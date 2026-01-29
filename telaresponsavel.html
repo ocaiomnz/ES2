@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SAPEA - Painel do Responsável">
+    <meta name="theme-color" content="#7B9ACC">
+    <title>SAPEA - Painel do Responsável</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="page-loading" class="page-loading">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <p>Carregando painel...</p>
+    </div>
+
+    <div id="page-content" class="page-content">
+        <header class="page-header">
+            <h1 class="page-title">Painel do Responsável</h1>
+            <div>
+                <a href="index.html#modal-contatos" class="btn-icon" aria-label="Contatos rápidos">📞</a>
+            </div>
+        </header>
+        <main class="page-main" id="main-content">
+            <section class="card">
+                <h2 class="card-title">Status de Hoje</h2>
+                <div class="status-grid" id="status-grid"></div>
+                <a href="acompanhamento_humor.html" class="btn btn-secondary mt-md">Ver acompanhamento de humor</a>
+            </section>
+            <section class="card">
+                <h2 class="card-title">Alertas de Transição</h2>
+                <div class="alert-list" id="alert-list"></div>
+            </section>
+            <section class="card">
+                <h2 class="card-title">Calendário</h2>
+                <div class="calendar-view" id="calendar-view"></div>
+            </section>
+            <section class="card">
+                <h2 class="card-title">Histórico de Crises</h2>
+                <div class="history-list" id="history-list"></div>
+            </section>
+        </main>
+        <nav class="bottom-nav">
+            <a href="telaresponsavel.html" class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Início</span>
+            </a>
+            <a href="acompanhamento_humor.html" class="nav-item">
+                <span class="nav-icon">😊</span>
+                <span class="nav-label">Humor</span>
+            </a>
+            <a href="ambiente.html" class="nav-item">
+                <span class="nav-icon">🏫</span>
+                <span class="nav-label">Ambientes</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        (function () {
+            var loading = document.getElementById('page-loading');
+            var content = document.getElementById('page-content');
+            var statusGrid = document.getElementById('status-grid');
+            var alertList = document.getElementById('alert-list');
+            var calendarView = document.getElementById('calendar-view');
+            var historyList = document.getElementById('history-list');
+
+            function riscoClass(risco) {
+                var r = (risco || '').toUpperCase();
+                if (r === 'ALTO') return 'alert-high';
+                if (r === 'MEDIO') return 'alert-medium';
+                return 'alert-low';
+            }
+
+            function buildCalendar() {
+                var weekDays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                var today = new Date();
+                var first = new Date(today.getFullYear(), today.getMonth(), 1);
+                var last = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                var html = '';
+                weekDays.forEach(function (d) {
+                    html += '<div class="calendar-day-header">' + d + '</div>';
+                });
+                for (var i = 0; i < first.getDay(); i++) html += '<div></div>';
+                for (var d = 1; d <= last.getDate(); d++) {
+                    var cls = 'calendar-day';
+                    if (d === today.getDate()) cls += ' today';
+                    if (d % 7 === 0) cls += ' has-event';
+                    html += '<div class="' + cls + '">' + d + '</div>';
+                }
+                calendarView.innerHTML = html;
+            }
+
+            SAPEA_API.fetchTelaresponsavel().then(function (data) {
+                var status = data.status || {};
+                statusGrid.innerHTML = '<div class="status-item">' +
+                    '<div class="status-icon status-good">😊</div>' +
+                    '<p class="status-label">Estado Emocional</p>' +
+                    '<p class="status-value">' + (status.estado_emocional || '—') + '</p></div>' +
+                    '<div class="status-item">' +
+                    '<div class="status-icon status-warning">⚠️</div>' +
+                    '<p class="status-label">Próxima Transição</p>' +
+                    '<p class="status-value">' + (status.proxima_transicao_min != null ? 'Em ' + status.proxima_transicao_min + ' min' : '—') + '</p></div>';
+
+                var alertas = data.alertas || [];
+                alertList.innerHTML = alertas.length ? alertas.map(function (a) {
+                    return '<div class="alert-item ' + riscoClass(a.nivel_risco) + '">' +
+                        '<div class="alert-indicator"></div>' +
+                        '<div class="alert-content">' +
+                        '<p class="alert-title">' + (a.titulo || '') + '</p>' +
+                        '<p class="alert-time">' + (a.data_hora || '') + ' - Risco ' + (a.nivel_risco || '') + '</p>' +
+                        '</div></div>';
+                }).join('') : '<p class="text-center" style="color: var(--color-text-light);">Nenhum alerta.</p>';
+
+                buildCalendar();
+
+                var crises = data.registro_crises || [];
+                historyList.innerHTML = crises.length ? crises.map(function (c) {
+                    return '<div class="list-item">' +
+                        '<div class="list-item-date">' + (c.data_hora || '') + '</div>' +
+                        '<p class="list-item-detail">Gatilho: ' + (c.gatilho_identificado || '—') + '</p>' +
+                        '<p class="list-item-detail">Estratégia: ' + (c.estrategia || '—') + '</p></div>';
+                }).join('') : '<p class="text-center" style="color: var(--color-text-light);">Nenhum registro.</p>';
+
+                loading.classList.add('hidden');
+                content.classList.add('ready');
+            }).catch(function () {
+                loading.querySelector('p').textContent = 'Erro ao carregar. Tente de novo.';
+                setTimeout(function () {
+                    loading.classList.add('hidden');
+                    content.classList.add('ready');
+                    statusGrid.innerHTML = '';
+                    alertList.innerHTML = '<p class="text-center" style="color: var(--color-text-light);">Nenhum alerta.</p>';
+                    buildCalendar();
+                    historyList.innerHTML = '<p class="text-center" style="color: var(--color-text-light);">Nenhum registro.</p>';
+                }, 2000);
+            });
+        })();
+    </script>
+</body>
+</html>

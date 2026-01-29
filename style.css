@@ -1,0 +1,1046 @@
+/* ============================================
+   SAPEA - Style Padrão (Modular e Componentizado)
+   Sistema de Apoio Pedagógico Digital
+   ============================================ */
+
+/* --------------------------------------------
+   1. VARIÁVEIS (Design Tokens)
+   -------------------------------------------- */
+:root {
+    /* Cores Primárias */
+    --color-primary: #7B9ACC;
+    --color-primary-light: #A8C4E8;
+    --color-primary-dark: #5A7BA8;
+    --color-green: #9ACD9A;
+    --color-green-light: #C4E6C4;
+    --color-purple: #B19CD9;
+    --color-sand: #D4C5A9;
+    /* Status */
+    --color-success: #9ACD9A;
+    --color-warning: #F4D03F;
+    --color-danger: #E8A5A5;
+    --color-info: #7B9ACC;
+    /* Neutras */
+    --color-bg: #F8F9FA;
+    --color-bg-secondary: #FFFFFF;
+    --color-text: #2C3E50;
+    --color-text-light: #6C7A89;
+    --color-border: #E1E8ED;
+    /* Espaçamento */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    /* Tipografia */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+    --font-size-3xl: 2.5rem;
+    /* Bordas */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+    /* Transições */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    /* Z-index */
+    --z-modal: 1000;
+    --z-sos: 999;
+    --z-nav: 100;
+}
+
+/* --------------------------------------------
+   2. RESET E BASE
+   -------------------------------------------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+h1 { font-size: var(--font-size-3xl); }
+h2 { font-size: var(--font-size-2xl); }
+h3 { font-size: var(--font-size-xl); }
+h4 { font-size: var(--font-size-lg); }
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover { color: var(--color-primary-dark); }
+
+/* --------------------------------------------
+   3. COMPONENTES - Botões
+   -------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.btn:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text);
+    border: 2px solid var(--color-border);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-bg);
+    border-color: var(--color-primary);
+}
+
+.btn-large {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-lg);
+    min-height: 56px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-xl);
+    padding: var(--spacing-xs);
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+}
+
+.btn-icon:hover { background-color: var(--color-bg); }
+
+.btn-danger {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.btn-danger:hover { filter: brightness(0.95); }
+
+.color-option.active {
+    outline: 3px solid var(--color-text);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------
+   4. COMPONENTES - Formulários
+   -------------------------------------------- */
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg-secondary);
+    color: var(--color-text);
+    transition: all var(--transition-fast);
+    min-height: 44px;
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(123, 154, 204, 0.1);
+}
+
+.form-input::placeholder { color: var(--color-text-light); }
+
+/* --------------------------------------------
+   5. COMPONENTES - Cards
+   -------------------------------------------- */
+.card {
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text);
+}
+
+/* --------------------------------------------
+   6. COMPONENTES - Timeline (Rotina)
+   -------------------------------------------- */
+.timeline-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-border);
+    transition: all var(--transition-normal);
+}
+
+.timeline-item.completed {
+    opacity: 0.6;
+    border-color: var(--color-success);
+    background-color: rgba(154, 205, 154, 0.1);
+}
+
+.timeline-item.active {
+    border-color: var(--color-primary);
+    background: linear-gradient(135deg, rgba(123, 154, 204, 0.1) 0%, rgba(123, 154, 204, 0.05) 100%);
+    box-shadow: var(--shadow-md);
+}
+
+.timeline-item.upcoming { border-color: var(--color-border); }
+
+.timeline-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.timeline-icon-large {
+    font-size: 4rem;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.timeline-content { flex: 1; }
+
+.timeline-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.timeline-activity {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: var(--spacing-xs) 0;
+}
+
+.timeline-time {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin: var(--spacing-sm) 0;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+
+/* --------------------------------------------
+   7. COMPONENTES - Status e Alertas
+   -------------------------------------------- */
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.status-item {
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
+}
+
+.status-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.status-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-xs);
+}
+
+.status-value {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.alert-list { display: flex; flex-direction: column; gap: var(--spacing-sm); }
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border-left: 4px solid;
+}
+
+.alert-item.alert-low {
+    background-color: rgba(154, 205, 154, 0.1);
+    border-color: var(--color-success);
+}
+
+.alert-item.alert-medium {
+    background-color: rgba(244, 208, 63, 0.1);
+    border-color: var(--color-warning);
+}
+
+.alert-item.alert-high {
+    background-color: rgba(232, 165, 165, 0.1);
+    border-color: var(--color-danger);
+}
+
+.alert-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.alert-low .alert-indicator { background-color: var(--color-success); }
+.alert-medium .alert-indicator { background-color: var(--color-warning); }
+.alert-high .alert-indicator { background-color: var(--color-danger); }
+
+.alert-title { font-weight: 600; color: var(--color-text); margin-bottom: var(--spacing-xs); }
+.alert-time { font-size: var(--font-size-sm); color: var(--color-text-light); }
+
+/* --------------------------------------------
+   8. COMPONENTES - Listas (Histórico, Crianças, Contatos)
+   -------------------------------------------- */
+.list-item {
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.list-item-date { font-weight: 600; color: var(--color-text); margin-bottom: var(--spacing-xs); }
+.list-item-detail { font-size: var(--font-size-sm); color: var(--color-text-light); }
+
+.students-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.student-item,
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
+    border: 2px solid var(--color-border);
+    margin-bottom: var(--spacing-sm);
+}
+
+.student-avatar,
+.contact-avatar {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.student-name,
+.contact-name { font-weight: 600; color: var(--color-text); }
+.student-status,
+.contact-role { font-size: var(--font-size-sm); color: var(--color-text-light); }
+
+.badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-low { background-color: rgba(154, 205, 154, 0.2); color: var(--color-success); }
+.badge-medium { background-color: rgba(244, 208, 63, 0.2); color: var(--color-warning); }
+.badge-high { background-color: rgba(232, 165, 165, 0.2); color: var(--color-danger); }
+
+/* --------------------------------------------
+   9. COMPONENTES - Navegação e Layout
+   -------------------------------------------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--color-bg-secondary);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.page-title { font-size: var(--font-size-xl); color: var(--color-text); }
+
+.page-main {
+    padding: var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text);
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-bg-secondary);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-around;
+    padding: var(--spacing-sm) 0;
+    z-index: var(--z-nav);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    color: var(--color-text-light);
+    transition: all var(--transition-fast);
+    min-width: 60px;
+}
+
+.nav-item.active { color: var(--color-primary); }
+.nav-icon { font-size: 1.5rem; }
+.nav-label { font-size: var(--font-size-xs); }
+
+/* --------------------------------------------
+   10. COMPONENTES - Modais
+   -------------------------------------------- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: var(--z-modal);
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    backdrop-filter: blur(4px);
+}
+
+.modal-overlay.active {
+    display: flex;
+    animation: fadeIn var(--transition-normal);
+}
+
+.modal-box {
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp var(--transition-normal);
+}
+
+.modal-box.modal-large { max-width: 800px; }
+
+.modal-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: none;
+    border: none;
+    font-size: var(--font-size-xl);
+    cursor: pointer;
+    color: var(--color-text-light);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+}
+
+.modal-close:hover {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+.modal-title { margin-bottom: var(--spacing-md); font-size: var(--font-size-xl); }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --------------------------------------------
+   11. TELAS - Comum (screen)
+   -------------------------------------------- */
+.screen {
+    display: none;
+    min-height: 100vh;
+}
+
+.screen.active { display: block; }
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 10000;
+}
+
+.skip-link:focus { top: 0; }
+
+/* --------------------------------------------
+   12. TELA - Login
+   -------------------------------------------- */
+#login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, #F8F9FA 0%, #E8EDF2 100%);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.logo-container { text-align: center; margin-bottom: var(--spacing-xl); }
+
+.logo-circle {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md);
+}
+
+.logo-text {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.logo-subtitle { color: var(--color-text-light); font-size: var(--font-size-sm); }
+
+.login-form { margin-top: var(--spacing-xl); }
+.login-help { margin-top: var(--spacing-lg); text-align: center; }
+
+/* --------------------------------------------
+   13. TELA - Criança (telacrianca)
+   -------------------------------------------- */
+#telacrianca {
+    background: linear-gradient(180deg, #F8F9FA 0%, #FFFFFF 100%);
+    padding-bottom: 100px;
+}
+
+.tela-crianca-header {
+    background-color: var(--color-bg-secondary);
+    padding: var(--spacing-md) var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title { font-size: var(--font-size-xl); color: var(--color-text); }
+
+.time-display {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+}
+
+.tela-crianca-main {
+    padding: var(--spacing-lg);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.actions-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-secondary);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    min-height: 120px;
+}
+
+.action-btn:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(123, 154, 204, 0.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-icon { font-size: 3rem; }
+.action-label { font-size: var(--font-size-base); font-weight: 500; color: var(--color-text); }
+
+.sos-button {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border: none;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    z-index: var(--z-sos);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    transition: all var(--transition-normal);
+}
+
+.sos-button:hover { transform: scale(1.1); }
+.sos-icon { font-size: 2rem; }
+.sos-text { color: white; font-weight: 600; font-size: var(--font-size-sm); }
+
+/* --------------------------------------------
+   14. TELA - Responsável (telaresponsavel)
+   -------------------------------------------- */
+#telaresponsavel { padding-bottom: 80px; }
+
+/* --------------------------------------------
+   15. TELA - Escolar (telaescolar)
+   -------------------------------------------- */
+#telaescolar { padding-bottom: var(--spacing-lg); }
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.action-card-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    min-height: 120px;
+}
+
+.action-card-btn:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(123, 154, 204, 0.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-card-icon { font-size: 2.5rem; }
+.action-card-label { font-size: var(--font-size-base); font-weight: 500; color: var(--color-text); }
+
+/* --------------------------------------------
+   16. TELA - Acompanhamento Humor
+   -------------------------------------------- */
+#acompanhamento-humor { padding-bottom: 80px; }
+
+.humor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.humor-card {
+    text-align: center;
+    padding: var(--spacing-lg);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-border);
+    transition: all var(--transition-normal);
+}
+
+.humor-card:hover { border-color: var(--color-primary); box-shadow: var(--shadow-md); }
+
+.humor-emoji { font-size: 3rem; margin-bottom: var(--spacing-sm); }
+.humor-label { font-size: var(--font-size-sm); color: var(--color-text-light); }
+.humor-value { font-size: var(--font-size-lg); font-weight: 600; color: var(--color-text); }
+
+/* --------------------------------------------
+   17. TELA - Ambiente (galeria de ambientes)
+   -------------------------------------------- */
+#ambiente { padding-bottom: var(--spacing-lg); }
+
+.ambiente-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.ambiente-card {
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--color-border);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.ambiente-card:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(123, 154, 204, 0.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.ambiente-icon { font-size: 4rem; margin-bottom: var(--spacing-sm); }
+.ambiente-nome { font-weight: 600; color: var(--color-text); }
+.ambiente-desc { font-size: var(--font-size-sm); color: var(--color-text-light); margin-top: var(--spacing-xs); }
+
+/* --------------------------------------------
+   18. Calendário (compartilhado)
+   -------------------------------------------- */
+.calendar-view {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--spacing-xs);
+}
+
+.calendar-day-header {
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-light);
+    padding: var(--spacing-xs);
+    text-align: center;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.calendar-day:hover { background-color: var(--color-primary-light); color: white; }
+.calendar-day.today { background-color: var(--color-primary); color: white; font-weight: 600; }
+.calendar-day.has-event { border: 2px solid var(--color-primary); }
+
+/* --------------------------------------------
+   19. MODAL - Transição
+   -------------------------------------------- */
+.modal-transicao .modal-box { max-width: 480px; }
+
+.transicao-info {
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.transicao-risco {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    margin-top: var(--spacing-sm);
+}
+
+/* --------------------------------------------
+   20. MODAL - Alerta de Crise
+   -------------------------------------------- */
+.modal-alerta-crise .modal-box { max-width: 520px; }
+
+.alerta-crise-content {
+    text-align: center;
+    padding: var(--spacing-md);
+}
+
+.alerta-crise-icon { font-size: 4rem; margin-bottom: var(--spacing-md); }
+.alerta-crise-message { font-size: var(--font-size-lg); color: var(--color-text); margin-bottom: var(--spacing-lg); line-height: 1.6; }
+
+.alerta-crise-form .form-group { margin-bottom: var(--spacing-md); }
+
+/* --------------------------------------------
+   21. MODAL - Contatos Rápidos
+   -------------------------------------------- */
+.modal-contatos .contatos-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.contato-item-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: left;
+    transition: all var(--transition-fast);
+}
+
+.contato-item-btn:hover {
+    border-color: var(--color-primary);
+    background-color: rgba(123, 154, 204, 0.05);
+}
+
+/* --------------------------------------------
+   22. Utilitários e Responsividade
+   -------------------------------------------- */
+.text-center { text-align: center; }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+
+/* --------------------------------------------
+   Loading (telas preenchidas por fetch)
+   -------------------------------------------- */
+.page-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: var(--spacing-xl);
+    color: var(--color-text-light);
+}
+.page-loading.hidden { display: none; }
+.page-content { display: none; min-height: 50vh; }
+.page-content.ready { display: block; }
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: var(--radius-full);
+    animation: spin 0.8s linear infinite;
+    margin-bottom: var(--spacing-md);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.page-loading p { margin-top: var(--spacing-sm); }
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-3xl: 2rem;
+        --font-size-2xl: 1.75rem;
+        --font-size-xl: 1.25rem;
+    }
+    .modal-box { max-height: 95vh; padding: var(--spacing-md); }
+    .timeline-icon-large { width: 80px; height: 80px; font-size: 3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+body.minimal-mode {
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+}
+
+body.minimal-mode .btn:hover { transform: none; }

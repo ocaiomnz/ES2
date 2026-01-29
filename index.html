@@ -6,14 +6,12 @@
     <meta name="description" content="Sistema de Apoio Pedagógico Digital Personalizado para Crianças no Espectro Autista">
     <meta name="theme-color" content="#7B9ACC">
     <title>SAPEA - Sistema de Apoio Pedagógico Digital</title>
-    <link rel="stylesheet" href="css/design-system.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- Skip to main content para acessibilidade -->
     <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
     <div id="app">
-        <!-- Tela de Login será carregada por padrão -->
+        <!-- ========== TELA DE LOGIN ========== -->
         <div id="login-screen" class="screen active">
             <div class="login-container">
                 <div class="logo-container">
@@ -27,34 +25,27 @@
                     <h1 class="logo-text">SAPEA</h1>
                     <p class="logo-subtitle">Sistema de Apoio Pedagógico Digital</p>
                 </div>
-
                 <div class="login-form">
                     <div class="form-group">
                         <label for="user-email" class="form-label">E-mail</label>
                         <input type="email" id="user-email" class="form-input" placeholder="seu@email.com" autocomplete="email">
                     </div>
-
                     <div class="form-group">
                         <label for="user-password" class="form-label">Senha</label>
                         <input type="password" id="user-password" class="form-input" placeholder="••••••••" autocomplete="current-password">
                     </div>
-
                     <div class="form-group">
-                        <label for="user-profile" class="form-label">Perfil</label>
+                        <label for="user-profile" class="form-label">Perfil (tipo_perfil)</label>
                         <select id="user-profile" class="form-select">
                             <option value="">Selecione seu perfil</option>
-                            <option value="pais">Pais/Responsáveis</option>
+                            <option value="responsavel">Pais/Responsáveis</option>
                             <option value="escola">Equipe Escolar</option>
                         </select>
                     </div>
-
-                    <button type="button" class="btn btn-primary btn-large" onclick="handleLogin()">
-                        Entrar
-                    </button>
-
+                    <button type="button" class="btn btn-primary btn-large" onclick="handleLogin()">Entrar</button>
                     <div class="login-help">
                         <p class="help-text">Precisa de ajuda? Entre em contato com a escola.</p>
-                        <button type="button" class="btn-link" onclick="showScreen('crianca-screen')" style="margin-top: 1rem; color: var(--color-primary); text-decoration: underline; background: none; border: none; cursor: pointer; font-size: 0.875rem;">
+                        <button type="button" class="btn btn-secondary" style="margin-top: 1rem;" onclick="showScreen('telacrianca')">
                             Ver interface da criança (modo demonstração)
                         </button>
                     </div>
@@ -62,99 +53,88 @@
             </div>
         </div>
 
-        <!-- Interface da Criança -->
-        <div id="crianca-screen" class="screen">
-            <header class="crianca-header">
+        <!-- ========== TELA CRIANÇA (telacrianca) ========== -->
+        <div id="telacrianca" class="screen">
+            <header class="tela-crianca-header page-header">
                 <div class="header-content">
-                    <h2 class="header-title">Olá, João! 👋</h2>
+                    <h2 class="header-title page-title">Olá, João! 👋</h2>
                     <div class="time-display" id="current-time">09:30</div>
                 </div>
             </header>
-
-            <main class="crianca-main" id="main-content">
-                <section class="rotina-section">
-                    <h3 class="section-title">Sua Rotina de Hoje</h3>
-                    
-                    <div class="timeline-container">
-                        <div class="timeline-item completed">
-                            <div class="timeline-icon">🌅</div>
-                            <div class="timeline-content">
-                                <p class="timeline-label">Chegada</p>
-                                <p class="timeline-time">08:00</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item active" id="current-activity">
-                            <div class="timeline-icon-large">📚</div>
-                            <div class="timeline-content">
-                                <p class="timeline-label-large">AGORA</p>
-                                <p class="timeline-activity">Aula de Português</p>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar" id="activity-progress" style="width: 60%"></div>
-                                </div>
-                                <p class="timeline-time-remaining" id="time-remaining">Faltam 20 minutos</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item upcoming">
-                            <div class="timeline-icon">🍎</div>
-                            <div class="timeline-content">
-                                <p class="timeline-label">DEPOIS</p>
-                                <p class="timeline-activity">Lanche</p>
-                                <p class="timeline-time">10:30</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item upcoming">
-                            <div class="timeline-icon">🎨</div>
-                            <div class="timeline-content">
-                                <p class="timeline-label">DEPOIS</p>
-                                <p class="timeline-activity">Arte</p>
-                                <p class="timeline-time">11:00</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item upcoming">
-                            <div class="timeline-icon">🏠</div>
-                            <div class="timeline-content">
-                                <p class="timeline-label">DEPOIS</p>
-                                <p class="timeline-activity">Voltar para casa</p>
-                                <p class="timeline-time">12:00</p>
-                            </div>
+            <main class="tela-crianca-main page-main" id="main-content">
+                <h3 class="section-title">Sua Rotina de Hoje (eventos)</h3>
+                <div class="timeline-container">
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon">🌅</div>
+                        <div class="timeline-content">
+                            <p class="timeline-label">Chegada</p>
+                            <p class="timeline-time">08:00</p>
                         </div>
                     </div>
-                </section>
-
+                    <div class="timeline-item active" id="current-activity">
+                        <div class="timeline-icon-large">📚</div>
+                        <div class="timeline-content">
+                            <p class="timeline-label">AGORA</p>
+                            <p class="timeline-activity">Aula de Português</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="activity-progress" style="width: 60%"></div>
+                            </div>
+                            <p class="timeline-time" id="time-remaining">Faltam 20 minutos</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item upcoming">
+                        <div class="timeline-icon">🍎</div>
+                        <div class="timeline-content">
+                            <p class="timeline-label">DEPOIS</p>
+                            <p class="timeline-activity">Lanche</p>
+                            <p class="timeline-time">10:30</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item upcoming">
+                        <div class="timeline-icon">🎨</div>
+                        <div class="timeline-content">
+                            <p class="timeline-label">DEPOIS</p>
+                            <p class="timeline-activity">Arte</p>
+                            <p class="timeline-time">11:00</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item upcoming">
+                        <div class="timeline-icon">🏠</div>
+                        <div class="timeline-content">
+                            <p class="timeline-label">DEPOIS</p>
+                            <p class="timeline-activity">Voltar para casa</p>
+                            <p class="timeline-time">12:00</p>
+                        </div>
+                    </div>
+                </div>
                 <section class="actions-section">
-                    <button class="action-btn btn-tour" onclick="showTour()">
+                    <button class="action-btn" onclick="showScreen('ambiente')">
                         <span class="action-icon">🏫</span>
                         <span class="action-label">Ver Lugares</span>
                     </button>
-                    <button class="action-btn btn-help" onclick="showHelp()">
+                    <button class="action-btn" onclick="openModal('modal-alerta-crise')">
                         <span class="action-icon">💙</span>
                         <span class="action-label">Preciso de Ajuda</span>
                     </button>
                 </section>
             </main>
-
-            <!-- Botão SOS Fixo -->
             <button class="sos-button" id="sos-btn" onclick="triggerSOS()" aria-label="Preciso de ajuda urgente">
                 <span class="sos-icon">🆘</span>
                 <span class="sos-text">Ajuda</span>
             </button>
         </div>
 
-        <!-- Painel Pais/Responsáveis -->
-        <div id="pais-screen" class="screen">
-            <header class="dashboard-header">
-                <h1 class="dashboard-title">Painel do Responsável</h1>
-                <button class="btn-icon" onclick="showSettings()" aria-label="Configurações">
-                    <span>⚙️</span>
-                </button>
+        <!-- ========== TELA RESPONSÁVEL (telaresponsavel) ========== -->
+        <div id="telaresponsavel" class="screen">
+            <header class="page-header">
+                <h1 class="page-title">Painel do Responsável</h1>
+                <div>
+                    <button class="btn-icon" onclick="openModal('modal-contatos')" aria-label="Contatos rápidos">📞</button>
+                    <button class="btn-icon" onclick="showSettings()" aria-label="Configurações">⚙️</button>
+                </div>
             </header>
-
-            <main class="dashboard-main" id="main-content">
-                <section class="status-card">
+            <main class="page-main" id="main-content">
+                <section class="card">
                     <h2 class="card-title">Status de Hoje</h2>
                     <div class="status-grid">
                         <div class="status-item">
@@ -168,10 +148,10 @@
                             <p class="status-value">Em 20 min</p>
                         </div>
                     </div>
+                    <button class="btn btn-secondary mt-md" onclick="showScreen('acompanhamento-humor')">Ver acompanhamento de humor</button>
                 </section>
-
-                <section class="alert-card">
-                    <h2 class="card-title">Alertas de Transição</h2>
+                <section class="card">
+                    <h2 class="card-title">Alertas de Transição (eventos / nivel_risco)</h2>
                     <div class="alert-list">
                         <div class="alert-item alert-low">
                             <div class="alert-indicator"></div>
@@ -179,6 +159,7 @@
                                 <p class="alert-title">Lanche</p>
                                 <p class="alert-time">10:30 - Risco Baixo</p>
                             </div>
+                            <button class="btn btn-secondary btn-large" onclick="openModal('modal-transicao')">Ver detalhes</button>
                         </div>
                         <div class="alert-item alert-medium">
                             <div class="alert-indicator"></div>
@@ -186,59 +167,50 @@
                                 <p class="alert-title">Mudança de Sala</p>
                                 <p class="alert-time">11:00 - Risco Médio</p>
                             </div>
+                            <button class="btn btn-secondary btn-large" onclick="openModal('modal-transicao')">Ver detalhes</button>
                         </div>
                     </div>
                 </section>
-
-                <section class="calendar-card">
-                    <h2 class="card-title">Calendário</h2>
-                    <div class="calendar-view" id="calendar-view">
-                        <!-- Calendário será gerado via JS -->
-                    </div>
+                <section class="card">
+                    <h2 class="card-title">Calendário (eventos)</h2>
+                    <div class="calendar-view" id="calendar-view"></div>
                 </section>
-
-                <section class="history-card">
-                    <h2 class="card-title">Histórico de Crises</h2>
+                <section class="card">
+                    <h2 class="card-title">Histórico de Crises (registro_crises)</h2>
                     <div class="history-list">
-                        <div class="history-item">
-                            <div class="history-date">15/03/2024</div>
-                            <div class="history-content">
-                                <p class="history-trigger">Gatilho: Mudança inesperada de rotina</p>
-                                <p class="history-strategy">Estratégia: Espaço tranquilo + música calma</p>
-                            </div>
+                        <div class="list-item">
+                            <div class="list-item-date">15/03/2024</div>
+                            <p class="list-item-detail">Gatilho: Mudança inesperada de rotina</p>
+                            <p class="list-item-detail">Estratégia: Espaço tranquilo + música calma (intervencoes.estrategia)</p>
                         </div>
                     </div>
                 </section>
             </main>
-
             <nav class="bottom-nav">
-                <button class="nav-item active" onclick="showScreen('pais-screen')">
+                <button class="nav-item active" onclick="showScreen('telaresponsavel')">
                     <span class="nav-icon">🏠</span>
                     <span class="nav-label">Início</span>
                 </button>
-                <button class="nav-item" onclick="showScreen('calendar-screen')">
-                    <span class="nav-icon">📅</span>
-                    <span class="nav-label">Calendário</span>
+                <button class="nav-item" onclick="showScreen('acompanhamento-humor')">
+                    <span class="nav-icon">😊</span>
+                    <span class="nav-label">Humor</span>
                 </button>
-                <button class="nav-item" onclick="showScreen('history-screen')">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-label">Histórico</span>
+                <button class="nav-item" onclick="showScreen('ambiente')">
+                    <span class="nav-icon">🏫</span>
+                    <span class="nav-label">Ambientes</span>
                 </button>
             </nav>
         </div>
 
-        <!-- Painel Equipe Escolar -->
-        <div id="escola-screen" class="screen">
-            <header class="dashboard-header">
-                <h1 class="dashboard-title">Painel da Escola</h1>
-                <button class="btn-icon" onclick="showSettings()" aria-label="Configurações">
-                    <span>⚙️</span>
-                </button>
+        <!-- ========== TELA ESCOLAR (telaescolar) ========== -->
+        <div id="telaescolar" class="screen">
+            <header class="page-header">
+                <h1 class="page-title">Painel da Escola</h1>
+                <button class="btn-icon" onclick="showSettings()" aria-label="Configurações">⚙️</button>
             </header>
-
-            <main class="dashboard-main" id="main-content">
-                <section class="students-card">
-                    <h2 class="card-title">Crianças Vinculadas</h2>
+            <main class="page-main" id="main-content">
+                <section class="card">
+                    <h2 class="card-title">Crianças Vinculadas (criancas / responsavel)</h2>
                     <div class="students-list">
                         <div class="student-item">
                             <div class="student-avatar">👦</div>
@@ -246,7 +218,7 @@
                                 <p class="student-name">João Silva</p>
                                 <p class="student-status status-good">Status: Calmo</p>
                             </div>
-                            <div class="student-risk risk-low">Baixo</div>
+                            <span class="badge badge-low">Baixo</span>
                         </div>
                         <div class="student-item">
                             <div class="student-avatar">👧</div>
@@ -254,23 +226,22 @@
                                 <p class="student-name">Maria Santos</p>
                                 <p class="student-status status-warning">Status: Ansiosa</p>
                             </div>
-                            <div class="student-risk risk-medium">Médio</div>
+                            <span class="badge badge-medium">Médio</span>
                         </div>
                     </div>
                 </section>
-
-                <section class="actions-card">
+                <section class="card">
                     <h2 class="card-title">Ações Rápidas</h2>
                     <div class="action-grid">
-                        <button class="action-card-btn" onclick="showRoutineManager()">
+                        <button class="action-card-btn" onclick="openModal('modal-transicao')">
                             <span class="action-card-icon">📋</span>
-                            <span class="action-card-label">Gerenciar Rotina</span>
+                            <span class="action-card-label">Gerenciar Rotina (eventos)</span>
                         </button>
-                        <button class="action-card-btn" onclick="showCrisisRegister()">
+                        <button class="action-card-btn" onclick="openModal('modal-alerta-crise')">
                             <span class="action-card-icon">📝</span>
-                            <span class="action-card-label">Registrar Crise</span>
+                            <span class="action-card-label">Registrar Crise (registro_crises)</span>
                         </button>
-                        <button class="action-card-btn" onclick="showEnvironmentManager()">
+                        <button class="action-card-btn" onclick="showScreen('ambiente')">
                             <span class="action-card-icon">🏫</span>
                             <span class="action-card-label">Ambientes</span>
                         </button>
@@ -279,72 +250,190 @@
             </main>
         </div>
 
-        <!-- Modal de Tours Virtuais -->
-        <div id="tour-modal" class="modal">
-            <div class="modal-content modal-large">
-                <button class="modal-close" onclick="closeModal('tour-modal')" aria-label="Fechar">✕</button>
-                <h2 class="modal-title">Lugares da Escola</h2>
-                <div class="tour-gallery">
-                    <div class="tour-item">
-                        <div class="tour-image">📚</div>
-                        <p class="tour-label">Sala de Aula</p>
+        <!-- ========== TELA ACOMPANHAMENTO HUMOR ========== -->
+        <div id="acompanhamento-humor" class="screen">
+            <header class="page-header">
+                <button class="btn-icon" onclick="showScreen('telaresponsavel')" aria-label="Voltar">←</button>
+                <h1 class="page-title">Acompanhamento de Humor</h1>
+                <span></span>
+            </header>
+            <main class="page-main" id="main-content">
+                <section class="card">
+                    <h2 class="card-title">Estado Emocional (por criança)</h2>
+                    <div class="humor-grid">
+                        <div class="humor-card">
+                            <div class="humor-emoji">😊</div>
+                            <p class="humor-label">Calmo</p>
+                            <p class="humor-value">Hoje 09:00</p>
+                        </div>
+                        <div class="humor-card">
+                            <div class="humor-emoji">😐</div>
+                            <p class="humor-label">Neutro</p>
+                            <p class="humor-value">Ontem 14:00</p>
+                        </div>
+                        <div class="humor-card">
+                            <div class="humor-emoji">😟</div>
+                            <p class="humor-label">Ansioso</p>
+                            <p class="humor-value">15/03 10:30</p>
+                        </div>
                     </div>
-                    <div class="tour-item">
-                        <div class="tour-image">🍎</div>
-                        <p class="tour-label">Refeitório</p>
+                </section>
+            </main>
+            <nav class="bottom-nav">
+                <button class="nav-item" onclick="showScreen('telaresponsavel')">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Início</span>
+                </button>
+                <button class="nav-item active">
+                    <span class="nav-icon">😊</span>
+                    <span class="nav-label">Humor</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- ========== TELA AMBIENTE (galeria de ambientes) ========== -->
+        <div id="ambiente" class="screen">
+            <header class="page-header">
+                <button class="btn-icon" onclick="voltarDaTelaAmbiente()" aria-label="Voltar">←</button>
+                <h1 class="page-title">Lugares da Escola</h1>
+                <span></span>
+            </header>
+            <main class="page-main" id="main-content">
+                <section class="card">
+                    <h2 class="card-title">Ambientes (tours virtuais)</h2>
+                    <div class="ambiente-grid">
+                        <div class="ambiente-card">
+                            <div class="ambiente-icon">📚</div>
+                            <p class="ambiente-nome">Sala de Aula</p>
+                            <p class="ambiente-desc">Onde você estuda</p>
+                        </div>
+                        <div class="ambiente-card">
+                            <div class="ambiente-icon">🍎</div>
+                            <p class="ambiente-nome">Refeitório</p>
+                            <p class="ambiente-desc">Onde você lancha</p>
+                        </div>
+                        <div class="ambiente-card">
+                            <div class="ambiente-icon">🚽</div>
+                            <p class="ambiente-nome">Banheiro</p>
+                            <p class="ambiente-desc">Banheiro da escola</p>
+                        </div>
+                        <div class="ambiente-card">
+                            <div class="ambiente-icon">🌳</div>
+                            <p class="ambiente-nome">Pátio</p>
+                            <p class="ambiente-desc">Área de recreio</p>
+                        </div>
                     </div>
-                    <div class="tour-item">
-                        <div class="tour-image">🚽</div>
-                        <p class="tour-label">Banheiro</p>
-                    </div>
-                    <div class="tour-item">
-                        <div class="tour-image">🌳</div>
-                        <p class="tour-label">Pátio</p>
-                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- ========== MODAL TRANSIÇÃO ========== -->
+        <div id="modal-transicao" class="modal-overlay modal-transicao" role="dialog" aria-labelledby="modal-transicao-title">
+            <div class="modal-box">
+                <button class="modal-close" onclick="closeModal('modal-transicao')" aria-label="Fechar">✕</button>
+                <h2 class="modal-title" id="modal-transicao-title">Detalhes da Transição (eventos)</h2>
+                <div class="transicao-info">
+                    <p><strong>Título:</strong> Mudança de Sala</p>
+                    <p><strong>Data/hora início:</strong> 11:00</p>
+                    <p><strong>Data/hora fim:</strong> 11:30</p>
+                    <p><strong>Status:</strong> PENDENTE</p>
+                    <span class="transicao-risco badge badge-medium">Nível de risco: Médio</span>
                 </div>
-                <div class="tour-navigation">
-                    <button class="btn btn-secondary" onclick="closeModal('tour-modal')">Fechar</button>
+                <button class="btn btn-primary btn-large" onclick="closeModal('modal-transicao')">Entendi</button>
+            </div>
+        </div>
+
+        <!-- ========== MODAL ALERTA DE CRISE ========== -->
+        <div id="modal-alerta-crise" class="modal-overlay modal-alerta-crise" role="dialog" aria-labelledby="modal-alerta-crise-title">
+            <div class="modal-box">
+                <button class="modal-close" onclick="closeModal('modal-alerta-crise')" aria-label="Fechar">✕</button>
+                <div class="alerta-crise-content">
+                    <div class="alerta-crise-icon">💙</div>
+                    <h2 class="modal-title" id="modal-alerta-crise-title">Ajuda Enviada!</h2>
+                    <p class="alerta-crise-message">Alguém virá te ajudar em breve. Você está seguro. (pedidos_suporte / registro_crises)</p>
+                    <button class="btn btn-primary btn-large" onclick="closeModal('modal-alerta-crise')">Entendi</button>
+                </div>
+                <div class="alerta-crise-form mt-md" style="border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);">
+                    <h3 class="card-title">Registrar crise (equipe escolar)</h3>
+                    <div class="form-group">
+                        <label class="form-label">Intensidade (registro_crises.intensidade)</label>
+                        <select class="form-select">
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <input type="text" class="form-input" placeholder="Descrição da crise">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Gatilho identificado</label>
+                        <input type="text" class="form-input" placeholder="Gatilho identificado">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estratégia (intervencoes.estrategia)</label>
+                        <input type="text" class="form-input" placeholder="Estratégia aplicada">
+                    </div>
+                    <button class="btn btn-primary btn-large">Salvar registro</button>
                 </div>
             </div>
         </div>
 
-        <!-- Modal de Ajuda/SOS -->
-        <div id="help-modal" class="modal">
-            <div class="modal-content">
-                <button class="modal-close" onclick="closeModal('help-modal')" aria-label="Fechar">✕</button>
-                <div class="help-content">
-                    <div class="help-icon-large">💙</div>
-                    <h2 class="modal-title">Ajuda Enviada!</h2>
-                    <p class="help-message">Alguém virá te ajudar em breve. Você está seguro.</p>
-                    <button class="btn btn-primary" onclick="closeModal('help-modal')">Entendi</button>
+        <!-- ========== MODAL CONTATOS RÁPIDOS ========== -->
+        <div id="modal-contatos" class="modal-overlay modal-contatos" role="dialog" aria-labelledby="modal-contatos-title">
+            <div class="modal-box modal-large">
+                <button class="modal-close" onclick="closeModal('modal-contatos')" aria-label="Fechar">✕</button>
+                <h2 class="modal-title" id="modal-contatos-title">Contatos Rápidos (usuarios / responsavel)</h2>
+                <div class="contatos-list">
+                    <button type="button" class="contato-item-btn">
+                        <div class="contact-avatar">👩</div>
+                        <div style="text-align: left;">
+                            <p class="contact-name">Professora Ana</p>
+                            <p class="contact-role">Equipe Escolar</p>
+                        </div>
+                        <span>📞</span>
+                    </button>
+                    <button type="button" class="contato-item-btn">
+                        <div class="contact-avatar">👨</div>
+                        <div style="text-align: left;">
+                            <p class="contact-name">Coordenação</p>
+                            <p class="contact-role">Escola</p>
+                        </div>
+                        <span>📞</span>
+                    </button>
+                    <button type="button" class="contato-item-btn">
+                        <div class="contact-avatar">🏥</div>
+                        <div style="text-align: left;">
+                            <p class="contact-name">Emergência</p>
+                            <p class="contact-role">192</p>
+                        </div>
+                        <span>📞</span>
+                    </button>
                 </div>
+                <button class="btn btn-secondary btn-large mt-md" onclick="closeModal('modal-contatos')">Fechar</button>
             </div>
         </div>
 
-        <!-- Modal de Configurações -->
-        <div id="settings-modal" class="modal">
-            <div class="modal-content modal-large">
+        <!-- ========== MODAL CONFIGURAÇÕES ========== -->
+        <div id="settings-modal" class="modal-overlay" role="dialog">
+            <div class="modal-box modal-large">
                 <button class="modal-close" onclick="closeModal('settings-modal')" aria-label="Fechar">✕</button>
                 <h2 class="modal-title">Configurações</h2>
-                <div class="settings-content">
-                    <section class="setting-section">
-                        <h3 class="setting-title">Cores</h3>
-                        <div class="color-picker">
-                            <button class="color-option" data-color="blue" style="background: #7B9ACC;" onclick="changeColor('blue')"></button>
-                            <button class="color-option" data-color="green" style="background: #9ACD9A;" onclick="changeColor('green')"></button>
-                            <button class="color-option" data-color="purple" style="background: #B19CD9;" onclick="changeColor('purple')"></button>
-                            <button class="color-option" data-color="sand" style="background: #D4C5A9;" onclick="changeColor('sand')"></button>
-                        </div>
-                    </section>
-                    <section class="setting-section">
-                        <h3 class="setting-title">Modo Mínimo</h3>
-                        <label class="switch">
-                            <input type="checkbox" id="minimal-mode" onchange="toggleMinimalMode()">
-                            <span class="slider"></span>
-                        </label>
-                        <p class="setting-description">Reduz estímulos visuais ao máximo</p>
-                    </section>
+                <div class="form-group">
+                    <h3 class="card-title">Cores</h3>
+                    <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+                        <button type="button" class="btn color-option active" data-color="blue" style="background: #7B9ACC; width: 44px; height: 44px; border-radius: var(--radius-full);" onclick="changeColor('blue')" aria-label="Tema azul"></button>
+                        <button type="button" class="btn color-option" data-color="green" style="background: #9ACD9A; width: 44px; height: 44px; border-radius: var(--radius-full);" onclick="changeColor('green')" aria-label="Tema verde"></button>
+                        <button type="button" class="btn color-option" data-color="purple" style="background: #B19CD9; width: 44px; height: 44px; border-radius: var(--radius-full);" onclick="changeColor('purple')" aria-label="Tema lilás"></button>
+                        <button type="button" class="btn color-option" data-color="sand" style="background: #D4C5A9; width: 44px; height: 44px; border-radius: var(--radius-full);" onclick="changeColor('sand')" aria-label="Tema areia"></button>
+                    </div>
                 </div>
+                <div class="form-group mt-md">
+                    <label class="form-label">Modo Mínimo (reduz estímulos)</label>
+                    <input type="checkbox" id="minimal-mode" onchange="toggleMinimalMode()">
+                </div>
+                <button class="btn btn-secondary" onclick="closeModal('settings-modal')">Fechar</button>
             </div>
         </div>
     </div>
@@ -352,4 +441,3 @@
     <script src="js/main.js"></script>
 </body>
 </html>
-

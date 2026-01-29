@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SAPEA - Interface da Criança">
+    <meta name="theme-color" content="#7B9ACC">
+    <title>SAPEA - Tela Criança</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="page-loading" class="page-loading">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <p>Carregando sua rotina...</p>
+    </div>
+
+    <div id="page-content" class="page-content">
+        <header class="tela-crianca-header page-header">
+            <div class="header-content">
+                <h2 class="header-title page-title" id="header-title">Olá! 👋</h2>
+                <div class="time-display" id="current-time">--:--</div>
+            </div>
+        </header>
+        <main class="tela-crianca-main page-main" id="main-content">
+            <h3 class="section-title">Sua Rotina de Hoje</h3>
+            <div class="timeline-container" id="timeline-container"></div>
+            <section class="actions-section">
+                <a href="ambiente.html" class="action-btn">
+                    <span class="action-icon">🏫</span>
+                    <span class="action-label">Ver Lugares</span>
+                </a>
+                <button type="button" class="action-btn" id="btn-ajuda">
+                    <span class="action-icon">💙</span>
+                    <span class="action-label">Preciso de Ajuda</span>
+                </button>
+            </section>
+        </main>
+        <button class="sos-button" id="sos-btn" aria-label="Preciso de ajuda urgente">
+            <span class="sos-icon">🆘</span>
+            <span class="sos-text">Ajuda</span>
+        </button>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        (function () {
+            var loading = document.getElementById('page-loading');
+            var content = document.getElementById('page-content');
+            var titleEl = document.getElementById('header-title');
+            var timelineEl = document.getElementById('timeline-container');
+            var timeEl = document.getElementById('current-time');
+
+            function formatTime(str) {
+                if (!str) return '--:--';
+                var parts = String(str).match(/(\d{1,2}):(\d{2})/);
+                return parts ? parts[0] : str;
+            }
+
+            function statusClass(status) {
+                if (status === 'CONCLUIDO') return 'completed';
+                if (status === 'EM_ANDAMENTO') return 'active';
+                return 'upcoming';
+            }
+
+            function labelStatus(status) {
+                if (status === 'CONCLUIDO') return '';
+                if (status === 'EM_ANDAMENTO') return 'AGORA';
+                return 'DEPOIS';
+            }
+
+            function renderTimeline(eventos) {
+                if (!eventos || !eventos.length) {
+                    timelineEl.innerHTML = '<p class="text-center" style="color: var(--color-text-light);">Nenhum evento hoje.</p>';
+                    return;
+                }
+                timelineEl.innerHTML = eventos.map(function (ev) {
+                    var cls = statusClass(ev.status);
+                    var label = labelStatus(ev.status);
+                    var progress = ev.progresso != null ? '<div class="progress-bar-container"><div class="progress-bar" style="width: ' + ev.progresso + '%"></div></div><p class="timeline-time">Faltam ' + (100 - ev.progresso) + ' min</p>' : '<p class="timeline-time">' + formatTime(ev.data_hora_inicio) + '</p>';
+                    var iconSize = ev.status === 'EM_ANDAMENTO' ? 'timeline-icon-large' : 'timeline-icon';
+                    return '<div class="timeline-item ' + cls + '">' +
+                        '<div class="' + iconSize + '">' + (ev.icone || '📌') + '</div>' +
+                        '<div class="timeline-content">' +
+                        (label ? '<p class="timeline-label">' + label + '</p>' : '') +
+                        '<p class="timeline-activity">' + (ev.titulo || '') + '</p>' +
+                        progress +
+                        '</div></div>';
+                }).join('');
+            }
+
+            function updateClock() {
+                var now = new Date();
+                timeEl.textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            SAPEA_API.fetchTelacrianca().then(function (data) {
+                var crianca = data.crianca || {};
+                var eventos = data.eventos || [];
+                titleEl.textContent = 'Olá, ' + (crianca.nome || '') + '! 👋';
+                renderTimeline(eventos);
+                updateClock();
+                setInterval(updateClock, 1000);
+                loading.classList.add('hidden');
+                content.classList.add('ready');
+            }).catch(function () {
+                loading.querySelector('p').textContent = 'Não foi possível carregar. Tente de novo.';
+                setTimeout(function () {
+                    loading.classList.add('hidden');
+                    content.classList.add('ready');
+                    titleEl.textContent = 'Olá! 👋';
+                    renderTimeline([]);
+                }, 2000);
+            });
+
+            document.getElementById('sos-btn').addEventListener('click', function () {
+                alert('Ajuda solicitada! Alguém virá em breve.');
+            });
+            document.getElementById('btn-ajuda').addEventListener('click', function () {
+                alert('Ajuda solicitada! Você está seguro.');
+            });
+        })();
+    </script>
+</body>
+</html>
