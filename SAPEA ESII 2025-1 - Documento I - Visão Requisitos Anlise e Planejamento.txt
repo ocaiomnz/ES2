@@ -1,0 +1,1250 @@
+﻿ES I – Documento de Especificação de Requisitos
+
+
+
+
+ Sistema de Apoio Pedagógico Digital Personalizado para Crianças no Espectro Autista com Recursos Visuais Interativos
+Documento de Visão, Análise e Planejamento
+
+
+Versão 4.0
+Caio Enzo Menezes Machado dos Santos
+Gyannine Candeias Gomes dos Santos
+José Luciano de Oliveira Filho
+[Aluno4]
+
+
+
+
+
+
+
+
+Histórico de Alterações
+Data
+	Versão
+	Descrição
+	Autor(es)
+	07/07/25 
+	1.0 
+	Adição da Introdução 
+	Samuel
+	07/07/25 
+	1.0
+	Adição da Visão Geral 
+	Caio 
+	07/07/25 
+	1.0 
+	Adição da Prospecção de outras tecnologias 
+	Caio 
+	08/07/25 
+	1.0 
+	Prototipação das telas 
+	Samuel
+	08/07/25  
+	1.0
+	Adição de Requisitos funcionais e não funcionais 
+	Pedro 
+	08/07/25   
+	1.0
+	Adição de esboços de relatórios para a realização de casos de uso
+	Samuel
+	08/07/25  
+	1.0 
+	Adição do modelo de negócios
+	Samuel 
+	08/07/25  
+	1.0
+	Adição de regras de negócio e estória dos usuários e atualização do modelo de negócios 
+	Felipe 
+	02/08/25  
+	2.0
+	Inserção do Diagrama de Use Case
+	Felipe 
+	02/08/25 
+	2.0 
+	Inserção da Descrição dos Casos de Uso 
+	Felipe 
+	03/08/25  
+	2.0
+	Inserção do documento de visão
+	Caio 
+	03/08/25  
+	2.0
+	Inserção do Diagrama de Classes
+	Pedro 
+
+
+	03/08/25 
+	2.0 
+	Inserção dos Diagramas de sequência
+	Pedro 
+	03/08/25  
+	2.0
+	Inserção das Máquinas de Estado 
+	Samuel 
+	03/08/25  
+	2.0
+	Inserção do Diagrama de Atividades 
+	Samuel 
+	03/08/25 
+
+
+	2.0
+	Adição das Telas de Prototipagem 
+	Samuel 
+	03/08/25   
+	2.0
+	Reinserção dos artefatos de análise 
+	Samuel
+	03/08/25  
+	2.0
+	Inserção de alguns diagramas de sequência 
+	Samuel 
+	07/08/25  
+	3.0
+	Revisão dos requisitos funcionais 
+	Pedro 
+	23/08/25
+	3.0 
+	Revisão dos artefatos de análise 
+	Felipe
+
+
+	23/08/25   
+	3.0
+	Correção dos diagramas de sequência
+	Felipe 
+	23/08/25 
+	3.0
+	Adição do modelo de dados e DER 
+	Felipe 
+	23/08/25   
+	3.0
+	Revisão dos requisitos não funcionais
+	Pedro 
+
+
+	23/08/25  
+	3.0
+	Correção do Diagrama de Atividades 
+	Samuel 
+
+
+	24/08/25  
+	3.0
+	Inserção de mais sistemas similares existentes no mercado 
+	Samuel 
+	24/08/25  
+	3.0
+	Adição da Situação atual
+	Felipe 
+	24/08/25   
+	3.0
+	Adição de Requisitos Inversos
+	Samuel 
+
+
+	24/08/25   
+	3.0
+	Adição do Diagrama de Classes de Projeto 
+	Samuel
+	24/08/25  
+	3.0 
+	Correção das Telas do Protótipo
+	Samuel 
+	24/08/25  
+	3.0
+	Adição da situação atual 
+	Caio 
+	24/08/25  
+	3.0
+	Adição dos Planejamentos do Projeto (Artefatos Scrum) 
+	Samuel
+	24/08/25  
+	3.0
+	Revisão das estórias dos usuários 
+	Pedro 
+	24/08/25  
+	3.0
+	Adição de Comparativo de Mercado 
+	Caio
+	24/08/25
+	3.0 
+	Regras de negócios e Modelo de negócios 
+	Felipe
+
+
+	09/11/25
+	4.0
+	Refatoração do Escopo do Projeto: 
+introdução revisada, visão geral do produto e projeto revisados, sistemas relacionados revisados, atores a histórias dos usuários revisados e requisitos funcionais (rf) revisados.
+
+
+	Gyannine C. G. dos Santos
+	09/11/25
+	4.0
+	PROTOTIPAÇÃO DAS TELAS
+	Caio
+	18/12/25
+	4.0
+	Requisitos não funcionais
+	José Luciano
+	
+
+	
+
+	
+
+	
+
+	
+
+Sumário
+
+
+1.        INTRODUÇÃO REVISADA        5
+1.1        Objetivo do Projeto        5
+1.2        Convenções, termos e abreviações        5
+2.        VISÃO GERAL DO PRODUTO E PROJETO REVISADOS        5
+2.1        Problema        5
+2.2        Principais Stakeholders e Usuários        5
+2.3        Documento de Visão        5
+3.        SISTEMAS RELACIONADOS REVISADOS        6
+3.1        Situação atual        7
+3.2        Sistemas similares existente no mercado        7
+4.        ATORES A HISTÓRIAS DOS USUÁRIOS REVISADOS        7
+5.        REQUISITOS FUNCIONAIS (RF) REVISADOS        7
+5.1        <Nome da subseção para agrupar requisitos relacionados>        8
+5.2        Modelo de Negócios <Processo de negócio modelado em BPMN>        8
+[RFXX001] <Nome do requisito>        8
+6.        REQUISITOS NÃO-FUNCIONAIS (RNF) REVISADOS        8
+6.1        Usabilidade        8
+[NFUS001] Interface Intuitiva        9
+[NFUS002] Conforto sensorial da interface        9
+6.2        Confiabilidade        9
+[NFCO001] Disponibilidade de botão de suporte        9
+6.3        Desempenho        10
+[NFDM001] Tempo de resposta a interações        10
+[NFDM002] Funcionamento de modo online e offline
+[NFDM003] Eficiência de uso de recursos 
+6.4        Segurança        10
+[NFSG001] Autenticação segura        10
+[NFSG002] Proteção de dados em trânsito e em repouso
+[NFSG003] Proteção de dados LGPD        10
+6.5        Implantação        11
+[NFIM001] Implantação Web Responsiva        11
+6.6        Padrões        11
+[NFPA001] Alinhamento de Práticas baseadas em Evidências (PBE)        12
+6.7        Hardware e software        12
+[NFHS001] Compatibilidade com sistemas operacionais        12
+7.        REQUISITOS INVERSOS (RIN) REVISADOS        12
+8.        ARTEFATOS DE ANÁLISE REVISADOS        12
+8.1        Diagrama de Use Case        13
+8.2        Diagrama de Classes (Modelo de Domínio)        13
+8.3        Diagramas de Sequência        13
+9.        PROTÓTIPO DAS TELAS REVISADOS        13
+10.        PLANEJAMENTO DO PROJETO        13
+10.1        Planos do Projeto (artefatos segundo SCRUM)        13
+REFERÊNCIAS        17
+
+
+
+
+1. Introdução Revisada
+Esta seção é utilizada para descrever os objetivos do documento e o público ao qual ele se destina. 
+   1. Objetivo do Projeto
+Desenvolver o "SAPEA - Módulo Transições e Rupturas", uma plataforma de software assistivo (Tecnologia Assistiva) destinada a apoiar crianças no Transtorno do Espectro Autista (TEA), seus pais e equipes escolares.
+Para alcançar este objetivo, o SAPEA irá digitalizar e integrar Práticas Baseadas em Evidências (PBEs) já consolidadas, como Suporte Visual, Histórias Sociais e modelagem (Tours Virtuais), em um canal de comunicação unificado e proativo. O propósito final do sistema é mitigar o estresse e reduzir significativamente a incidência e a intensidade de crises comportamentais (como meltdowns ou shutdowns), que frequentemente ocorrem devido à dificuldade intrínseca de processar mudanças e transições na rotina escolar.
+A visão do sistema é, portanto, transformar esses momentos de transição, hoje vistos majoritariamente como fontes de crise, em oportunidades estruturadas de aprendizado, previsibilidade e fomento da autonomia da criança.
+   2. Convenções, termos e abreviações
+A correta interpretação deste documento exige o conhecimento de algumas convenções e termos específicos e abreviações, que são descritos a seguir (em ordem alfabética).
+● BPMN: Business Process Model and Notation, padrão usado para modelagem de processos de negócio; 
+● RF: Requisitos Funcionais; 
+● RNF: Requisitos Não-Funcionais; 
+● RI: Requisitos Inversos; 
+● Stakeholders: Qualquer indivíduo, grupo ou organização que influencia ou é afetado direta ou indiretamente pelo desenvolvimento, uso ou manutenção de um sistema de software; 
+● TEA: Transtorno do Espectro Autista. Condição do neurodesenvolvimento que afeta a comunicação, comportamento e interação social. 
+● PBE: Práticas Baseadas em Evidências (ex: Histórias Sociais, Suporte Visual).
+
+
+2. Visão Geral do Produto e Projeto Revisados
+Incluir um breve histórico dos setores e áreas envolvidos com o projeto, indicando os principais objetivos, usuários e metas.
+   3. Problema
+Descrever o problema principal do cliente, identificando todos os envolvidos (stakeholders), o impacto esperado no setor quando o software estiver em funcionamento e os benefícios esperados para a solução escolhida.
+O desenvolvimento do SAPEA tem como foco principal responder a uma demanda crítica e específica no apoio a crianças no espectro autista: a gestão da ansiedade gerada por transições e rupturas na rotina escolar. Crianças no TEA frequentemente possuem uma necessidade de previsibilidade, que os métodos tradicionais (como agendas físicas ou quadros de velcro) não conseguem suprir de forma dinâmica, gerando desafios não apenas para as crianças acometidas, mas também para professores e familiares.
+Diante desse cenário, o sistema proposto visa impactar diretamente essas crianças (usuários finais), oferecendo-lhes uma ferramenta de antecipação que respeite seu tempo e forma de processamento. Indiretamente, professores e pais/cuidadores (usuários principais) também se beneficiam, ao contar com uma ferramenta capaz de unificar a comunicação e transformar o gerenciamento de rotina de reativo para proativo.
+A proposta surge a partir da identificação de lacunas relevantes no apoio atual: a dificuldade de ferramentas estáticas em lidar com rupturas inesperadas da rotina (ex: professora substituta, dia de chuva); a escassez de recursos de preparação para novos ambientes; e, o mais crítico, a falha de comunicação crônica entre escola e família, que impede uma abordagem unificada e antecipatória.
+
+Para mitigar tais obstáculos, o sistema integra Práticas Baseadas em Evidências (PBEs), como Suporte Visual (agendas) e Histórias Sociais, em uma plataforma digital interativa. O objetivo é promover a autonomia da criança e reduzir a sobrecarga cognitiva, facilitando sua inclusão e pleno acesso ao ambiente pedagógico, contribuindo assim para seu desenvolvimento social e emocional.
+Dessa forma, propõe-se a criação de um ecossistema digital (móvel e web) interativo que utiliza elementos visuais e recursos adaptativos para apoiar a previsibilidade. Esse sistema deverá possibilitar o registro de crises (via "Botão SOS") para futura análise de padrões, promover a preparação antecipada (com "Tours Virtuais 360°") e integrar educadores e responsáveis em um processo colaborativo e em tempo real.
+Para isso, contará com uma interface intuitiva e sensorialmente amigável (personalizável em cores e fontes). Oferecerá conteúdos interativos (como Histórias Sociais digitais e "Kits de Regulação Emocional") e permitirá a personalização da rotina. O sistema gerará relatórios de padrões (como "Mapas de Calor de Ansiedade") e oferecerá o "Hub de Comunicação Sincronizada" como seu principal canal de comunicação.
+   4. Principais Stakeholders e Usuários
+Essa seção será detalhada no documento termo de atribuição de papéis e responsabilidades no projeto/software.
+Papel
+	Responsabilidades
+	Stakeholders
+	Desenvolvedor
+	Responsável por projetar, programar e testar o software conforme as especificações, garantindo usabilidade e acessibilidade para o público-alvo
+	
+
+	Product Owner (P.O.)
+	Define as necessidades do sistema, orienta a equipe técnica durante o desenvolvimento e avalia a qualidade do produto final. 
+	Profª Drª Adicinéia Oliveira
+	Usuário Principal
+	Gerenciam o calendário escolar, criam alertas de transição e registram eventos.
+	Professores/Equipe Escolar
+	Usuário Principal
+	Acompanham o progresso das crianças por meio do sistema, utilizando os recursos disponíveis para complementar o aprendizado em casa. 
+	Pais e responsáveis das crianças no espectro autista 
+	Usuário Principal
+	Consome o conteúdo (rotinas, histórias, tours) e usa o kit de regulação.
+	Crianças no espectro autista em idade escolar.
+	   5. Documento de Visão 
+Essa seção resume as necessidades do dono do produto e as características esperadas do produto de software a ser desenvolvido. Representa um resumo das entrevistas realizadas.
+
+
+Quadro 1 – Modelo do Documento de Visão.
+Modelo do Documento de Visão
+	Nome do Produto: 
+	Público-alvo: 
+Usuários Finais: Crianças no Transtorno do Espectro Autista (TEA) em idade escolar.
+Usuários Principais (Clientes): Pais/Cuidadores e Professores/Equipe Escolar.
+	Problema/Necessidade:
+A dificuldade neurológica de crianças no TEA em processar mudanças, levando a alta ansiedade e crises (meltdowns/shutdowns) durante transições e rupturas na rotina escolar. Este problema é agravado pela comunicação falha e dessincronizada entre pais e escola, que impede uma preparação proativa e unificada.
+
+
+	Características-chave:
+
+
+Calendário Visual Unificado: Agenda visual de rotinas (casa e escola) sincronizada em tempo real.
+
+Hub de Comunicação Sincronizada: Espelhamento em tempo real de eventos e status (ex: nível de estresse) entre pais e professores.
+
+Toolkit de Preparação: Ferramentas para criação de Histórias Sociais digitais e upload/visualização de Tours Virtuais de novos ambientes.
+
+Sistema Preditivo (Baseado em IA/Regras): Análise de dados de crises para identificar "mapas de calor" de transições difíceis e sugerir intervenções.
+
+Suporte de Crise Imediato: "Botão SOS" para registro rápido de crises e "Kit de Regulação Emocional" (temporizadores visuais).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	Condições Gerais de Satisfação (Critérios para aceitação): 
+Usabilidade (RNF): A interface da criança deve ser sensorialmente amigável (fontes, cores personalizáveis) e navegável com mínimo auxílio de adultos. TORNAR MENSURAVEL
+Desempenho (RNF): A sincronização de um evento crítico (ex: "Mudança de Rotina") deve ser refletida no app dos cuidadores em menos de 5 segundos (em rede estável).
+Confiabilidade (RNF): O "Kit de Regulação" e a rotina do dia devem estar acessíveis em modo offline.
+
+
+	Diferenciais: 
+Sincronização Ativa Casa-Escola (Hub): Diferente de agendas estáticas, o SAPEA unifica pais e professores em tempo real na mesma rotina, fechando a lacuna de comunicação.
+Foco Preditivo (e não Reativo): O sistema não apenas registra rotinas, mas usa dados de crises para antecipar e preparar para futuros gatilhos de estresse.
+
+
+
+
+	Premissas, Riscos e Impedimentos:
+
+
+* Premissa (P): Pais e professores estão dispostos a alimentar o sistema com dados (eventos, status, crises) em troca de maior previsibilidade.
+* Risco (R) - Adoção: O maior risco. Se o app não for extremamente simples e rápido, os usuários (sobrecarregados) não o utilizarão, tornando-o inútil.
+* Risco (R) - Infraestrutura: Dependência de conectividade de internet nas escolas para a sincronização em tempo real.
+* Risco (R) - UX/UI: Falha em criar uma interface sensorialmente adequada para o usuário final (criança), tornando o app um distrator em vez de um apoio.
+* Impedimento (I): Falta de acesso a dispositivos móveis (tablets/smartphones) pela criança ou pela equipe escolar.
+	Expectativas de Prazo: 
+	Expectativas de Custo:
+	Elaborado por:
+
+
+	Aprovado por (Dono do Produto):
+Profa. Dra. Adicinia A. de Oliveira 
+	3. Sistemas Relacionados Revisados
+Essa seção apresenta como os sistemas e subsistemas da organização estão relacionados atualmente e quais serão os subsistemas depois de terminado o desenvolvimento da solução proposta, bem como, o levantamento das soluções similares que existem no mercado.
+   6. Situação atual
+O atendimento a crianças com Transtorno do Espectro Autista (TEA) no ambiente escolar envolve diferentes níveis de responsabilidade. A Secretaria de Educação define políticas de inclusão, oferece formações e disponibiliza recursos. A gestão escolar implementa essas diretrizes, organiza a equipe e garante acessibilidade. O professor, em sala de aula, aplica práticas inclusivas, faz adaptações e acompanha o desenvolvimento do estudante, com a ajuda da equipe de apoio quando necessário. Disciplina de Engenharia de Software I – 2025-1 Página 9 de 53 Sistema de Apoio Pedagógico Digital Personalizado para Crianças no Espectro Autista com Recursos Visuais Interativos ES I 2025-1 Documento de Visão, Análise e Planejamento Versão 3.0 Apesar desses esforços, ainda há limitações quanto ao acompanhamento individualizado e à utilização de ferramentas digitais específicas para apoiar o processo pedagógico. A comunicação entre escola e família, bem como a personalização do ensino, são pontos críticos que carecem de maior suporte tecnológico.
+  
+
+   7. Sistemas similares existente no mercado
+
+
+Tabela Comparativa de Aplicativos de Apoio a Pessoas com TEA (Transtorno do Espectro Autista)
+
+
+Nº
+	Aplicativo/Plataforma
+	Tipo/Foco Principal
+	Pontos Positivos
+	Limitações
+	Link de Acesso
+	1
+	Proloquo2Go
+	Comunicação Aumentativa e Alternativa (CAA) com símbolos visuais.
+	Interface acessível e personalizável.
+	Focado estritamente na comunicação, sem foco pedagógico/ensino.
+	https://www.assistiveware.com/products/proloquo2go
+	2
+	Zac Browser
+	Navegador infantil adaptado para crianças autistas (vídeos e jogos).
+	Ambiente visual seguro.
+	Não oferece conteúdo pedagógico estruturado.
+	https://www.zacbrowser.com/
+	3
+	AutiSpark
+	Plataforma educacional com jogos (matemática, linguagem, habilidades sociais).
+	Conteúdo adaptado especificamente para o espectro autista.
+	Apenas em inglês; requer pagamento (versão paga).
+	https://play.google.com/store/apps/details?id=com.touchzinggame.autispark
+	4
+	Livox
+	Aplicativo brasileiro de CAA (comunicação por figuras/cartões).
+	Interface extremamente simples e intuitiva; baixo custo; em português; ideal para introdução à comunicação com figuras e crianças mais novas.
+	Funcionalidades limitadas ao básico.
+	https://www.livox.com.br/
+	5
+	Matraquinha
+	Software de CAA para tablets/smartphones (criação de pranchas de comunicação personalizadas).
+	Desenvolvimento e suporte em português (Brasil); totalmente customizável; algoritmo de IA para sugestão de símbolos; utilizado por escolas e terapeutas.
+	Assistência restrita à comunicação.
+	https://www.matraquinha.com.br
+	6
+	Jade Autism
+	Plataforma gamificada que estimula funções cognitivas (memória, atenção, raciocínio).
+	Desenvolvido no Brasil; forte foco em coleta e análise de dados para acompanhamento terapêutico (baseado em ABA); gamificado.
+	Não oferece funcionalidade de comunicação; inadequado para ensino de conteúdo curricular escolar (foco apenas no estímulo cognitivo).
+	https://www.jadeautism.com/
+	7
+	Goally
+	Sistema (dispositivo físico + apps) para criação de rotinas visuais, listas de tarefas, temporizadores e sistema de recompensas.
+	Foco total em funções executivas (planejamento, rotina), um grande desafio no autismo; altamente visual e interativo; rotinas personalizáveis.
+	Requer hardware específico; funciona por assinatura; conteúdo principal em inglês; não auxilia no ensino de conteúdos curriculares escolares.
+	https://getgoally.com/
+	
+
+3.3 Comparativo de posicionamento do SAPEA
+
+Embora tais soluções tragam avanços importantes, observa-se que a maioria foca em comunicação (Proloquo2Go, Livox, Matraquinha) ou em estimulação cognitiva (Jade Autism, Autispark), deixando lacunas quanto à integração pedagógica em ambiente escolar. Além disso, muitas delas não contemplam relatórios pedagógicos alinhados A Base Nacional Comum Curricular (BNCC), nem oferta a comunicação estruturada entre professores, gestores e familiares, diferenciais que estão presentes com o SAPEA 
+
+
+4. Atores e Histórias dos Usuários Revisados
+
+
+Essa seção apresenta todos os atores da aplicação, bem como, as principais estórias dos usuários. Cada ator representa um papel particular de usuário da aplicação. Porém, além de representar pessoas, os atores também podem ser dispositivos de hardware ou até outras aplicações que devam trocar informações com a aplicação a ser desenvolvida. A lista a seguir descreve brevemente cada ator da aplicação.
+
+
+Ator
+	Descrição
+	Crianças no espectro autista em idade escolar.
+	Usuário final da aplicação. Crianças no espectro autista que irão interagir com recursos visuais, atividades e notificações
+	Equipe escolar
+	Mantêm calendário escolar e mantêm alertas de transição.
+	Pais/Responsáveis 
+	Auxiliam a criança no uso do sistema em casa e acompanham seu desenvolvimento por meio de relatórios e notificações. 
+	
+
+
+
+Eu como...
+	Gostaria de...
+	Para..
+	Equipe escolar 
+	Manter calendário escolar.
+	que os pais sejam notificados automaticamente e preparem a criança em casa.
+
+
+	Equipe escolar 
+	Manter histórico de crises das crianças no TEA cadastradas.
+	identificar padrões (ex: "as crises sempre ocorrem às terças, 10h") e discutir mudanças estruturais com os professores.
+	Equipe escolar 
+	Manter transições no calendário com "gradação de mudança" (ex: nível de risco Alto/Vermelho)
+	que o sistema e os pais saibam que essa transição específica exige um esforço de prevenção maior.
+	Equipe escolar 
+	registrar uma estratégia que funcionou (ex: "Ouvir música") no Histórico Compartilhado.
+	que os pais saibam o que funciona na escola e para que o sistema recomende essa estratégia no futuro.
+	Pai/Responsável 
+	Visualizar calendário escolar e alertas de transição.
+	poder me antecipar, preparar meu filho em casa e alinhar minha rotina com a da escola, evitando surpresas.
+	Pai/Responsável 
+	Visualizar transições no calendário com "gradação de mudança" (ex: nível de risco Alto/Vermelho).
+	saber quais transições são mais críticas e onde devo focar meu esforço de preparação (ex: usar uma História Social).
+	Pai/Responsável 
+	Visualizar histórico de crises da criança associada a mim.
+	entender quais são os gatilhos do meu filho, validar o que a escola está registrando e acompanhar se as estratégias de prevenção estão funcionando.
+	Criança no espectro autista em idade escolar.
+	Visualizar minha rotina em uma linha do tempo com ícones grandes e claros, que mostram o "Agora" e o "Depois".
+	me sentir seguro e entender o que vai acontecer no meu dia, sem precisar perguntar a um adulto.
+	Criança no espectro autista em idade escolar.
+	Visualizar ambientes da escola
+	saber como são antes de ir e diminuir o medo do desconhecido.
+	Criança no espectro autista em idade escolar.
+	Visualizar transições de maneira gamificada (com uma barra que diminui ou um círculo que se fecha)
+	entender visualmente quanto tempo (ex: 5 minutos) eu ainda tenho no tablet antes de ter que ir para o banho, tornando a transição mais fácil.
+	Criança no espectro autista em idade escolar.
+	Acionar o "Botão de Ajuda"
+	sinalizar para meu professor(a) que estou me sentindo sobrecarregado, mesmo que eu esteja quieto por fora (em shutdown) e não consiga falar.
+	
+
+5. Requisitos Funcionais (RF) Revisados
+
+
+Essa seção apresenta todos os requisitos funcionais da aplicação, que devem ser identificados e mapeados a partir das histórias identificadas. Incluir a planilha com as histórias dos usuários na seção anterior.
+
+
+5.1 Gestão de Rotina
+Esta subseção agrupa os requisitos relacionados ao agendamento, manutenção e visualização das atividades diárias e eventos escolares. O foco é garantir a previsibilidade para todos os atores envolvidos.
+
+
+[RF001] Manter Calendário Escolar
+
+
+
+
+Prioridade: 
+	☒ 
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Equipe Escolar
+	Requisitos associados:
+	 RF004, RF006
+	Objetivo:
+	Manter (criar, editar, visualizar e excluir) os eventos do calendário escolar. O sistema deve permitir que a Equipe Escolar marque transições com uma "gradação de mudança" (nível de risco).
+	
+
+[RF002] Visualizar Calendário Escolar
+
+
+
+
+Prioridade: 
+	☒ 
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Pai/Responsável
+	Requisitos associados:
+	RF001
+	Objetivo:
+	O sistema deve permitir que o Pai/Responsável visualize o calendário escolar da criança, incluindo alertas de transição e a "gradação de mudança" (nível de risco) definida pela escola.
+	 
+
+
+
+
+
+
+
+
+5.2 Gestão de Crises
+Esta subseção reúne os requisitos focados no registro, monitoramento e sinalização de crises comportamentais e estratégias de regulação. O objetivo é transformar eventos de crise em dados para aprendizado e prevenção futura.
+
+
+[RF003] Manter Histórico de Crises
+
+
+
+
+Prioridade: 
+	☒ 
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Equipe Escolar
+	Requisitos associados:
+	RF004
+	Objetivo:
+	Manter (criar, editar, visualizar e excluir) o registro de crises associado a uma criança. O sistema deve permitir que a Equipe Escolar registre a estratégia que funcionou (ex: "Ouvir música") para que os pais possam visualizar e o sistema possa usar esse dado futuramente.
+	
+
+[RF004] Visualizar Histórico de Crises 
+
+
+
+
+Prioridade: 
+	☒ 
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Pai/Responsável
+	Requisitos associados:
+	RF003
+	Objetivo:
+	O sistema deve permitir que o Pai/Responsável visualize o histórico de crises da sua criança, incluindo as estratégias que funcionaram, para acompanhar o desenvolvimento e alinhar as abordagens.
+	
+
+[RF004] Acionar Botão de Suporte
+
+
+
+
+Prioridade: 
+	☒ 
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Criança
+	Requisitos associados:
+	RF003, RF004
+	Objetivo:
+	Permitir que a Criança acione o "Botão de Suporte" para sinalizar à Equipe Escolar e Pai/responsável que está se sentindo sobrecarregada. O acionamento deve notificar o professor e criar um registro automático no histórico.
+	
+
+5.3 Preparação de Ambientes
+Esta subseção agrupa os requisitos relacionados à familiarização da criança com os espaços físicos da escola, utilizando recursos visuais para reduzir a ansiedade do desconhecido.
+[RF005] Manter Ambientes Escolares
+
+
+
+
+Prioridade: 
+	☐
+	Essencial
+	☒ 
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Equipe Escolar
+	Requisitos associados:
+	RF006
+	Objetivo:
+	O sistema deve permitir manter (cadastrar, visualizar, editar, excluir) os "Tours Virtuais" (fotos dos ambientes escolares). O sistema deve permitir que a Equipe Escolar gerencie os ambientes escolares.
+	
+
+[RF006] Visualizar Ambientes 
+
+
+
+
+Prioridade: 
+	☐
+	Essencial
+	☒ 
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	 Criança e Pai/Responsável
+	Requisitos associados:
+	RF005
+	Objetivo:
+	O sistema deve permitir que a Criança e Pai/Responsável possam visualizar ambientes da escola para se preparar antecipadamente para transições entre locais, diminuindo o medo do desconhecido.
+	5.4  Administração e Configuração
+
+
+[RF007] Manter Perfil da Criança
+
+
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐ 
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	 Professor/Equipe Escolar e Pai/Responsável
+	Requisitos associados:
+	Não há
+	Objetivo:
+	O sistema deve permitir o cadastro de crianças e o vínculo entre os perfis de "Responsável" e "Professor" a uma criança específica. 
+	[RF008] Gerenciar Personalização Sensorial
+
+
+
+
+Prioridade: 
+	☐
+	Essencial
+	☐ 
+	Importante
+	☒
+	Desejável
+	Ator(es):
+	 Professor/Equipe Escolar e Pai/Responsável
+	Requisitos associados:
+	Não há
+	Objetivo:
+	O sistema deve permitir configurar a paleta de cores, ícones e fontes da interface da criança para evitar sobrecarga sensorial.
+	[RF009] Sincronização em Tempo Real
+
+
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐ 
+	Importante
+	☐
+	Desejável
+	Ator(es):
+	Sistema 
+	Requisitos associados:
+	Não há
+	Objetivo:
+	O sistema deve disparar notificações push imediatas para os responsáveis e professores quando um evento crítico (ex: "Mudança de Rotina" ou "Acionamento do botão de suporte") ocorrer.
+	Modelo de Negócios Revisado
+  
+
+
+
+6. Requisitos Não-Funcionais (RNF) Revisados
+Nesta seção estão descritos os requisitos não funcionais da solução SAPEA
+   8. Usabilidade
+Esta seção descreve os requisitos não-funcionais associados à facilidade de uso da aplicação.
+[NFUS001] Interface Intuitiva
+A interface do sistema deve atender os requisitos de usabilidades definidos pelas normas ISO 9241-11:2018 e ISO/IEC 25010:2011, assegurando que um novo usuário consiga realizar as principais tarefas (cadastro, consulta e atualização de dados) com no máximo 2 erros críticos e tempo de aprendizado inferior a 30 minutos, que a taxa de sucesso na execução das tarefas principais seja de pelo menos 90% entre usuários sem treinamento prévio e que a interface siga boas práticas de consistência, feedback e prevenção de erros, conforme descrito nas normas. 
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	RF008
+	
+
+[NFUS002] Conforto sensorial da interface
+O sistema deve atender às diretrizes de acessibilidade da WCAG 2.1 (Seção 2.3) e aos princípios de ergonomia das norma ISO 9241-112:2017, garantindo que nenhum elemento visual pisque ou alterne mais de 3 vezes por segundo, prevenindo riscos de desconforto ou crises epilépticas, que animações sejam usadas apenas quando tiverem função informativa ou de feedback, podendo ser desativadas pelo usuário. Ao atender às normas, o sistema também deve garantir que, sons tenham nível de volume configurável, não devendo ultrapassar o nível padrão definido pelo sistema operacional e que a interface evite elementos visuais ou auditivos que causem sobrecarga sensorial, promovendo conforto e acessibilidade para crianças.
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	RF008
+	
+
+   9. Confiabilidade
+Esta seção descreve os requisitos não-funcionais associados à frequência e severidade de falhas da aplicação e habilidade de recuperação das mesmas. 
+[NFCO001] Disponibilidade do Botão De Suporte
+O módulo do "Botão de Suporte" deve ter uma disponibilidade de 90% durante o horário escolar, garantindo que o pedido de ajuda da criança seja sempre processado localmente.
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF004], [RF009]
+	
+
+   10. Desempenho
+Esta seção descreve os requisitos não-funcionais associados à eficiência, uso de recursos e tempo de resposta da aplicação.
+[NFDM001] Tempo de resposta a interações
+O sistema deverá ser ágil para atender às necessidades da criança e do cuidador, sendo necessário que o tempo de resposta não ultrapasse 1 segundo. 
+
+
+Prioridade: 
+	☐
+	Essencial
+	☒
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF009] 
+	[NFDM002] Funcionamento em modo online e offline. 
+O sistema reservará espaço de memória no dispositivo para armazenar os dados pedagógicos das crianças e fará sincronização na nuvem quando houver conexão. A sincronização com a nuvem deve ocorrer automaticamente em até 5 minutos após a detecção de conexão estável, sem perda de dados. O usuário poderá forçar uma sincronização manual a qualquer momento. Será oferecida a possibilidade de backup local e backup em nuvem, visando maior resiliência. 
+
+
+Prioridade: 
+	☐
+	Essencial
+	☒
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF005] ,[RF006] 
+	
+
+[NFDM003] Eficiência de uso de recursos 
+O sistema deve atender à subcaracterística de utilização de recursos definida na ISO/IEC 25010:2011, garantindo baixo consumo de bateria e uso eficiente de memória durante a execução. O consumo médio de CPU não deve ultrapassar 15% em execução normal (telas e operações pedagógicas básicas). O consumo de memória RAM não deve ultrapassar 200 MB em condições normais de uso. O espaço ocupado em armazenamento local não deve exceder 50 MB, desconsiderando dados pedagógicos das crianças. 
+
+
+Prioridade: 
+	☐
+	Essencial
+	☐
+	Importante
+	☒
+	Desejável
+	Requisitos funcionais associados:
+	[RF009] 
+	
+
+   11. Segurança
+Esta seção descreve os requisitos não-funcionais associados à integridade, privacidade e autenticidade dos dados da aplicação. 
+[NFSG001] Autenticação segura 
+O sistema deverá implementar autenticação baseada em credenciais únicas de usuário, com senhas armazenadas utilizando algoritmos de hash criptográfico robusto, garantindo proteção contra acessos não autorizados. 
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF009] 
+	[NFSG002] Proteção de dados em trânsito e em repouso 
+Todas as comunicações entre cliente e servidor deverão ser realizadas por meio de protocolo seguro (HTTPS/TLS 1.3 ou superior), e os dados armazenados localmente ou na nuvem deverão ser criptografados com AES-256 ou equivalente, prevenindo interceptação ou exposição de informações sensíveis. 
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF009] 
+	[NFSG003] Proteção de Dados (LGPD)
+Todos os dados sobre crises, comportamento e rotinas devem ser criptografados em trânsito (TLS 1.3) e em repouso (AES-256), conforme a LGPD.
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF001], [RF007]  
+	
+
+   12. Implantação
+Esta seção descreve os requisitos não-funcionais associados à implantação da solução.
+[NFIM001] Implantação Web Responsiva
+ deve ser implantado como uma aplicação Web Responsiva, acessível via navegadores modernos (Chrome, Firefox, Edge) sem necessidade de instalação local
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	[RF009] 
+	
+
+   13. Padrões
+Esta seção descreve os requisitos não-funcionais associados a padrões ou normas que devem ser seguidos pela aplicação ou pelo seu processo de desenvolvimento. 
+[NFPA001] Alinhamento com Práticas Baseadas em Evidências (PBE)
+As intervenções sugeridas pelo sistema (ex: Histórias Sociais, Temporizadores Visuais) devem seguir os protocolos de PBE reconhecidos para o tratamento do TEA.
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	
+
+	
+
+   14. Hardware e software
+Esta seção descreve os requisitos não funcionais associados ao hardware e software usados para desenvolver ou para executar a aplicação. 
+[NFHS001] Compatibilidade com Sistemas Operacionais
+O sistema deverá rodar em dispositivos android e IOS, sejam Smartphones ou Tablets. As versões deverão ser Android 15 (API 35) e IOS17, compilado com SDK IOS 18.
+
+
+Prioridade: 
+	☒
+	Essencial
+	☐
+	Importante
+	☐
+	Desejável
+	Requisitos funcionais associados:
+	
+
+	
+
+7. Requisitos Inversos (RIN) Revisados
+
+
+ID
+	Descrição
+	Prioridade
+	[RI001] Compartilhamento de Dados entre Perfis
+	O sistema não deverá, sob nenhuma circunstância, permitir que dados de progresso, rotina, perfil ou qualquer informação de uma criança sejam visualizados ou acessados por pais, responsáveis ou professores que não estejam explicitamente associados àquele perfil específico.
+	Essencial
+	[RI002] Diagnóstico Clínico
+	O sistema não deverá fornecer diagnósticos, laudos clínicos ou pareceres psicológicos sobre o Transtorno do Espectro Autista ou qualquer outra condição.
+	Essencial
+	[RI003] Substituição de Terapia ou Ensino Profissional
+	O sistema não deverá ser apresentado ou funcionar como um substituto para a intervenção de terapeutas qualificados, fonoaudiólogos, psicólogos ou para o currículo escolar formal definido pela BNCC.
+	Essencial
+	[RI004] Exibição de Publicidade
+	O sistema não deverá exibir anúncios publicitários, banners ou qualquer tipo de marketing de produtos de terceiros em suas interfaces, especialmente nas telas destinadas à interação com a criança.
+	Essencial
+	[RI005] Interação entre Crianças
+	O sistema não deverá funcionar como uma rede social, não permitindo a comunicação direta, aberta ou não supervisionada entre os perfis das crianças usuárias.
+	Essencial
+	[RI006] Modo Offline
+	O sistema não deverá descartar ou sobrescrever automaticamente dados de progresso registrados em modo offline em caso de falha ou conflito na sincronização com a nuvem.
+	Importante
+	[RI007] Autenticação Obrigatória
+	O sistema não deverá permitir o acesso de usuários sem autenticação, garantindo que apenas pessoas devidamente cadastradas possam utilizar suas funcionalidades.
+	Essencial
+	[RI008] Criptografia de Dados Pessoais
+	O sistema não deverá armazenar dados pessoais em formato não criptografado, assegurando conformidade com a LGPD e a proteção contra acessos indevidos.
+	Essencial
+	[RI009] Estímulos Visuais Inadequados
+	O sistema não deverá utilizar elementos visuais que piscam em alta frequência, garantindo acessibilidade e evitando desconfortos sensoriais.
+	Essencial
+	[RI010] Funcionalidade Offline
+	O sistema não deverá exigir conexão constante com a internet para funcionalidades críticas, permitindo que parte das atividades seja realizada em modo offline.
+	Desejável
+	[RI011] Exclusão de Registros
+	O sistema não deverá permitir a exclusão permanente de registros sem uma etapa de confirmação, prevenindo perdas acidentais de informações pedagógicas.
+	Essencial
+	
+
+
+
+8. Artefatos de Análise Novos e Revisados
+Esta seção apresenta os arquivos em que estão documentadas as informações geradas pela Análise.
+   15. Diagrama de Use Case
+
+
+  
+
+   16. Diagrama de Classes (Modelo de Domínio)
+  
+
+   17. Diagramas de Sequência
+<Inserir aqui os Diagramas de Sequência – Um para cada Caso de Uso.>
+
+
+  
+
+   18. Diagrama de Máquina de Estados
+  
+
+   19. Diagrama de Atividades  
+   20. Diagrama de Classes de Projeto  
+   21. Modelo de Dados
+  
+
+
+
+9.        Protótipo das Telas Revisados
+Link do protótipo das telas: https://ocaiomnz.github.io/ES2/
+
+1 - Tela de Login
+  
+
+
+2 - Interfaces destinadas ao usuário criança
+2.1 - Tela Principal da Criança
+  
+
+2.2 - Tela Suporte a caminho
+  
+
+2.3 -Tela de visualização dos ambientes da unidade escolar 
+  
+
+
+
+3 - Interfaces destinadas ao usuário Equipe Escolar
+3.1- Painel de controle de crianças
+  
+
+3.2 - Painel de controle geral
+  
+
+4 - Interfaces destinadas ao usuário Pai/Responsável
+4.1 Painel de controle da criança associada
+  
+  
+  
+
+
+
+10.         Planejamento do Projeto 
+   1. Planos do Projeto (artefatos segundo SCRUM)
+
+
+________________
+Quadro 1 – Prioridade dos Requisitos.
+Prioridade
+	Requisitos
+	1
+Alta
+	  
+
+
+
+	2
+Média
+	  
+
+	
+
+Quadro 2 – Backlog do Produto 1.
+BACKLOG DO PRODUTO
+	BURNDOWN
+	  
+
+	Produto:SAPEA
+
+
+	Release:1
+
+
+	Requisitos:
+	(+) prioridade                 REQUISITOS                    (-) prioridade    
+	Não Planejado
+	  
+
+	
+
+	
+
+	
+
+	Impedimentos
+	
+
+	
+
+	
+
+Quadro 3 – Plano do Release 1.
+PLANO DO RELEASE
+	Produto: SAPEA
+	Release: 1  
+	Data Estimada de Entrega: Final do semestre
+	Metas: 
+Disponibilizar gestão de rotina escolar por meio de calendário visual
+Permitir o registro e acompanhamento de crises comportamentais
+Garantir sincronização em tempo real entre escola e responsáveis
+
+
+
+
+	Time de Projeto e % de alocação:
+Caio, Gyaninne, Pedro, Luciano: 25% cada
+	Quantidade e duração das Sprints:
+2 Sprints
+Duração de cada Sprint: 2 semanas
+
+
+	Esforço estimado: Aproximadamente 4 semanas de desenvolvimento acadêmico
+	Backlog do produto priorizado:
+RF001, RF002, RF003, RF004, RF009, RF007
+	Custo/Valor do Projeto: Projeto acadêmico, sem custo financeiro direto
+	  
+
+	Premissa: Engajamento dos usuários no uso da plataforma
+Risco: Baixa adoção devido à complexidade de uso
+Impedimento: Restrições de tempo e recursos acadêmicos
+	ScrumMaster:
+Caio Machado
+	Data:
+18/11
+	Aprovado por (Dono do Produto):
+
+
+	Data:
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Quadro 4 – Roadmap do Produto 1.
+Nome do Produto: SAPEA
+	Versão do Roadmap: 1.0 
+	Release 1
+	Requisitos
+	Valor/Benefício
+	PRD
+	Direcionador*
+	Data Início:
+11/10
+	RF001 – Manter Calendário Escolar
+	Garante previsibilidade da rotina escolar para a criança, reduzindo ansiedade
+	Documento de Visão
+	Necessidade de organização e antecipação de transições
+	RF002 – Visualizar Calendário Escolar
+	Permite que pais e crianças acompanhem a rotina de forma visual e intuitiva
+	Documento de Visão
+	Usabilidade e apoio à previsibilidade
+	Data Entrega:
+
+
+	18/12
+	
+
+	
+
+	
+
+	Elaborado por:
+Equipe de Desenvolvimento SAPEA
+	Aprovado por (Dono do Produto):
+
+
+	
+
+Quadro 5 - Sprint 1 do Release 1.
+Plano da Sprint
+	Meta da Sprint: Estruturação inicial do sistema e gestão de rotina
+	Duração: 2 semanas
+	Integrantes de Equipe:
+Caio
+Gyaninne
+Luciano
+Pedro
+	Data de Início: 08/11
+	Data de Encerramento: 22/11
+	Data de Revisão/Demo: 16/11
+	Definição de Pronto: 18/11
+	Requisitos Selecionados: RF001, RF002, RF007
+
+
+	Local e Horário das Reuniões Diárias: discord 9h
+	ScrumMaster: Gyannine
+	Dono do Produto: Prof: Adicineia 
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Quadro 6 – Detalhes da Sprint 1.
+Sprint: 
+	Meta: 
+	BACKLOG
+	EM ANDAMENTO
+	CONCLUÌDO
+	BURNDOWN
+	  
+
+	
+
+	
+
+	  
+
+	
+
+	
+
+	
+
+	IMPEDIMENTOS
+	ITENS NÃO PLANEJADOS
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+Referências
+
+
+Knight V, Sartini E, Spriggs AD. Evaluating visual activity schedules as evidence-based practice for individuals with autism spectrum disorders. J Autism Dev Disord. 2015 Jan;45(1):157-78. doi: 10.1007/s10803-014-2201-z. PMID: 25081593.
+
+
+
+
+
+
+Disciplina de Engenharia de Software I – 2025-1
+	Página  de
