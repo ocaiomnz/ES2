@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SAPEA - Lugares da Escola" />
+    <meta name="theme-color" content="#7B9ACC" />
+    <title>SAPEA - Lugares da Escola</title>
+    <link rel="stylesheet" href="../stylesheets/design-system.css" />
+    <link rel="stylesheet" href="../stylesheets/main.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="page-loading" class="page-loading">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Carregando ambientes...</p>
+    </div>
+
+    <div id="page-content" class="page-content">
+      <header class="page-header">
+        <a
+          href="telacrianca.html"
+          id="btn-voltar"
+          class="btn-icon"
+          aria-label="Voltar"
+          >←</a
+        >
+        <h1 class="page-title">Lugares da Escola</h1>
+        <a
+          href="login.html"
+          class="btn btn-secondary"
+          style="font-size: 0.875rem; padding: 0.25rem 0.5rem"
+          onclick="localStorage.removeItem('sapea_token'); localStorage.removeItem('sapea_crianca_id');"
+          >Sair</a
+        >
+      </header>
+      <main class="page-main" id="main-content">
+        <section class="card">
+          <h2 class="card-title">Ambientes (tours virtuais)</h2>
+          <div class="ambiente-grid" id="ambiente-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="../javascripts/api.js"></script>
+    <script>
+      (function () {
+        if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
+          return;
+        var loading = document.getElementById("page-loading");
+        var content = document.getElementById("page-content");
+        var gridEl = document.getElementById("ambiente-grid");
+        var btnVoltar = document.getElementById("btn-voltar");
+
+        if (
+          document.referrer &&
+          document.referrer.indexOf("telaresponsavel") >= 0
+        ) {
+          btnVoltar.href = "telaresponsavel.html";
+        } else {
+          btnVoltar.href = "telacrianca.html";
+        }
+
+        SAPEA_API.fetchAmbiente()
+          .then(function (data) {
+            var ambientes = data.ambientes || [];
+            gridEl.innerHTML = ambientes.length
+              ? ambientes
+                  .map(function (a) {
+                    return (
+                      '<div class="ambiente-card">' +
+                      '<div class="ambiente-icon">' +
+                      (a.icone || "🏫") +
+                      "</div>" +
+                      '<p class="ambiente-nome">' +
+                      (a.nome || "") +
+                      "</p>" +
+                      '<p class="ambiente-desc">' +
+                      (a.descricao || "") +
+                      "</p></div>"
+                    );
+                  })
+                  .join("")
+              : '<p class="text-center" style="color: var(--color-text-light);">Nenhum ambiente cadastrado.</p>';
+
+            loading.classList.add("hidden");
+            content.classList.add("ready");
+          })
+          .catch(function () {
+            loading.querySelector("p").textContent =
+              "Erro ao carregar. Tente de novo.";
+            setTimeout(function () {
+              loading.classList.add("hidden");
+              content.classList.add("ready");
+              gridEl.innerHTML =
+                '<p class="text-center" style="color: var(--color-text-light);">Nenhum ambiente cadastrado.</p>';
+            }, 2000);
+          });
+      })();
+    </script>
+  </body>
+</html>

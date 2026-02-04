@@ -41,5 +41,5 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  "include": ["src", "public/javascripts/main.js"]
+  "include": ["src", "src/infrastructure/public/javascripts/main.js"]
 }

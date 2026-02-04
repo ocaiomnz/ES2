@@ -1,30 +1,38 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { PrismaUsuarioRepository } from "../../database/PrismaUsuarioRepository.js";
+import { PrismaCriancaRepository } from "../../database/PrismaCriancaRepository.js";
 import { PasswordHasher } from "../../security/PasswordHasher.js";
 import { JwtService } from "../../security/JwtService.js";
 import { RegistrarUsuarioUseCase } from "../../../application/use-cases/auth/RegistrarUsuarioUseCase.js";
 import { LoginUseCase } from "../../../application/use-cases/auth/LoginUseCase.js";
 import { ObterUsuarioAutenticadoUseCase } from "../../../application/use-cases/auth/ObterUsuarioAutenticadoUseCase.js";
+import { VisualizarCriancaUseCase } from "../../../application/use-cases/VisualizarCriancaUseCase.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { TipoPerfilEnum } from "../../../domain/value-objects/TipoPerfil.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 const usuarioRepository = new PrismaUsuarioRepository(prisma);
+const criancaRepository = new PrismaCriancaRepository(prisma);
 const passwordHasher = new PasswordHasher();
 const jwtService = new JwtService();
 
 const registrarUsuarioUseCase = new RegistrarUsuarioUseCase(
   usuarioRepository,
-  passwordHasher,
+  passwordHasher
 );
 const loginUseCase = new LoginUseCase(
   usuarioRepository,
   passwordHasher,
-  jwtService,
+  jwtService
 );
 const obterUsuarioAutenticadoUseCase = new ObterUsuarioAutenticadoUseCase(
-  usuarioRepository,
+  usuarioRepository
+);
+const visualizarCriancaUseCase = new VisualizarCriancaUseCase(
+  criancaRepository,
+  usuarioRepository
 );
 
 /**
@@ -150,9 +158,29 @@ router.post("/auth/login", async (req, res) => {
 
     const resultado = await loginUseCase.execute({ email, senha });
 
+    let criancaId: string | undefined;
+    const perfisComCriancas = [
+      TipoPerfilEnum.RESPONSAVEL,
+      TipoPerfilEnum.PAI,
+      TipoPerfilEnum.PROFESSOR,
+    ];
+    if (
+      perfisComCriancas.includes(resultado.usuario.tipoPerfil as TipoPerfilEnum)
+    ) {
+      try {
+        const criancas = await visualizarCriancaUseCase.listarPorUsuario(
+          resultado.usuario.id
+        );
+        criancaId = criancas[0]?.id;
+      } catch {
+        criancaId = undefined;
+      }
+    }
+
     return res.status(200).json({
       message: "Login realizado com sucesso",
       ...resultado,
+      criancaId: criancaId ?? null,
     });
   } catch (error: any) {
     console.error("Erro ao fazer login:", error);
@@ -167,13 +195,19 @@ router.post("/auth/login", async (req, res) => {
       });
     }
 
+    if (error?.name === "PrismaClientInitializationError") {
+      return res.status(503).json({
+        error: "Banco de dados indisponível",
+        message: "Verifique as credenciais do DATABASE_URL no arquivo .env",
+      });
+    }
+
     return res.status(500).json({
       error: "Erro ao fazer login",
       message: "Erro interno do servidor",
     });
   }
 });
-
 
 /**
  * @swagger
@@ -211,7 +245,7 @@ router.get("/auth/me", authMiddleware, async (req, res) => {
     }
 
     const usuario = await obterUsuarioAutenticadoUseCase.execute(
-      req.user.userId,
+      req.user.userId
     );
 
     return res.status(200).json({

@@ -9,9 +9,9 @@ import { swaggerSpec } from "./swagger/swaggerConfig.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const srcPublic = path.join(__dirname, "..", "public");
-const distPublic = path.join(__dirname, "public");
-const staticDir = fs.existsSync(srcPublic) ? srcPublic : distPublic;
+const rootPublic = path.join(process.cwd(), "public");
+const infraPublic = path.join(__dirname, "public");
+const staticDir = fs.existsSync(infraPublic) ? infraPublic : rootPublic;
 
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
@@ -42,10 +42,14 @@ class Server {
   }
 
   private setupRoutes(apiRouter: Router): void {
-    this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-      customCss: '.swagger-ui .topbar { display: none }',
-      customSiteTitle: "SAPEA API - Documentação",
-    }));
+    this.app.use(
+      "/api-docs",
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerSpec, {
+        customCss: ".swagger-ui .topbar { display: none }",
+        customSiteTitle: "SAPEA API - Documentação",
+      })
+    );
 
     this.app.get("/api-docs.json", (req, res) => {
       res.setHeader("Content-Type", "application/json");
@@ -62,7 +66,14 @@ class Server {
     this.app.use("/api", apiRouter);
 
     this.app.use((req, res) => {
-      res.sendFile(path.join(staticDir, "index.html"));
+      const indexPath = path.resolve(staticDir, "index.html");
+      if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+      } else {
+        res
+          .status(404)
+          .send("Frontend não encontrado. Verifique se a pasta public existe.");
+      }
     });
   }
 

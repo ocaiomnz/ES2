@@ -17,6 +17,8 @@ git clone https://github.com/ocaiomnz/ES2.git
 cd ES2
 ```
 
+Crie o arquivo `.env` na raiz com `DATABASE_URL`, `JWT_SECRET` e `PORT`.
+
 2. Instale as dependências:
 
 ```bash
@@ -55,7 +57,11 @@ src/
 │   │   ├── middlewares/
 │   │   └── routes/
 │   └── security/
-├── public/              # Arquivos estáticos (HTML, JS, CSS)
+├── public/              # Frontend
+│   ├── index.html       # SPA principal (todas as telas)
+│   ├── pages/           # Páginas individuais (login, telacrianca, etc.)
+│   ├── javascripts/     # main.js, api.js
+│   └── stylesheets/     # design-system.css, main.css
 └── server.ts            # Ponto de entrada da aplicação
 prisma/
 ├── schema.prisma        # Modelo do banco de dados
