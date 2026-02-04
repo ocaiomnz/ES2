@@ -1,126 +1,75 @@
-# SAPEA - Sistema de Apoio Pedagógico Digital Personalizado
+# SAPEA
 
-Sistema web responsivo desenvolvido para apoiar crianças no espectro autista durante transições da rotina escolar, reduzindo ansiedade e aumentando previsibilidade.
+Sistema para gestão de ambientes escolares, suporte e acompanhamento de crianças, com autenticação, controle de usuários, eventos, crises e ambientes.
 
-## 🎯 Objetivo
+## Pré-requisitos
 
-O SAPEA foi projetado para:
-- Reduzir ansiedade durante transições escolares
-- Aumentar previsibilidade através de recursos visuais
-- Prevenir crises através de comunicação sincronizada
-- Oferecer suporte imediato quando necessário
+- Node.js 18+
+- npm
+- Banco de dados PostgreSQL (configurado via Prisma)
 
-## 👥 Perfis de Usuário
+## Preparação do Ambiente
 
-1. **Criança com TEA** - Interface visual, simples e intuitiva
-2. **Pais/Responsáveis** - Dashboard com visão geral e histórico
-3. **Equipe Escolar** - Gestão de rotinas, registro de crises e ambientes
+1. Clone o repositório:
 
-## 🎨 Princípios de Design
-
-- **Design sensorialmente amigável** - Sem estímulos agressivos
-- **Tipografia arredondada e legível** - Fácil leitura
-- **Ícones grandes e semânticos** - Comunicação visual clara
-- **Paleta de cores calma** - Tons pastel personalizáveis
-- **Zero distrações** - Interface focada e limpa
-- **Microinterações suaves** - Animações lentas e desativáveis
-- **Interface emocionalmente segura** - Visual acolhedor e previsível
-
-## 🚀 Como Usar
-
-1. Abra o arquivo `index.html` em um navegador moderno
-2. Na tela de login, selecione seu perfil (Pais/Responsáveis ou Equipe Escolar)
-3. Navegue pelas diferentes telas usando os controles
-
-### Para Crianças
-
-- Visualize a rotina do dia na tela inicial
-- Use o botão "Ver Lugares" para explorar ambientes da escola
-- Use o botão SOS (fixo no canto inferior direito) para solicitar ajuda urgente
-
-### Para Pais/Responsáveis
-
-- Acompanhe o status emocional da criança
-- Veja alertas de transições com níveis de risco
-- Consulte o calendário e histórico de crises
-
-### Para Equipe Escolar
-
-- Visualize todas as crianças vinculadas
-- Gerencie rotinas e defina níveis de risco
-- Registre crises e estratégias eficazes
-- Gerencie fotos dos ambientes da escola
-
-## ⚙️ Configurações
-
-Acesse as configurações através do ícone ⚙️ no canto superior direito:
-
-- **Cores**: Escolha entre azul, verde, lilás ou areia
-- **Modo Mínimo**: Reduz estímulos visuais ao máximo (sem animações, sombras, etc.)
-
-## 📱 Responsividade
-
-O sistema é totalmente responsivo e funciona em:
-- 📱 Smartphones
-- 📱 Tablets
-- 💻 Desktop
-
-## 🛠️ Tecnologias
-
-- HTML5
-- CSS3 (com variáveis CSS)
-- JavaScript (Vanilla)
-- Design System próprio
-
-## 📁 Estrutura do Projeto
-
-```
-es2/
-├── index.html          # Página principal com todas as telas
-├── css/
-│   ├── design-system.css  # Design system e variáveis
-│   └── main.css           # Estilos específicos das telas
-├── js/
-│   └── main.js            # Lógica da aplicação
-└── README.md              # Documentação
+```bash
+git clone https://github.com/ocaiomnz/ES2.git
+cd ES2
 ```
 
-## 🎨 Paleta de Cores
+2. Instale as dependências:
 
-- **Azul (padrão)**: #7B9ACC
-- **Verde**: #9ACD9A
-- **Lilás**: #B19CD9
-- **Areia**: #D4C5A9
+```bash
+npm install
+```
 
-## 🔒 Segurança e Privacidade
+3. Setup do banco:
 
-- Nenhuma informação sensível é exposta desnecessariamente
-- Confirmações claras antes de ações destrutivas
-- Indicadores visuais de segurança
+```bash
+npx prisma generate
+npx prisma migrate dev
+```
 
-## 📝 Notas de Desenvolvimento
+4. Rodar
 
-Este é um protótipo funcional. Em produção, seria necessário:
-- Backend para autenticação e armazenamento de dados
-- API para sincronização entre perfis
-- Sistema de notificações em tempo real
-- Upload e gerenciamento de imagens
-- Histórico completo e relatórios
+```bash
+npm run dev
+```
 
-## 🌟 Características Especiais
+## Estrutura do Projeto
 
-- **Botão SOS fixo**: Sempre acessível para a criança
-- **Timeline visual**: Mostra "AGORA" e "DEPOIS" claramente
-- **Barra de progresso**: Visualização do tempo restante da atividade
-- **Tours virtuais**: Exploração visual dos ambientes
-- **Alertas coloridos**: Sistema de cores para níveis de risco
-- **Modo mínimo**: Redução máxima de estímulos
+```
+src/
+├── application/         # Casos de uso (use-cases) e DTOs
+│   ├── use-cases/
+│   └── dtos/
+├── domain/              # Entidades, agregados, repositórios e value objects
+│   ├── entities/
+│   ├── aggregates/
+│   ├── repositories/
+│   └── value-objects/
+├── infrastructure/      # Banco de dados (Prisma), rotas HTTP, middlewares, segurança
+│   ├── database/
+│   ├── http/
+│   │   ├── controllers/
+│   │   ├── middlewares/
+│   │   └── routes/
+│   └── security/
+├── public/              # Arquivos estáticos (HTML, JS, CSS)
+└── server.ts            # Ponto de entrada da aplicação
+prisma/
+├── schema.prisma        # Modelo do banco de dados
+└── migrations/          # Migrações do Prisma
+```
 
-## 📄 Licença
+## Scripts
 
-Este é um projeto de protótipo educacional.
+- `npm run dev` — Inicia o servidor em modo desenvolvimento com recarregamento automático.
+- `npx prisma migrate dev` — Executa as migrações do banco de dados.
+- `npx prisma studio` — Interface visual para o banco de dados.
 
----
+## Observações
 
-**Desenvolvido com foco em acessibilidade cognitiva e design inclusivo** 💙
-
+- As rotas e casos de uso estão organizados por domínio e responsabilidade.
+- O projeto utiliza TypeScript, Express, Prisma ORM e JWT para autenticação.
+- Para detalhes de cada endpoint, consulte as rotas em `src/infrastructure/http/routes/`.

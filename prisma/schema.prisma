@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AmbienteEscolar {
+  id        String   @id
+  escolaId  String
+  nome      String
+  descricao String?
+  midias    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Escola    Escola   @relation(fields: [escolaId], references: [id], onDelete: Cascade)
+}
+
+model Crianca {
+  id                      String                   @id
+  dataNascimento          DateTime
+  grauTEA                 String
+  grauSuporte             String
+  escolaId                String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime
+  Escola                  Escola?                  @relation(fields: [escolaId], references: [id])
+  CriancaResponsavel      CriancaResponsavel[]
+  Evento                  Evento[]
+  Intervencao             Intervencao[]
+  PedidoSuporte           PedidoSuporte[]
+  PersonalizacaoSensorial PersonalizacaoSensorial?
+  RegistroCrise           RegistroCrise[]
+}
+
+model CriancaResponsavel {
+  id            String   @id
+  criancaId     String
+  responsavelId String
+  createdAt     DateTime @default(now())
+  Crianca       Crianca  @relation(fields: [criancaId], references: [id], onDelete: Cascade)
+  Usuario       Usuario  @relation(fields: [responsavelId], references: [id], onDelete: Cascade)
+
+  @@unique([criancaId, responsavelId])
+}
+
+model Escola {
+  id              String            @id
+  nome            String
+  endereco        String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  AmbienteEscolar AmbienteEscolar[]
+  Crianca         Crianca[]
+  Usuario         Usuario[]
+}
+
+model Evento {
+  id             String   @id
+  criancaId      String
+  titulo         String
+  dataHoraInicio DateTime
+  dataHoraFim    DateTime
+  nivelRisco     String
+  status         String   @default("PENDENTE")
+  descricao      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  Crianca        Crianca  @relation(fields: [criancaId], references: [id], onDelete: Cascade)
+}
+
+model Intervencao {
+  id          String   @id
+  criancaId   String
+  dataHora    DateTime
+  estrategia  String
+  aplicadaPor String
+  resultado   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Crianca     Crianca  @relation(fields: [criancaId], references: [id], onDelete: Cascade)
+}
+
+model PedidoSuporte {
+  id              String         @id
+  criancaId       String
+  dataHora        DateTime
+  status          String
+  registroCriseId String?        @unique
+  localizacao     String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime
+  Crianca         Crianca        @relation(fields: [criancaId], references: [id], onDelete: Cascade)
+  RegistroCrise   RegistroCrise? @relation(fields: [registroCriseId], references: [id])
+}
+
+model PersonalizacaoSensorial {
+  id            String   @id
+  criancaId     String   @unique
+  paletaCores   String?
+  tamanhoFonte  String   @default("MEDIO")
+  icones        String?
+  sons          Boolean  @default(false)
+  animacoes     Boolean  @default(false)
+  contrasteAlto Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  Crianca       Crianca  @relation(fields: [criancaId], references: [id], onDelete: Cascade)
+}
+
+model RegistroCrise {
+  id                  String         @id
+  criancaId           String
+  dataHora            DateTime
+  intensidade         String
+  descricao           String?
+  gatilhoIdentificado String?
+  foiEficaz           Boolean?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime
+  PedidoSuporte       PedidoSuporte?
+  Crianca             Crianca        @relation(fields: [criancaId], references: [id], onDelete: Cascade)
+}
+
+model Usuario {
+  id                 String               @id
+  nome               String
+  email              String               @unique
+  senhaHash          String
+  tipoPerfil         String
+  escolaId           String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime
+  CriancaResponsavel CriancaResponsavel[]
+  Escola             Escola?              @relation(fields: [escolaId], references: [id])
+}
