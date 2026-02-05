@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SAPEA - Gerenciar Ambientes Escolares" />
+    <meta name="theme-color" content="#7B9ACC" />
+    <title>SAPEA - Gerenciar Ambientes</title>
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="page-loading" class="page-loading">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Carregando ambientes...</p>
+    </div>
+
+    <div id="page-content" class="page-content">
+      <header class="page-header">
+        <a href="/pages/telaescolar.html" class="btn-icon" aria-label="Voltar"
+          >←</a
+        >
+        <h1 class="page-title">Gerenciar Ambientes</h1>
+        <button type="button" class="btn btn-primary" id="btn-novo-ambiente">
+          + Novo Ambiente
+        </button>
+      </header>
+      <main class="page-main" id="main-content">
+        <section class="card">
+          <h2 class="card-title">Ambientes da Escola</h2>
+          <p class="help-text" style="margin-bottom: 1rem">
+            Cadastre e edite os ambientes escolares para familiarização das
+            crianças.
+          </p>
+          <div id="ambiente-list" class="ambiente-grid"></div>
+          <p
+            id="ambiente-empty"
+            class="text-center"
+            style="display: none; color: var(--color-text-light); padding: 2rem"
+          >
+            Nenhum ambiente cadastrado. Clique em "Novo Ambiente" para começar.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal Novo/Editar Ambiente -->
+    <div
+      id="modal-ambiente"
+      class="modal-overlay"
+      role="dialog"
+      aria-labelledby="modal-ambiente-title"
+    >
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="fecharModalAmbiente()"
+          aria-label="Fechar"
+        >
+          ✕
+        </button>
+        <h2 class="modal-title" id="modal-ambiente-title">Novo Ambiente</h2>
+        <form id="form-ambiente">
+          <input type="hidden" id="ambiente-id" />
+          <div class="form-group">
+            <label for="ambiente-nome" class="form-label">Nome *</label>
+            <input
+              type="text"
+              id="ambiente-nome"
+              class="form-input"
+              placeholder="Ex: Sala de Aula"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="ambiente-descricao" class="form-label">Descrição</label>
+            <textarea
+              id="ambiente-descricao"
+              class="form-input"
+              rows="3"
+              placeholder="Breve descrição do ambiente"
+            ></textarea>
+          </div>
+          <div
+            class="form-actions"
+            style="display: flex; gap: 0.5rem; margin-top: 1rem"
+          >
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="fecharModalAmbiente()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="btn-salvar-ambiente"
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="/javascripts/api.js"></script>
+    <script>
+      (function () {
+        if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
+          return;
+
+        var loading = document.getElementById("page-loading");
+        var content = document.getElementById("page-content");
+        var listEl = document.getElementById("ambiente-list");
+        var emptyEl = document.getElementById("ambiente-empty");
+        var form = document.getElementById("form-ambiente");
+        var modal = document.getElementById("modal-ambiente");
+
+        var usuario = {};
+        var criancas = [];
+        var ambientes = [];
+
+        function carregarDados() {
+          return Promise.all([
+            SAPEA_API.fetchUsuario(),
+            SAPEA_API.fetchTelaescolar
+              ? SAPEA_API.fetchTelaescolar()
+              : Promise.resolve({ criancas: [] }),
+          ]).then(function (results) {
+            usuario = results[0];
+            criancas = results[1].criancas || [];
+            var criancaId =
+              localStorage.getItem("sapea_crianca_id") ||
+              (criancas[0] && criancas[0].id);
+            if (criancaId) {
+              return SAPEA_API.listarAmbientesPorCrianca(criancaId).then(
+                function (a) {
+                  ambientes = a;
+                }
+              );
+            }
+            ambientes = [];
+          });
+        }
+
+        function renderizarLista() {
+          if (!ambientes || ambientes.length === 0) {
+            listEl.innerHTML = "";
+            listEl.style.display = "none";
+            emptyEl.style.display = "block";
+            return;
+          }
+          emptyEl.style.display = "none";
+          listEl.style.display = "grid";
+          listEl.innerHTML = ambientes
+            .map(function (a) {
+              return (
+                '<div class="ambiente-card ambiente-card-edit">' +
+                '<div class="ambiente-icon">🏫</div>' +
+                '<p class="ambiente-nome">' +
+                (a.nome || "") +
+                "</p>" +
+                '<p class="ambiente-desc">' +
+                (a.descricao || "") +
+                "</p>" +
+                '<div class="ambiente-actions">' +
+                '<button type="button" class="btn btn-secondary btn-sm" onclick="editarAmbiente(\'' +
+                a.id +
+                "')\">Editar</button>" +
+                '<button type="button" class="btn btn-danger btn-sm" onclick="excluirAmbiente(\'' +
+                a.id +
+                "','" +
+                (a.nome || "").replace(/'/g, "\\'") +
+                "')\">Excluir</button>" +
+                "</div></div>"
+              );
+            })
+            .join("");
+        }
+
+        window.editarAmbiente = function (id) {
+          var a = ambientes.find(function (x) {
+            return x.id === id;
+          });
+          if (!a) return;
+          document.getElementById("modal-ambiente-title").textContent =
+            "Editar Ambiente";
+          document.getElementById("ambiente-id").value = a.id;
+          document.getElementById("ambiente-nome").value = a.nome || "";
+          document.getElementById("ambiente-descricao").value =
+            a.descricao || "";
+          modal.classList.add("active");
+        };
+
+        window.excluirAmbiente = function (id, nome) {
+          if (!confirm('Excluir o ambiente "' + nome + '"?')) return;
+          SAPEA_API.excluirAmbiente(id)
+            .then(function () {
+              return carregarDados();
+            })
+            .then(function () {
+              renderizarLista();
+              alert("Ambiente excluído com sucesso.");
+            })
+            .catch(function (err) {
+              alert(err.message || "Erro ao excluir.");
+            });
+        };
+
+        window.fecharModalAmbiente = function () {
+          modal.classList.remove("active");
+          form.reset();
+          document.getElementById("ambiente-id").value = "";
+          document.getElementById("modal-ambiente-title").textContent =
+            "Novo Ambiente";
+        };
+
+        document
+          .getElementById("btn-novo-ambiente")
+          .addEventListener("click", function () {
+            document.getElementById("modal-ambiente-title").textContent =
+              "Novo Ambiente";
+            document.getElementById("ambiente-id").value = "";
+            form.reset();
+            modal.classList.add("active");
+          });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var id = document.getElementById("ambiente-id").value;
+          var nome = document.getElementById("ambiente-nome").value.trim();
+          var descricao = document
+            .getElementById("ambiente-descricao")
+            .value.trim();
+          if (!nome) {
+            alert("Informe o nome do ambiente.");
+            return;
+          }
+          var btn = document.getElementById("btn-salvar-ambiente");
+          btn.disabled = true;
+          btn.textContent = "Salvando...";
+
+          var escolaId = usuario.escolaId;
+          if (!escolaId && criancas[0]) {
+            escolaId = criancas[0].escolaId;
+          }
+          if (!escolaId) {
+            alert(
+              "Escola não identificada. Faça login com perfil de equipe escolar."
+            );
+            btn.disabled = false;
+            btn.textContent = "Salvar";
+            return;
+          }
+
+          var promessa = id
+            ? SAPEA_API.atualizarAmbiente(id, {
+                nome: nome,
+                descricao: descricao || undefined,
+              })
+            : SAPEA_API.criarAmbiente({
+                escolaId: escolaId,
+                nome: nome,
+                descricao: descricao || undefined,
+              });
+
+          promessa
+            .then(function () {
+              return carregarDados();
+            })
+            .then(function () {
+              renderizarLista();
+              fecharModalAmbiente();
+              alert(id ? "Ambiente atualizado!" : "Ambiente cadastrado!");
+            })
+            .catch(function (err) {
+              alert(err.message || "Erro ao salvar.");
+            })
+            .finally(function () {
+              btn.disabled = false;
+              btn.textContent = "Salvar";
+            });
+        });
+
+        carregarDados()
+          .then(function () {
+            renderizarLista();
+            loading.classList.add("hidden");
+            content.classList.add("ready");
+          })
+          .catch(function () {
+            loading.querySelector("p").textContent =
+              "Erro ao carregar. Verifique se você tem permissão.";
+            setTimeout(function () {
+              loading.classList.add("hidden");
+              content.classList.add("ready");
+            }, 2000);
+          });
+      })();
+    </script>
+  </body>
+</html>

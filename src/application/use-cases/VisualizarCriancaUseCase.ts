@@ -14,10 +14,13 @@ export type CriancaDTO = {
 export class VisualizarCriancaUseCase {
   constructor(
     private readonly criancaRepo: ICriancaRepository,
-    private readonly usuarioRepo: IUsuarioRepository,
+    private readonly usuarioRepo: IUsuarioRepository
   ) {}
 
-  public async execute(usuarioId: string, criancaId: string): Promise<CriancaDTO> {
+  public async execute(
+    usuarioId: string,
+    criancaId: string
+  ): Promise<CriancaDTO> {
     const usuario = await this.usuarioRepo.buscarPorId(usuarioId);
     if (!usuario) {
       throw new Error("Usuário não encontrado");
@@ -32,13 +35,24 @@ export class VisualizarCriancaUseCase {
     const perfil = usuario.tipoPerfil.tipo;
 
     if (perfil === TipoPerfilEnum.ADMIN) {
-    } else if (perfil === TipoPerfilEnum.PROFESSOR) {
+      // Admin pode ver qualquer criança
+    } else if (
+      perfil === TipoPerfilEnum.PROFESSOR ||
+      perfil === TipoPerfilEnum.EQUIPE_ESCOLAR
+    ) {
       if (!usuario.escolaId || usuario.escolaId !== crianca.escolaId) {
-        throw new Error("Permissão negada: professor não pertence à mesma escola");
+        throw new Error(
+          "Permissão negada: não pertence à mesma escola da criança"
+        );
       }
-    } else if (perfil === TipoPerfilEnum.RESPONSAVEL) {
+    } else if (
+      perfil === TipoPerfilEnum.RESPONSAVEL ||
+      perfil === TipoPerfilEnum.PAI
+    ) {
       if (!crianca.responsavelIds.includes(usuario.id)) {
-        throw new Error("Permissão negada: usuário não é responsável pela criança");
+        throw new Error(
+          "Permissão negada: usuário não é responsável pela criança"
+        );
       }
     } else {
       throw new Error("Permissão negada");
@@ -70,15 +84,23 @@ export class VisualizarCriancaUseCase {
 
     if (perfil === TipoPerfilEnum.ADMIN) {
       agregados = (await this.criancaRepo.buscarPorFiltro?.({})) || [];
-    } else if (perfil === TipoPerfilEnum.PROFESSOR) {
+    } else if (
+      perfil === TipoPerfilEnum.PROFESSOR ||
+      perfil === TipoPerfilEnum.EQUIPE_ESCOLAR
+    ) {
       if (!usuario.escolaId) {
         return [];
       }
-      agregados = (await this.criancaRepo.buscarPorEscola?.(usuario.escolaId)) || [];
-    } else if (perfil === TipoPerfilEnum.RESPONSAVEL) {
-      const todasCriancas = (await this.criancaRepo.buscarPorFiltro?.({})) || [];
+      agregados =
+        (await this.criancaRepo.buscarPorEscola?.(usuario.escolaId)) || [];
+    } else if (
+      perfil === TipoPerfilEnum.RESPONSAVEL ||
+      perfil === TipoPerfilEnum.PAI
+    ) {
+      const todasCriancas =
+        (await this.criancaRepo.buscarPorFiltro?.({})) || [];
       agregados = todasCriancas.filter((a) =>
-        a.crianca.responsavelIds.includes(usuario.id),
+        a.crianca.responsavelIds.includes(usuario.id)
       );
     } else {
       return [];

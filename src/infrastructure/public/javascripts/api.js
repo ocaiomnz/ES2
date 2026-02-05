@@ -9,11 +9,7 @@
 
   window.SAPEA_REQUIRE_AUTH = function () {
     if (!getToken()) {
-      var base =
-        window.location.pathname.indexOf("/pages/") >= 0
-          ? "login.html"
-          : "pages/login.html";
-      window.location.href = base;
+      window.location.href = "/pages/login.html";
       return false;
     }
     return true;
@@ -27,7 +23,18 @@
     };
     if (token) headers["Authorization"] = "Bearer " + token;
     return fetch(API_BASE + url, { ...options, headers }).then((r) => {
-      if (!r.ok) throw new Error(r.statusText);
+      if (r.status === 401) {
+        window.location.href = "/pages/login.html";
+        return Promise.reject(new Error("Sessão expirada"));
+      }
+      if (!r.ok) {
+        return r
+          .json()
+          .catch(() => ({}))
+          .then((d) =>
+            Promise.reject(new Error(d?.message || d?.error || r.statusText))
+          );
+      }
       return r.json();
     });
   }
@@ -128,22 +135,27 @@
     },
 
     fetchTelaescolar: function () {
-      return fetchApi("/perfis/criancas").then((data) => ({
-        criancas: (data.criancas || []).map((c) => ({
-          id: c.id,
-          nome:
-            "Criança (Grau " +
-            (c.grauTEA || "—") +
-            ", Suporte " +
-            (c.grauSuporte || "—") +
-            ")",
-          grauTEA: c.grauTEA,
-          grauSuporte: c.grauSuporte,
-          status: "—",
-          nivel_risco: "BAIXO",
-          avatar: "👤",
-        })),
-      }));
+      return fetchApi("/perfis/criancas").then(function (data) {
+        return {
+          criancas: (data.criancas || []).map(function (c) {
+            return {
+              id: c.id,
+              nome:
+                "Criança (Grau " +
+                (c.grauTEA || "—") +
+                ", Suporte " +
+                (c.grauSuporte || "—") +
+                ")",
+              grauTEA: c.grauTEA,
+              grauSuporte: c.grauSuporte,
+              escolaId: c.escolaId,
+              status: "—",
+              nivel_risco: "BAIXO",
+              avatar: "👤",
+            };
+          }),
+        };
+      });
     },
 
     fetchAcompanhamentoHumor: function () {
@@ -192,6 +204,127 @@
         return Promise.reject(new Error("Criança não identificada"));
       return fetchApi("/criancas/" + criancaId + "/suporte", {
         method: "POST",
+      });
+    },
+
+    fetchUsuario: function () {
+      return fetchApi("/auth/me").then(function (data) {
+        return data.usuario || {};
+      });
+    },
+
+    criarAmbiente: function (payload) {
+      return fetchApi("/ambientes", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    atualizarAmbiente: function (id, payload) {
+      return fetchApi("/ambientes/" + id, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    },
+    excluirAmbiente: function (id) {
+      return fetchApi("/ambientes/" + id, {
+        method: "DELETE",
+      });
+    },
+    listarAmbientesPorCrianca: function (criancaId) {
+      return fetchApi("/criancas/" + criancaId + "/ambientes").then(function (
+        data
+      ) {
+        return (data.ambientes || []).map(function (a) {
+          return {
+            id: a.id,
+            nome: a.nome,
+            descricao: a.descricao || "",
+            escolaId: a.escolaId,
+          };
+        });
+      });
+    },
+
+    registrarCrise: function (payload) {
+      return fetchApi("/crises", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    registrarIntervencao: function (payload) {
+      return fetchApi("/intervencoes", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    listarCrisesPorCrianca: function (criancaId) {
+      return fetchApi("/crises/crianca/" + criancaId).then(function (data) {
+        return data.crises || [];
+      });
+    },
+
+    /** Carrega todos os dados para a tela Gerenciar Rotina (eventos, crises, ambientes, humor) */
+    fetchRotinaCompleta: function (criancaId) {
+      criancaId = criancaId || getCriancaId();
+      if (!criancaId) {
+        return Promise.resolve({
+          crianca: {},
+          eventos: [],
+          crises: [],
+          ambientes: [],
+          humorRegistros: [],
+        });
+      }
+      return Promise.all([
+        fetchApi("/criancas/" + criancaId + "/calendario"),
+        fetchApi("/crises/crianca/" + criancaId),
+        fetchApi("/criancas/" + criancaId + "/ambientes"),
+        fetchApi("/perfis/criancas/" + criancaId).catch(function () {
+          return { crianca: {} };
+        }),
+      ]).then(function (results) {
+        var calendario = results[0];
+        var crisesData = results[1];
+        var ambientesData = results[2];
+        var perfil = results[3];
+        var crianca = perfil.crianca || perfil || {};
+        var eventos = (calendario.eventos || []).map(function (e) {
+          return {
+            titulo: e.titulo,
+            dataHoraInicio: e.dataHoraInicio,
+            status: e.status,
+            nivelRisco: e.nivelRisco,
+            icone: "📌",
+            progresso: e.status === "EM_ANDAMENTO" ? 60 : null,
+          };
+        });
+        var crises = crisesData.crises || [];
+        var ambientes = (ambientesData.ambientes || []).map(function (a) {
+          return {
+            id: a.id,
+            nome: a.nome,
+            descricao: a.descricao || "",
+            icone: "🏫",
+          };
+        });
+        var emojiMap = { BAIXA: "😊", MEDIA: "😐", ALTA: "😟" };
+        var estadoMap = { BAIXA: "Calmo", MEDIA: "Neutro", ALTA: "Ansioso" };
+        var humorRegistros = crises.slice(0, 15).map(function (c) {
+          var int = (c.intensidade || "").toUpperCase();
+          return {
+            emoji: emojiMap[int] || "😐",
+            estado: estadoMap[int] || "—",
+            data_hora: formatDateTime(c.dataHora),
+            intensidade: c.intensidade,
+          };
+        });
+        return {
+          crianca: crianca,
+          eventos: eventos,
+          crises: crises,
+          ambientes: ambientes,
+          humorRegistros: humorRegistros,
+        };
       });
     },
   };

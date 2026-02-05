@@ -184,6 +184,19 @@ a:hover {
   border-color: var(--color-primary);
 }
 
+.btn-danger {
+  background-color: var(--color-danger);
+  color: white;
+}
+.btn-danger:hover {
+  background-color: #d48888;
+}
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-sm);
+  min-height: 32px;
+}
+
 .btn-large {
   padding: var(--spacing-md) var(--spacing-lg);
   font-size: var(--font-size-lg);
@@ -245,6 +258,11 @@ a:hover {
 
 .form-input::placeholder {
   color: var(--color-text-light);
+}
+
+textarea.form-input {
+  min-height: 80px;
+  resize: vertical;
 }
 
 /* Cards */

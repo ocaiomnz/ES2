@@ -2,6 +2,7 @@ import { ValueObject } from "./ValueObject.js";
 
 export enum TipoPerfilEnum {
   PROFESSOR = "PROFESSOR",
+  EQUIPE_ESCOLAR = "EQUIPE_ESCOLAR",
   PAI = "PAI/RESPONSAVEL",
   RESPONSAVEL = "RESPONSAVEL",
   ADMIN = "ADMIN",
@@ -18,6 +19,10 @@ export class TipoPerfil extends ValueObject {
 
   public static professor(): TipoPerfil {
     return new TipoPerfil(TipoPerfilEnum.PROFESSOR);
+  }
+
+  public static equipeEscolar(): TipoPerfil {
+    return new TipoPerfil(TipoPerfilEnum.EQUIPE_ESCOLAR);
   }
 
   public static pai(): TipoPerfil {

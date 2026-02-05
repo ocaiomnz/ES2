@@ -6,8 +6,8 @@
     <meta name="description" content="SAPEA - Interface da Criança" />
     <meta name="theme-color" content="#7B9ACC" />
     <title>SAPEA - Tela Criança</title>
-    <link rel="stylesheet" href="../stylesheets/design-system.css" />
-    <link rel="stylesheet" href="../stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
@@ -24,7 +24,7 @@
           <div style="display: flex; gap: 0.5rem; align-items: center">
             <div class="time-display" id="current-time">--:--</div>
             <a
-              href="login.html"
+              href="/pages/login.html"
               class="btn btn-secondary"
               style="font-size: 0.875rem; padding: 0.25rem 0.5rem"
               onclick="localStorage.removeItem('sapea_token'); localStorage.removeItem('sapea_crianca_id');"
@@ -37,7 +37,7 @@
         <h3 class="section-title">Sua Rotina de Hoje</h3>
         <div class="timeline-container" id="timeline-container"></div>
         <section class="actions-section">
-          <a href="ambiente.html" class="action-btn">
+          <a href="/pages/ambiente.html" class="action-btn">
             <span class="action-icon">🏫</span>
             <span class="action-label">Ver Lugares</span>
           </a>
@@ -57,7 +57,39 @@
       </button>
     </div>
 
-    <script src="../javascripts/api.js"></script>
+    <!-- Modal Preciso de Ajuda -->
+    <div
+      id="modal-ajuda"
+      class="modal-overlay"
+      role="dialog"
+      aria-labelledby="modal-ajuda-title"
+    >
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="fecharModalAjuda()"
+          aria-label="Fechar"
+        >
+          ✕
+        </button>
+        <div class="alerta-crise-content" style="text-align: center">
+          <div class="alerta-crise-icon" style="font-size: 4rem">💙</div>
+          <h2 class="modal-title" id="modal-ajuda-title">Ajuda Enviada!</h2>
+          <p class="alerta-crise-message">
+            Alguém virá te ajudar em breve. Você está seguro.
+          </p>
+          <button
+            type="button"
+            class="btn btn-primary btn-large"
+            onclick="fecharModalAjuda()"
+          >
+            Entendi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/javascripts/api.js"></script>
     <script>
       (function () {
         if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
@@ -166,38 +198,38 @@
             }, 2000);
           });
 
+        function abrirModalAjuda() {
+          var modal = document.getElementById("modal-ajuda");
+          if (modal) modal.classList.add("active");
+        }
+        window.fecharModalAjuda = function () {
+          var modal = document.getElementById("modal-ajuda");
+          if (modal) modal.classList.remove("active");
+        };
+        function acionarAjuda() {
+          var criancaId = localStorage.getItem("sapea_crianca_id");
+          if (!criancaId) {
+            var msg =
+              "Para solicitar ajuda em uma emergência, é preciso estar logado e ter uma criança selecionada. ";
+            msg +=
+              'Vá ao Painel da Escola ou do Responsável e selecione "Ver como criança" para configurar.';
+            alert(msg);
+            return;
+          }
+          SAPEA_API.solicitarSuporte(criancaId)
+            .then(function () {
+              abrirModalAjuda();
+            })
+            .catch(function (err) {
+              alert(err.message || "Erro ao solicitar ajuda. Tente novamente.");
+            });
+        }
         document
           .getElementById("sos-btn")
-          .addEventListener("click", function () {
-            var criancaId = localStorage.getItem("sapea_crianca_id");
-            if (criancaId) {
-              SAPEA_API.solicitarSuporte(criancaId)
-                .then(function () {
-                  alert("Ajuda solicitada! Alguém virá em breve.");
-                })
-                .catch(function () {
-                  alert("Erro ao solicitar ajuda. Tente novamente.");
-                });
-            } else {
-              alert("Faça login para solicitar ajuda.");
-            }
-          });
+          .addEventListener("click", acionarAjuda);
         document
           .getElementById("btn-ajuda")
-          .addEventListener("click", function () {
-            var criancaId = localStorage.getItem("sapea_crianca_id");
-            if (criancaId) {
-              SAPEA_API.solicitarSuporte(criancaId)
-                .then(function () {
-                  alert("Ajuda solicitada! Você está seguro.");
-                })
-                .catch(function () {
-                  alert("Erro ao solicitar ajuda. Tente novamente.");
-                });
-            } else {
-              alert("Faça login para solicitar ajuda.");
-            }
-          });
+          .addEventListener("click", acionarAjuda);
       })();
     </script>
   </body>

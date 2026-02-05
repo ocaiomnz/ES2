@@ -14,7 +14,7 @@ export class AgregadoCrianca {
     crianca: Crianca,
     crises: RegistroCrise[],
     pedidosSuporte: PedidoSuporte[],
-    intervencoes: Intervencao[],
+    intervencoes: Intervencao[]
   ) {
     this._crianca = crianca;
     this._crises = [...crises];
@@ -37,17 +37,17 @@ export class AgregadoCrianca {
       input.crianca,
       input.crises,
       input.pedidosSuporte,
-      input.intervencoes,
+      input.intervencoes
     );
   }
 
   public adicionarCrise(crise: RegistroCrise): AgregadoCrianca {
     const crisesNaoResolvidas = this._crises.filter(
-      (c) => c.foiEficaz === undefined,
+      (c) => c.foiEficaz === undefined
     );
     if (crisesNaoResolvidas.length > 0) {
       throw new Error(
-        "Não é possível adicionar uma nova crise: já existe uma crise em andamento",
+        "Não é possível adicionar uma nova crise: já existe uma crise em andamento"
       );
     }
 
@@ -55,18 +55,18 @@ export class AgregadoCrianca {
       this._crianca,
       [...this._crises, crise],
       this._pedidosSuporte,
-      this._intervencoes,
+      this._intervencoes
     );
     return novoAgregado;
   }
 
   public adicionarPedidoSuporte(pedido: PedidoSuporte): AgregadoCrianca {
     const criseNaoResolvida = this._crises.find(
-      (c) => c.foiEficaz === undefined,
+      (c) => c.foiEficaz === undefined
     );
     if (!criseNaoResolvida) {
       throw new Error(
-        "Não é possível adicionar pedido de suporte: não há crise não resolvida",
+        "Não é possível adicionar pedido de suporte: não há crise não resolvida"
       );
     }
 
@@ -74,7 +74,7 @@ export class AgregadoCrianca {
       this._crianca,
       this._crises,
       [...this._pedidosSuporte, pedido],
-      this._intervencoes,
+      this._intervencoes
     );
     return novoAgregado;
   }
@@ -84,7 +84,7 @@ export class AgregadoCrianca {
       this._crianca,
       this._crises,
       this._pedidosSuporte,
-      [...this._intervencoes, intervencao],
+      [...this._intervencoes, intervencao]
     );
     return novoAgregado;
   }
@@ -93,17 +93,28 @@ export class AgregadoCrianca {
   private validarInvariantes(): void {
     // Invariante 1: Máximo uma crise não resolvida
     const crisesNaoResolvidas = this._crises.filter(
-      (c) => c.foiEficaz === undefined,
+      (c) => c.foiEficaz === undefined
     );
     if (crisesNaoResolvidas.length > 1) {
       throw new Error("Invariante violada: múltiplas crises não resolvidas");
     }
 
-    // Invariante 2: Pedidos de suporte só com crises não resolvidas
-    if (this._pedidosSuporte.length > 0 && crisesNaoResolvidas.length === 0) {
-      throw new Error(
-        "Invariante violada: pedidos de suporte sem crise não resolvida",
-      );
+    // Invariante 2: Todo pedido deve estar vinculado a uma crise existente.
+    // (A regra "só criar pedido com crise não resolvida" é aplicada em adicionarPedidoSuporte.
+    // Após resolver uma crise, é válido ter pedidos históricos vinculados a crises resolvidas.)
+    for (const pedido of this._pedidosSuporte) {
+      const criseVinculada = pedido.registroCrise;
+      if (!criseVinculada) {
+        throw new Error(
+          "Invariante violada: pedido de suporte sem crise vinculada"
+        );
+      }
+      const criseExiste = this._crises.some((c) => c.id === criseVinculada.id);
+      if (!criseExiste) {
+        throw new Error(
+          "Invariante violada: pedido de suporte vinculado a crise inexistente no agregado"
+        );
+      }
     }
   }
 

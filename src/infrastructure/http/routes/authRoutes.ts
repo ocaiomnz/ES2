@@ -163,6 +163,7 @@ router.post("/auth/login", async (req, res) => {
       TipoPerfilEnum.RESPONSAVEL,
       TipoPerfilEnum.PAI,
       TipoPerfilEnum.PROFESSOR,
+      TipoPerfilEnum.EQUIPE_ESCOLAR,
     ];
     if (
       perfisComCriancas.includes(resultado.usuario.tipoPerfil as TipoPerfilEnum)

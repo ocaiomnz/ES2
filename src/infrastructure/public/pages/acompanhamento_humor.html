@@ -6,8 +6,8 @@
     <meta name="description" content="SAPEA - Acompanhamento de Humor" />
     <meta name="theme-color" content="#7B9ACC" />
     <title>SAPEA - Acompanhamento de Humor</title>
-    <link rel="stylesheet" href="../stylesheets/design-system.css" />
-    <link rel="stylesheet" href="../stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
@@ -19,12 +19,15 @@
 
     <div id="page-content" class="page-content">
       <header class="page-header">
-        <a href="telaresponsavel.html" class="btn-icon" aria-label="Voltar"
+        <a
+          href="/pages/telaresponsavel.html"
+          class="btn-icon"
+          aria-label="Voltar"
           >←</a
         >
         <h1 class="page-title">Acompanhamento de Humor</h1>
         <a
-          href="login.html"
+          href="/pages/login.html"
           class="btn btn-secondary"
           style="font-size: 0.875rem; padding: 0.25rem 0.5rem"
           onclick="localStorage.removeItem('sapea_token'); localStorage.removeItem('sapea_crianca_id');"
@@ -34,22 +37,44 @@
       <main class="page-main" id="main-content">
         <section class="card">
           <h2 class="card-title">Estado Emocional</h2>
+          <p class="help-text" style="margin-bottom: 1rem">
+            Histórico de episódios de humor baseado no acompanhamento de crises
+            e intervenções.
+          </p>
+          <div id="crianca-selector" class="form-group" style="display: none">
+            <label for="select-crianca" class="form-label"
+              >Selecione a criança</label
+            >
+            <select id="select-crianca" class="form-select"></select>
+          </div>
           <div class="humor-grid" id="humor-grid"></div>
+          <p
+            id="humor-empty"
+            class="text-center"
+            style="
+              display: none;
+              color: var(--color-text-light);
+              padding: 1.5rem;
+            "
+          >
+            Nenhum registro de humor para exibir. Os registros aparecem quando
+            há crises ou intervenções cadastradas.
+          </p>
         </section>
       </main>
       <nav class="bottom-nav">
-        <a href="telaresponsavel.html" class="nav-item">
+        <a href="/pages/telaresponsavel.html" class="nav-item">
           <span class="nav-icon">🏠</span>
           <span class="nav-label">Início</span>
         </a>
-        <a href="acompanhamento_humor.html" class="nav-item active">
+        <a href="/pages/acompanhamento_humor.html" class="nav-item active">
           <span class="nav-icon">😊</span>
           <span class="nav-label">Humor</span>
         </a>
       </nav>
     </div>
 
-    <script src="../javascripts/api.js"></script>
+    <script src="/javascripts/api.js"></script>
     <script>
       (function () {
         if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
@@ -57,29 +82,73 @@
         var loading = document.getElementById("page-loading");
         var content = document.getElementById("page-content");
         var gridEl = document.getElementById("humor-grid");
+        var emptyEl = document.getElementById("humor-empty");
+        var selectorEl = document.getElementById("crianca-selector");
+        var selectCrianca = document.getElementById("select-crianca");
 
-        SAPEA_API.fetchAcompanhamentoHumor()
-          .then(function (data) {
+        function carregarHumor() {
+          return SAPEA_API.fetchAcompanhamentoHumor().then(function (data) {
             var registros = data.registros || [];
-            gridEl.innerHTML = registros.length
-              ? registros
-                  .map(function (r) {
-                    return (
-                      '<div class="humor-card">' +
-                      '<div class="humor-emoji">' +
-                      (r.emoji || "😐") +
-                      "</div>" +
-                      '<p class="humor-label">' +
-                      (r.estado || "") +
-                      "</p>" +
-                      '<p class="humor-value">' +
-                      (r.data_hora || "") +
-                      "</p></div>"
-                    );
-                  })
-                  .join("")
-              : '<p class="text-center" style="color: var(--color-text-light);">Nenhum registro de humor.</p>';
+            if (registros.length === 0) {
+              gridEl.innerHTML = "";
+              gridEl.style.display = "none";
+              emptyEl.style.display = "block";
+              return;
+            }
+            emptyEl.style.display = "none";
+            gridEl.style.display = "grid";
+            gridEl.innerHTML = registros
+              .map(function (r) {
+                return (
+                  '<div class="humor-card">' +
+                  '<div class="humor-emoji">' +
+                  (r.emoji || "😐") +
+                  "</div>" +
+                  '<p class="humor-label">' +
+                  (r.estado || "") +
+                  "</p>" +
+                  '<p class="humor-value">' +
+                  (r.data_hora || "") +
+                  "</p></div>"
+                );
+              })
+              .join("");
+          });
+        }
 
+        function setupCriancaSelector() {
+          if (!SAPEA_API.fetchTelaescolar) return Promise.resolve();
+          return SAPEA_API.fetchTelaescolar().then(function (data) {
+            var criancas = data.criancas || [];
+            var criancaAtual = localStorage.getItem("sapea_crianca_id");
+            if (criancas.length <= 1) return;
+            selectorEl.style.display = "block";
+            selectCrianca.innerHTML =
+              criancas
+                .map(function (c) {
+                  var sel = c.id === criancaAtual ? " selected" : "";
+                  return (
+                    '<option value="' +
+                    c.id +
+                    '"' +
+                    sel +
+                    ">" +
+                    (c.nome || "Criança") +
+                    "</option>"
+                  );
+                })
+                .join("") || '<option value="">Selecione</option>';
+            selectCrianca.addEventListener("change", function () {
+              var id = selectCrianca.value;
+              localStorage.setItem("sapea_crianca_id", id || "");
+              carregarHumor();
+            });
+          });
+        }
+
+        setupCriancaSelector()
+          .then(carregarHumor)
+          .then(function () {
             loading.classList.add("hidden");
             content.classList.add("ready");
           })
@@ -89,8 +158,8 @@
             setTimeout(function () {
               loading.classList.add("hidden");
               content.classList.add("ready");
-              gridEl.innerHTML =
-                '<p class="text-center" style="color: var(--color-text-light);">Nenhum registro de humor.</p>';
+              gridEl.innerHTML = "";
+              emptyEl.style.display = "block";
             }, 2000);
           });
       })();

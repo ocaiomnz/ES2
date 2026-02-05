@@ -6,8 +6,8 @@
     <meta name="description" content="SAPEA - Painel da Escola" />
     <meta name="theme-color" content="#7B9ACC" />
     <title>SAPEA - Painel da Escola</title>
-    <link rel="stylesheet" href="../stylesheets/design-system.css" />
-    <link rel="stylesheet" href="../stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
@@ -21,7 +21,7 @@
       <header class="page-header">
         <h1 class="page-title">Painel da Escola</h1>
         <a
-          href="login.html"
+          href="/pages/login.html"
           class="btn btn-secondary"
           style="font-size: 0.875rem; padding: 0.25rem 0.5rem"
           onclick="localStorage.removeItem('sapea_token'); localStorage.removeItem('sapea_crianca_id');"
@@ -31,20 +31,28 @@
       <main class="page-main" id="main-content">
         <section class="card">
           <h2 class="card-title">Crianças Vinculadas</h2>
+          <p class="help-text" style="margin-bottom: 1rem">
+            Selecione uma criança para ver sua rotina ou usar a interface como
+            ela.
+          </p>
           <div class="students-list" id="students-list"></div>
         </section>
         <section class="card">
           <h2 class="card-title">Ações Rápidas</h2>
           <div class="action-grid">
-            <a href="../index.html#modal-transicao" class="action-card-btn">
+            <a href="/pages/gerenciar_rotina.html" class="action-card-btn">
               <span class="action-card-icon">📋</span>
-              <span class="action-card-label">Gerenciar Rotina (eventos)</span>
+              <span class="action-card-label">Gerenciar Rotina</span>
             </a>
-            <a href="../index.html#modal-alerta-crise" class="action-card-btn">
+            <a href="/pages/registrar_crise.html" class="action-card-btn">
               <span class="action-card-icon">📝</span>
               <span class="action-card-label">Registrar Crise</span>
             </a>
-            <a href="ambiente.html" class="action-card-btn">
+            <a href="/pages/gerenciar_ambientes.html" class="action-card-btn">
+              <span class="action-card-icon">⚙️</span>
+              <span class="action-card-label">Gerenciar Ambientes</span>
+            </a>
+            <a href="/pages/ambiente.html" class="action-card-btn">
               <span class="action-card-icon">🏫</span>
               <span class="action-card-label">Ambientes</span>
             </a>
@@ -53,7 +61,7 @@
       </main>
     </div>
 
-    <script src="../javascripts/api.js"></script>
+    <script src="/javascripts/api.js"></script>
     <script>
       (function () {
         if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
@@ -100,7 +108,10 @@
                       badgeClass(c.nivel_risco) +
                       '">' +
                       (c.nivel_risco || "—") +
-                      "</span></div>"
+                      "</span>" +
+                      '<a href="/pages/telacrianca.html" class="btn btn-primary btn-sm" style="margin-left:auto" onclick="localStorage.setItem(\'sapea_crianca_id\', \'' +
+                      c.id +
+                      "')\">Ver como criança</a></div>"
                     );
                   })
                   .join("")

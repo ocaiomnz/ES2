@@ -112,24 +112,28 @@ function handleLogin() {
       appState.currentUser = data.usuario?.email || email;
       appState.currentProfile = data.usuario?.tipoPerfil || "";
 
-      const tipo = (data.usuario?.tipoPerfil || "").toUpperCase();
+      const tipo = (data.usuario?.tipoPerfil || "").toString();
       if (
         tipo === "RESPONSAVEL" ||
-        tipo === "PAI" ||
-        tipo.includes("RESPONSAVEL")
+        tipo === "PAI/RESPONSAVEL" ||
+        tipo.toUpperCase().includes("RESPONSAVEL") ||
+        tipo.toUpperCase().includes("PAI")
       ) {
         showScreen("telaresponsavel");
         loadTelaresponsavelData();
       } else if (
         tipo === "PROFESSOR" ||
         tipo === "EQUIPE_ESCOLAR" ||
-        tipo.includes("ESCOLAR")
+        tipo === "ADMIN"
       ) {
         showScreen("telaescolar");
         loadTelaescolarData();
-      } else {
+      } else if (tipo === "CRIANCA") {
         showScreen("telacrianca");
         loadTelacriancaData();
+      } else {
+        showScreen("telaresponsavel");
+        loadTelaresponsavelData();
       }
       savePreferences();
       showNotification("Login realizado com sucesso!", "success");
@@ -614,7 +618,7 @@ function renderCalendarWithEvents(eventos) {
 
 // ===== PAINEL ESCOLA =====
 function showRoutineManager() {
-  showNotification("Gerenciador de Rotina - Em desenvolvimento", "info");
+  window.location.href = "/pages/gerenciar_rotina.html";
 }
 
 function showCrisisRegister() {

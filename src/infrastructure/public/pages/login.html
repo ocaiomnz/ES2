@@ -6,8 +6,8 @@
     <meta name="description" content="SAPEA - Login" />
     <meta name="theme-color" content="#7B9ACC" />
     <title>SAPEA - Login</title>
-    <link rel="stylesheet" href="../stylesheets/design-system.css" />
-    <link rel="stylesheet" href="../stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
@@ -79,7 +79,7 @@
             Precisa de ajuda? Entre em contato com a escola.
           </p>
           <a
-            href="../index.html"
+            href="/"
             class="btn btn-secondary"
             style="
               margin-top: 1rem;
@@ -149,20 +149,24 @@
                 }
               }
 
-              var tipoPerfil = (data.usuario?.tipoPerfil || "").toUpperCase();
+              var tipoPerfil = (data.usuario?.tipoPerfil || "").toString();
               if (
                 tipoPerfil === "RESPONSAVEL" ||
-                tipoPerfil === "PAI/RESPONSAVEL"
+                tipoPerfil === "PAI/RESPONSAVEL" ||
+                tipoPerfil.toUpperCase() === "PAI"
               ) {
-                window.location.href = "telaresponsavel.html";
-              } else if (tipoPerfil === "PROFESSOR") {
-                window.location.href = "telaescolar.html";
+                window.location.href = "/pages/telaresponsavel.html";
+              } else if (
+                tipoPerfil === "PROFESSOR" ||
+                tipoPerfil === "EQUIPE_ESCOLAR"
+              ) {
+                window.location.href = "/pages/telaescolar.html";
               } else if (tipoPerfil === "CRIANCA") {
-                window.location.href = "telacrianca.html";
+                window.location.href = "/pages/telacrianca.html";
               } else if (tipoPerfil === "ADMIN") {
-                window.location.href = "telaescolar.html";
+                window.location.href = "/pages/telaescolar.html";
               } else {
-                window.location.href = "telaresponsavel.html";
+                window.location.href = "/pages/telaresponsavel.html";
               }
             })
             .catch(function (err) {

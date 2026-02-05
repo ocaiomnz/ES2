@@ -6,8 +6,8 @@
     <meta name="description" content="SAPEA - Lugares da Escola" />
     <meta name="theme-color" content="#7B9ACC" />
     <title>SAPEA - Lugares da Escola</title>
-    <link rel="stylesheet" href="../stylesheets/design-system.css" />
-    <link rel="stylesheet" href="../stylesheets/main.css" />
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
     <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
@@ -20,7 +20,7 @@
     <div id="page-content" class="page-content">
       <header class="page-header">
         <a
-          href="telacrianca.html"
+          href="/pages/telacrianca.html"
           id="btn-voltar"
           class="btn-icon"
           aria-label="Voltar"
@@ -28,7 +28,7 @@
         >
         <h1 class="page-title">Lugares da Escola</h1>
         <a
-          href="login.html"
+          href="/pages/login.html"
           class="btn btn-secondary"
           style="font-size: 0.875rem; padding: 0.25rem 0.5rem"
           onclick="localStorage.removeItem('sapea_token'); localStorage.removeItem('sapea_crianca_id');"
@@ -43,7 +43,7 @@
       </main>
     </div>
 
-    <script src="../javascripts/api.js"></script>
+    <script src="/javascripts/api.js"></script>
     <script>
       (function () {
         if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
@@ -57,9 +57,9 @@
           document.referrer &&
           document.referrer.indexOf("telaresponsavel") >= 0
         ) {
-          btnVoltar.href = "telaresponsavel.html";
+          btnVoltar.href = "/pages/telaresponsavel.html";
         } else {
-          btnVoltar.href = "telacrianca.html";
+          btnVoltar.href = "/pages/telacrianca.html";
         }
 
         SAPEA_API.fetchAmbiente()

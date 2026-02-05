@@ -580,6 +580,8 @@
   color: var(--color-text-light);
   transition: all var(--transition-fast);
   min-width: 60px;
+  text-decoration: none;
+  font: inherit;
 }
 
 .nav-item.active {
@@ -700,6 +702,11 @@
   cursor: pointer;
   transition: all var(--transition-normal);
   min-height: 120px;
+  font: inherit;
+  text-align: center;
+}
+button.action-card-btn {
+  text-decoration: none;
 }
 
 .action-card-btn:hover {
@@ -1016,7 +1023,105 @@ input:checked + .slider:before {
   }
 }
 
-/* ===== PÁGINAS INDIVIDUAIS ( loading states ) ===== */
+/* Ambientes - grid e cards */
+.ambiente-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+.ambiente-card {
+  padding: var(--spacing-md);
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--color-border);
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+.ambiente-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+.ambiente-card-edit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ambiente-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-sm);
+}
+.ambiente-nome {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+.ambiente-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+  flex: 1;
+}
+.ambiente-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Humor - grid e cards */
+.humor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--spacing-md);
+}
+.humor-card {
+  padding: var(--spacing-md);
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--color-border);
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+.humor-card:hover {
+  border-color: var(--color-primary);
+}
+.humor-emoji {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-sm);
+}
+.humor-label {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+.humor-value {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+/* ===== PÁGINAS INDIVIDUAIS ( layout e loading ) ===== */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-bg-secondary);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.page-title {
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
+}
+.page-main {
+  padding: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
 .page-loading {
   display: flex;
   flex-direction: column;
@@ -1027,10 +1132,13 @@ input:checked + .slider:before {
   color: var(--color-text-light);
 }
 .page-loading.hidden {
+  display: none !important;
+}
+.page-content {
   display: none;
 }
 .page-content.ready {
-  display: block;
+  display: block !important;
 }
 
 .loading-spinner {
@@ -1049,4 +1157,324 @@ input:checked + .slider:before {
 
 .hidden {
   display: none !important;
+}
+
+/* ===== GERENCIAR ROTINA ===== */
+.rotina-page {
+  font-family: "Nunito", var(--font-family);
+  background: linear-gradient(180deg, #f0f4f8 0%, #e8eef5 100%);
+}
+
+.rotina-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
+  color: white;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.rotina-header .btn-back {
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-md);
+}
+
+.rotina-header .btn-back:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.rotina-header .btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-primary-dark);
+  border: none;
+}
+
+.rotina-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.rotina-main {
+  padding: var(--spacing-lg);
+  max-width: 720px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+.rotina-selector {
+  margin-bottom: var(--spacing-lg);
+}
+
+.rotina-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.rotina-select {
+  width: 100%;
+  max-width: 320px;
+}
+
+.rotina-hero {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-light) 0%,
+    var(--color-primary) 100%
+  );
+  border-radius: var(--border-radius-xl);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.rotina-hero-avatar {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.rotina-hero-name {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: white;
+  margin: 0 0 var(--spacing-xs);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.rotina-hero-meta {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.rotina-hero-link {
+  display: inline-block;
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rotina-hero-link:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rotina-card {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(123, 154, 204, 0.15);
+}
+
+.rotina-card-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.rotina-card-icon {
+  font-size: 1.5rem;
+}
+
+.rotina-link {
+  margin-left: auto;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.rotina-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: -0.5rem 0 var(--spacing-md);
+}
+
+.rotina-empty {
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: var(--spacing-lg);
+  margin: 0;
+}
+
+.timeline-rotina .timeline-item {
+  background: var(--color-bg);
+}
+
+/* Crises */
+.rotina-crises {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.rotina-crise-item {
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid;
+}
+
+.rotina-crise-item.crise-baixa {
+  background: rgba(154, 205, 154, 0.12);
+  border-color: var(--color-success);
+}
+
+.rotina-crise-item.crise-media {
+  background: rgba(244, 208, 63, 0.12);
+  border-color: var(--color-warning);
+}
+
+.rotina-crise-item.crise-alta {
+  background: rgba(232, 165, 165, 0.12);
+  border-color: var(--color-danger);
+}
+
+.rotina-crise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xs);
+}
+
+.rotina-crise-data {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.rotina-crise-intensidade {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.crise-baixa .rotina-crise-intensidade {
+  background: rgba(154, 205, 154, 0.4);
+  color: #2d6a2d;
+}
+.crise-media .rotina-crise-intensidade {
+  background: rgba(244, 208, 63, 0.4);
+  color: #8b7000;
+}
+.crise-alta .rotina-crise-intensidade {
+  background: rgba(232, 165, 165, 0.4);
+  color: #a03030;
+}
+
+.rotina-crise-gatilho,
+.rotina-crise-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0.25rem 0 0;
+}
+
+/* Ambientes */
+.rotina-ambientes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.rotina-ambiente-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.rotina-ambiente-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.rotina-ambiente-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.rotina-ambiente-nome {
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.25rem;
+  font-size: var(--font-size-base);
+}
+
+.rotina-ambiente-desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+/* Humor */
+.rotina-humor {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.rotina-humor-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: var(--color-bg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.rotina-humor-card:hover {
+  border-color: var(--color-primary-light);
+}
+
+.rotina-humor-emoji {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.rotina-humor-estado {
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 0.2rem;
+  font-size: var(--font-size-sm);
+}
+
+.rotina-humor-data {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  margin: 0;
 }

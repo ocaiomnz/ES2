@@ -51,7 +51,7 @@ export type PersistedAgregadoCrianca = {
 };
 
 export function desserializarAgregadoCrianca(
-  persisted: PersistedAgregadoCrianca,
+  persisted: PersistedAgregadoCrianca
 ): AgregadoCrianca {
   const criancaData: any = {
     id: persisted.crianca.id,
@@ -71,15 +71,16 @@ export function desserializarAgregadoCrianca(
   const crianca = Crianca.fromPersistence(criancaData);
 
   const crises = (persisted.crises ?? []).map((c) =>
-    RegistroCrise.fromPersistence(c),
+    RegistroCrise.fromPersistence(c)
   );
 
-  const pedidos = (persisted.pedidosSuporte ?? []).map((p) =>
-    PedidoSuporte.fromPersistence(p),
-  );
+  // Só incluir pedidos que têm crise vinculada (evita falha em dados órfãos)
+  const pedidos = (persisted.pedidosSuporte ?? [])
+    .filter((p) => p.registroCrise != null)
+    .map((p) => PedidoSuporte.fromPersistence(p));
 
   const intervencoes = (persisted.intervencoes ?? []).map((i) =>
-    Intervencao.fromPersistence(i),
+    Intervencao.fromPersistence(i)
   );
 
   return AgregadoCrianca.fromPersistence({
@@ -91,7 +92,7 @@ export function desserializarAgregadoCrianca(
 }
 
 export function serializarAgregadoCrianca(
-  agregado: AgregadoCrianca,
+  agregado: AgregadoCrianca
 ): PersistedAgregadoCrianca {
   const crianca = agregado.crianca;
 

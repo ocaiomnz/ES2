@@ -336,24 +336,18 @@
           <section class="card">
             <h2 class="card-title">Ações Rápidas</h2>
             <div class="action-grid">
-              <button
-                class="action-card-btn"
-                onclick="openModal('modal-transicao')"
-              >
+              <a href="/pages/gerenciar_rotina.html" class="action-card-btn">
                 <span class="action-card-icon">📋</span>
-                <span class="action-card-label"
-                  >Gerenciar Rotina (eventos)</span
-                >
-              </button>
-              <button
-                class="action-card-btn"
-                onclick="openModal('modal-alerta-crise')"
-              >
+                <span class="action-card-label">Gerenciar Rotina</span>
+              </a>
+              <a href="/pages/registrar_crise.html" class="action-card-btn">
                 <span class="action-card-icon">📝</span>
-                <span class="action-card-label"
-                  >Registrar Crise (registro_crises)</span
-                >
-              </button>
+                <span class="action-card-label">Registrar Crise</span>
+              </a>
+              <a href="/pages/gerenciar_ambientes.html" class="action-card-btn">
+                <span class="action-card-icon">⚙️</span>
+                <span class="action-card-label">Gerenciar Ambientes</span>
+              </a>
               <button class="action-card-btn" onclick="showScreen('ambiente')">
                 <span class="action-card-icon">🏫</span>
                 <span class="action-card-label">Ambientes</span>
@@ -509,8 +503,7 @@
               Ajuda Enviada!
             </h2>
             <p class="alerta-crise-message">
-              Alguém virá te ajudar em breve. Você está seguro. (pedidos_suporte
-              / registro_crises)
+              Alguém virá te ajudar em breve. Você está seguro.
             </p>
             <button
               class="btn btn-primary btn-large"
@@ -524,46 +517,19 @@
             style="
               border-top: 1px solid var(--color-border);
               padding-top: var(--spacing-md);
+              margin-top: var(--spacing-md);
             "
           >
-            <h3 class="card-title">Registrar crise (equipe escolar)</h3>
-            <div class="form-group">
-              <label class="form-label"
-                >Intensidade (registro_crises.intensidade)</label
-              >
-              <select class="form-select">
-                <option value="baixa">Baixa</option>
-                <option value="media">Média</option>
-                <option value="alta">Alta</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Descrição</label>
-              <input
-                type="text"
-                class="form-input"
-                placeholder="Descrição da crise"
-              />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Gatilho identificado</label>
-              <input
-                type="text"
-                class="form-input"
-                placeholder="Gatilho identificado"
-              />
-            </div>
-            <div class="form-group">
-              <label class="form-label"
-                >Estratégia (intervencoes.estrategia)</label
-              >
-              <input
-                type="text"
-                class="form-input"
-                placeholder="Estratégia aplicada"
-              />
-            </div>
-            <button class="btn btn-primary btn-large">Salvar registro</button>
+            <p class="help-text" style="margin-bottom: 0.5rem">
+              Equipe escolar: registre a crise para acompanhamento e histórico.
+            </p>
+            <a
+              href="/pages/registrar_crise.html"
+              class="btn btn-secondary"
+              style="text-decoration: none"
+            >
+              Ir para Registrar Crise
+            </a>
           </div>
         </div>
       </div>

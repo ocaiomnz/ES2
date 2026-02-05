@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SAPEA - Registrar Crise" />
+    <meta name="theme-color" content="#7B9ACC" />
+    <title>SAPEA - Registrar Crise</title>
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="page-loading" class="page-loading">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Carregando...</p>
+    </div>
+
+    <div id="page-content" class="page-content">
+      <header class="page-header">
+        <a href="/pages/telaescolar.html" class="btn-icon" aria-label="Voltar"
+          >←</a
+        >
+        <h1 class="page-title">Registrar Crise</h1>
+        <a
+          href="/pages/login.html"
+          class="btn btn-secondary"
+          style="font-size: 0.875rem; padding: 0.25rem 0.5rem"
+          onclick="localStorage.removeItem('sapea_token'); localStorage.removeItem('sapea_crianca_id');"
+          >Sair</a
+        >
+      </header>
+      <main class="page-main" id="main-content">
+        <section class="card">
+          <h2 class="card-title">Nova Crise</h2>
+          <p class="help-text" style="margin-bottom: 1rem">
+            Registre uma crise para acompanhamento e histórico. Requer perfil
+            EQUIPE_ESCOLAR.
+          </p>
+          <form id="form-crise">
+            <div class="form-group">
+              <label for="crise-crianca" class="form-label">Criança *</label>
+              <select id="crise-crianca" class="form-select" required></select>
+            </div>
+            <div class="form-group">
+              <label for="crise-data-hora" class="form-label"
+                >Data e Hora *</label
+              >
+              <input
+                type="datetime-local"
+                id="crise-data-hora"
+                class="form-input"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="crise-intensidade" class="form-label"
+                >Intensidade *</label
+              >
+              <select id="crise-intensidade" class="form-select" required>
+                <option value="">Selecione</option>
+                <option value="BAIXA">Baixa</option>
+                <option value="MEDIA">Média</option>
+                <option value="ALTA">Alta</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="crise-descricao" class="form-label">Descrição</label>
+              <textarea
+                id="crise-descricao"
+                class="form-input"
+                rows="3"
+                placeholder="Descrição da crise"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="crise-gatilho" class="form-label"
+                >Gatilho identificado</label
+              >
+              <input
+                type="text"
+                id="crise-gatilho"
+                class="form-input"
+                placeholder="Ex: Mudança inesperada de rotina"
+              />
+            </div>
+            <div class="form-group">
+              <label for="crise-estrategia" class="form-label"
+                >Estratégia (opcional - registrar intervenção depois)</label
+              >
+              <input
+                type="text"
+                id="crise-estrategia"
+                class="form-input"
+                placeholder="Estratégia aplicada"
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary btn-large"
+              id="btn-registrar"
+            >
+              Registrar Crise
+            </button>
+          </form>
+          <div
+            id="form-success"
+            style="
+              display: none;
+              margin-top: 1rem;
+              padding: 1rem;
+              background: rgba(154, 205, 154, 0.2);
+              border-radius: 8px;
+              color: var(--color-success);
+            "
+          >
+            Crise registrada com sucesso!
+            <a href="/pages/registrar_crise.html">Registrar outra</a> ou
+            <a href="/pages/telaescolar.html">voltar ao painel</a>.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/javascripts/api.js"></script>
+    <script>
+      (function () {
+        if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
+          return;
+
+        var loading = document.getElementById("page-loading");
+        var content = document.getElementById("page-content");
+        var form = document.getElementById("form-crise");
+        var formSuccess = document.getElementById("form-success");
+        var selectCrianca = document.getElementById("crise-crianca");
+
+        function preencherDataHoraAtual() {
+          var now = new Date();
+          var y = now.getFullYear();
+          var m = String(now.getMonth() + 1).padStart(2, "0");
+          var d = String(now.getDate()).padStart(2, "0");
+          var h = String(now.getHours()).padStart(2, "0");
+          var min = String(now.getMinutes()).padStart(2, "0");
+          document.getElementById("crise-data-hora").value =
+            y + "-" + m + "-" + d + "T" + h + ":" + min;
+        }
+
+        SAPEA_API.fetchTelaescolar()
+          .then(function (data) {
+            var criancas = data.criancas || [];
+            selectCrianca.innerHTML =
+              '<option value="">Selecione a criança</option>' +
+              criancas
+                .map(function (c) {
+                  return (
+                    '<option value="' +
+                    c.id +
+                    '">' +
+                    (c.nome || "Criança") +
+                    "</option>"
+                  );
+                })
+                .join("");
+            preencherDataHoraAtual();
+            loading.classList.add("hidden");
+            content.classList.add("ready");
+          })
+          .catch(function () {
+            loading.querySelector("p").textContent =
+              "Erro ao carregar. Verifique se você tem permissão (EQUIPE_ESCOLAR).";
+            setTimeout(function () {
+              loading.classList.add("hidden");
+              content.classList.add("ready");
+            }, 2000);
+          });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var criancaId = selectCrianca.value;
+          var dataHora = document.getElementById("crise-data-hora").value;
+          var intensidade = document.getElementById("crise-intensidade").value;
+          var descricao = document
+            .getElementById("crise-descricao")
+            .value.trim();
+          var gatilhoIdentificado = document
+            .getElementById("crise-gatilho")
+            .value.trim();
+          var estrategia = document
+            .getElementById("crise-estrategia")
+            .value.trim();
+
+          if (!criancaId || !dataHora || !intensidade) {
+            alert("Preencha criança, data/hora e intensidade.");
+            return;
+          }
+
+          var btn = document.getElementById("btn-registrar");
+          btn.disabled = true;
+          btn.textContent = "Registrando...";
+
+          var payload = {
+            criancaId: criancaId,
+            dataHora: new Date(dataHora).toISOString(),
+            intensidade: intensidade,
+            descricao: descricao || undefined,
+            gatilhoIdentificado: gatilhoIdentificado || undefined,
+          };
+
+          SAPEA_API.registrarCrise(payload)
+            .then(function () {
+              if (estrategia) {
+                return SAPEA_API.registrarIntervencao({
+                  criancaId: criancaId,
+                  dataHora: new Date(dataHora).toISOString(),
+                  estrategia: estrategia,
+                  aplicadaPor: "Equipe Escolar",
+                  resultado: undefined,
+                }).then(function () {
+                  formSuccess.innerHTML =
+                    "Crise e intervenção registradas com sucesso! " +
+                    '<a href="/pages/registrar_crise.html">Registrar outra</a> ou ' +
+                    '<a href="/pages/telaescolar.html">voltar ao painel</a>.';
+                });
+              }
+            })
+            .then(function () {
+              form.style.display = "none";
+              formSuccess.style.display = "block";
+            })
+            .catch(function (err) {
+              alert(err.message || "Erro ao registrar crise.");
+            })
+            .finally(function () {
+              btn.disabled = false;
+              btn.textContent = "Registrar Crise";
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>
