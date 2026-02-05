@@ -1,5 +1,16 @@
+DROP TABLE IF EXISTS "PersonalizacaoSensorial" CASCADE;
+DROP TABLE IF EXISTS "Intervencao" CASCADE;
+DROP TABLE IF EXISTS "PedidoSuporte" CASCADE;
+DROP TABLE IF EXISTS "RegistroCrise" CASCADE;
+DROP TABLE IF EXISTS "AmbienteEscolar" CASCADE;
+DROP TABLE IF EXISTS "Evento" CASCADE;
+DROP TABLE IF EXISTS "CriancaResponsavel" CASCADE;
+DROP TABLE IF EXISTS "Crianca" CASCADE;
+DROP TABLE IF EXISTS "Usuario" CASCADE;
+DROP TABLE IF EXISTS "Escola" CASCADE;
+
 -- CreateTable
-CREATE TABLE "Usuario" (
+CREATE TABLE IF NOT EXISTS  "Usuario" (
     "id" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -13,7 +24,7 @@ CREATE TABLE "Usuario" (
 );
 
 -- CreateTable
-CREATE TABLE "Escola" (
+CREATE TABLE IF NOT EXISTS "Escola" (
     "id" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
     "endereco" TEXT,
@@ -24,7 +35,7 @@ CREATE TABLE "Escola" (
 );
 
 -- CreateTable
-CREATE TABLE "Crianca" (
+CREATE TABLE IF NOT EXISTS "Crianca" (
     "id" TEXT NOT NULL,
     "dataNascimento" TIMESTAMP(3) NOT NULL,
     "grauTEA" TEXT NOT NULL,
@@ -37,7 +48,7 @@ CREATE TABLE "Crianca" (
 );
 
 -- CreateTable
-CREATE TABLE "CriancaResponsavel" (
+CREATE TABLE IF NOT EXISTS "CriancaResponsavel" (
     "id" TEXT NOT NULL,
     "criancaId" TEXT NOT NULL,
     "responsavelId" TEXT NOT NULL,
@@ -47,7 +58,7 @@ CREATE TABLE "CriancaResponsavel" (
 );
 
 -- CreateTable
-CREATE TABLE "Evento" (
+CREATE TABLE IF NOT EXISTS "Evento" (
     "id" TEXT NOT NULL,
     "criancaId" TEXT NOT NULL,
     "titulo" TEXT NOT NULL,
@@ -63,7 +74,7 @@ CREATE TABLE "Evento" (
 );
 
 -- CreateTable
-CREATE TABLE "AmbienteEscolar" (
+CREATE TABLE IF NOT EXISTS "AmbienteEscolar" (
     "id" TEXT NOT NULL,
     "escolaId" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
@@ -76,7 +87,7 @@ CREATE TABLE "AmbienteEscolar" (
 );
 
 -- CreateTable
-CREATE TABLE "RegistroCrise" (
+CREATE TABLE IF NOT EXISTS "RegistroCrise" (
     "id" TEXT NOT NULL,
     "criancaId" TEXT NOT NULL,
     "dataHora" TIMESTAMP(3) NOT NULL,
@@ -91,7 +102,7 @@ CREATE TABLE "RegistroCrise" (
 );
 
 -- CreateTable
-CREATE TABLE "PedidoSuporte" (
+CREATE TABLE IF NOT EXISTS "PedidoSuporte" (
     "id" TEXT NOT NULL,
     "criancaId" TEXT NOT NULL,
     "dataHora" TIMESTAMP(3) NOT NULL,
@@ -105,7 +116,7 @@ CREATE TABLE "PedidoSuporte" (
 );
 
 -- CreateTable
-CREATE TABLE "Intervencao" (
+CREATE TABLE IF NOT EXISTS "Intervencao" (
     "id" TEXT NOT NULL,
     "criancaId" TEXT NOT NULL,
     "dataHora" TIMESTAMP(3) NOT NULL,
@@ -119,7 +130,7 @@ CREATE TABLE "Intervencao" (
 );
 
 -- CreateTable
-CREATE TABLE "PersonalizacaoSensorial" (
+CREATE TABLE IF NOT EXISTS "PersonalizacaoSensorial" (
     "id" TEXT NOT NULL,
     "criancaId" TEXT NOT NULL,
     "paletaCores" TEXT,
@@ -133,6 +144,12 @@ CREATE TABLE "PersonalizacaoSensorial" (
 
     CONSTRAINT "PersonalizacaoSensorial_pkey" PRIMARY KEY ("id")
 );
+
+DROP INDEX IF EXISTS "Usuario_email_key";
+DROP INDEX IF EXISTS "CriancaResponsavel_criancaId_responsavelId_key";
+DROP INDEX IF EXISTS "PedidoSuporte_registroCriseId_key";
+DROP INDEX IF EXISTS "PersonalizacaoSensorial_criancaId_key";
+
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");

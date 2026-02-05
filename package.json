@@ -36,7 +36,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src --ext ts --exec \"tsx\" src/server.ts"
+    "dev": "nodemon --watch src --ext ts --exec \"tsx\" src/server.ts",
+    "db:seed": "npx prisma db execute --file prisma/seed.sql --schema prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate deploy"
   },
   "repository": {
     "type": "git",

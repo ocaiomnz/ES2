@@ -17,8 +17,6 @@ git clone https://github.com/ocaiomnz/ES2.git
 cd ES2
 ```
 
-Crie o arquivo `.env` na raiz com `DATABASE_URL`, `JWT_SECRET` e `PORT`.
-
 2. Instale as dependências:
 
 ```bash
