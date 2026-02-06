@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS "Escola" (
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "Crianca" (
     "id" TEXT NOT NULL,
+    "nome" TEXT,
     "dataNascimento" TIMESTAMP(3) NOT NULL,
     "grauTEA" TEXT NOT NULL,
     "grauSuporte" TEXT NOT NULL,
@@ -208,8 +209,8 @@ INSERT INTO "Usuario" ("id", "nome", "email", "senhaHash", "tipoPerfil", "escola
   ('22222222-2222-2222-2222-222222222202', 'João Responsável', 'responsavel@email.com', '$2b$10$yjlPQw0YagpTeFwi2rvuge0piUbBIUj4nJRND4Xrv3ENbEwsu.Gme', 'RESPONSAVEL', NULL, NOW(), NOW()),
   ('22222222-2222-2222-2222-222222222203', 'Admin Sistema', 'admin@sapea.com', '$2b$10$yjlPQw0YagpTeFwi2rvuge0piUbBIUj4nJRND4Xrv3ENbEwsu.Gme', 'ADMIN', NULL, NOW(), NOW());
 
-INSERT INTO "Crianca" ("id", "dataNascimento", "grauTEA", "grauSuporte", "escolaId", "createdAt", "updatedAt") VALUES
-  ('33333333-3333-3333-3333-333333333301', '2015-05-10 00:00:00', 'LEVE', 'NIVEL_1', '11111111-1111-1111-1111-111111111111', NOW(), NOW());
+INSERT INTO "Crianca" ("id", "nome", "dataNascimento", "grauTEA", "grauSuporte", "escolaId", "createdAt", "updatedAt") VALUES
+  ('33333333-3333-3333-3333-333333333301', 'Lucas', '2015-05-10 00:00:00', 'LEVE', 'NIVEL_1', '11111111-1111-1111-1111-111111111111', NOW(), NOW());
 
 INSERT INTO "CriancaResponsavel" ("id", "criancaId", "responsavelId") VALUES
   ('44444444-4444-4444-4444-444444444401', '33333333-3333-3333-3333-333333333301', '22222222-2222-2222-2222-222222222202');

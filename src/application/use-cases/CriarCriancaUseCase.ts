@@ -2,11 +2,16 @@ import type { ICriancaRepository } from "../../domain/repositories/ICriancaRepos
 import type { IUsuarioRepository } from "../../domain/repositories/IUsuarioRepository.js";
 import { Crianca } from "../../domain/entities/Crianca.js";
 import { AgregadoCrianca } from "../../domain/aggregates/AgregadoCrianca.js";
-import { DataNascimento, GrauTEA, GrauSuporte } from "../../domain/value-objects/index.js";
+import {
+  DataNascimento,
+  GrauTEA,
+  GrauSuporte,
+} from "../../domain/value-objects/index.js";
 import { TipoPerfilEnum } from "../../domain/value-objects/TipoPerfil.js";
 
 export type CriarCriancaInput = {
   usuarioId: string;
+  nome?: string;
   dataNascimento: Date;
   grauTEA: string;
   grauSuporte: string;
@@ -17,7 +22,7 @@ export type CriarCriancaInput = {
 export class CriarCriancaUseCase {
   constructor(
     private readonly criancaRepo: ICriancaRepository,
-    private readonly usuarioRepo: IUsuarioRepository,
+    private readonly usuarioRepo: IUsuarioRepository
   ) {}
 
   public async execute(input: CriarCriancaInput): Promise<string> {
@@ -27,15 +32,29 @@ export class CriarCriancaUseCase {
     }
 
     const perfil = usuario.tipoPerfil.tipo;
-    if (perfil !== TipoPerfilEnum.PROFESSOR && perfil !== TipoPerfilEnum.RESPONSAVEL) {
-      throw new Error("Permissão negada: apenas equipe escolar ou responsáveis podem cadastrar crianças");
+    const perfisPermitidos = [
+      TipoPerfilEnum.PROFESSOR,
+      TipoPerfilEnum.EQUIPE_ESCOLAR,
+      TipoPerfilEnum.RESPONSAVEL,
+    ];
+    if (!perfisPermitidos.includes(perfil)) {
+      throw new Error(
+        "Permissão negada: apenas equipe escolar ou responsáveis podem cadastrar crianças"
+      );
     }
 
-    if (perfil === TipoPerfilEnum.PROFESSOR && !input.escolaId) {
+    if (
+      (perfil === TipoPerfilEnum.PROFESSOR ||
+        perfil === TipoPerfilEnum.EQUIPE_ESCOLAR) &&
+      !input.escolaId
+    ) {
       throw new Error("escolaId é obrigatório para equipe escolar");
     }
 
-    if (perfil === TipoPerfilEnum.RESPONSAVEL && !input.responsavelIds?.includes(input.usuarioId)) {
+    if (
+      perfil === TipoPerfilEnum.RESPONSAVEL &&
+      !input.responsavelIds?.includes(input.usuarioId)
+    ) {
       if (!input.responsavelIds) {
         input.responsavelIds = [input.usuarioId];
       } else {
@@ -53,6 +72,7 @@ export class CriarCriancaUseCase {
       grauSuporte,
       input.escolaId,
       input.responsavelIds,
+      input.nome
     );
 
     const agregado = AgregadoCrianca.criar(crianca);

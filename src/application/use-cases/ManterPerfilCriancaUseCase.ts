@@ -1,11 +1,16 @@
 import type { ICriancaRepository } from "../../domain/repositories/ICriancaRepository.js";
 import type { IUsuarioRepository } from "../../domain/repositories/IUsuarioRepository.js";
 import { TipoPerfilEnum } from "../../domain/value-objects/TipoPerfil.js";
-import { DataNascimento, GrauTEA, GrauSuporte } from "../../domain/value-objects/index.js";
+import {
+  DataNascimento,
+  GrauTEA,
+  GrauSuporte,
+} from "../../domain/value-objects/index.js";
 
 export type EditarCriancaInput = {
   usuarioId: string;
   criancaId: string;
+  nome?: string;
   dataNascimento?: Date;
   grauTEA?: string;
   grauSuporte?: string;
@@ -16,7 +21,7 @@ export type EditarCriancaInput = {
 export class EditarCriancaUseCase {
   constructor(
     private readonly criancaRepo: ICriancaRepository,
-    private readonly usuarioRepo: IUsuarioRepository,
+    private readonly usuarioRepo: IUsuarioRepository
   ) {}
 
   public async execute(input: EditarCriancaInput): Promise<void> {
@@ -37,18 +42,28 @@ export class EditarCriancaUseCase {
       // Admin pode editar qualquer criança
     } else if (perfil === TipoPerfilEnum.PROFESSOR) {
       if (!usuario.escolaId || usuario.escolaId !== crianca.escolaId) {
-        throw new Error("Permissão negada: professor não pertence à mesma escola");
+        throw new Error(
+          "Permissão negada: professor não pertence à mesma escola"
+        );
       }
     } else if (perfil === TipoPerfilEnum.RESPONSAVEL) {
       if (!crianca.responsavelIds.includes(usuario.id)) {
-        throw new Error("Permissão negada: usuário não é responsável pela criança");
+        throw new Error(
+          "Permissão negada: usuário não é responsável pela criança"
+        );
       }
     } else {
       throw new Error("Permissão negada");
     }
 
+    if (input.nome !== undefined) {
+      crianca.alterarNome(input.nome || undefined);
+    }
+
     if (input.dataNascimento) {
-      crianca.alterarDataNascimento(DataNascimento.create(input.dataNascimento));
+      crianca.alterarDataNascimento(
+        DataNascimento.create(input.dataNascimento)
+      );
     }
 
     if (input.grauTEA) {
@@ -66,4 +81,3 @@ export class EditarCriancaUseCase {
     await this.criancaRepo.salvar(agregado);
   }
 }
-

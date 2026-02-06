@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SAPEA - Gerenciar Crianças" />
+    <meta name="theme-color" content="#7B9ACC" />
+    <title>SAPEA - Gerenciar Crianças</title>
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="page-loading" class="page-loading">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Carregando crianças...</p>
+    </div>
+
+    <div id="page-content" class="page-content">
+      <header class="page-header">
+        <a href="/pages/telaescolar.html" class="btn-icon" aria-label="Voltar"
+          >←</a
+        >
+        <a
+          href="/pages/telaescolar.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
+        <h1 class="page-title">Gerenciar Crianças</h1>
+        <button type="button" class="btn btn-primary" id="btn-nova-crianca">
+          + Nova Criança
+        </button>
+      </header>
+      <main class="page-main" id="main-content">
+        <section class="card">
+          <h2 class="card-title">Perfis de Crianças</h2>
+          <p class="help-text" style="margin-bottom: 1rem">
+            Cadastre e edite os perfis das crianças vinculadas ao sistema.
+          </p>
+          <div id="crianca-list" class="students-list"></div>
+          <p
+            id="crianca-empty"
+            class="text-center"
+            style="display: none; color: var(--color-text-light); padding: 2rem"
+          >
+            Nenhuma criança cadastrada. Clique em "Nova Criança" para começar.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal Novo/Editar Criança -->
+    <div id="modal-crianca" class="modal-overlay" role="dialog">
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="fecharModalCrianca()"
+          aria-label="Fechar"
+        >
+          ✕
+        </button>
+        <h2 class="modal-title" id="modal-crianca-title">Nova Criança</h2>
+        <form id="form-crianca">
+          <input type="hidden" id="crianca-id" />
+          <div class="form-group">
+            <label for="crianca-nome" class="form-label"
+              >Nome da criança *</label
+            >
+            <input
+              type="text"
+              id="crianca-nome"
+              class="form-input"
+              placeholder="Ex: Lucas, Maria..."
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="crianca-data-nasc" class="form-label"
+              >Data de Nascimento *</label
+            >
+            <input
+              type="date"
+              id="crianca-data-nasc"
+              class="form-input"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="crianca-grau-tea" class="form-label">Grau TEA *</label>
+            <select
+              id="crianca-grau-tea"
+              class="form-select form-input"
+              required
+            >
+              <option value="LEVE">Leve</option>
+              <option value="MODERADO">Moderado</option>
+              <option value="SEVERO">Severo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="crianca-grau-suporte" class="form-label"
+              >Nível de Suporte *</label
+            >
+            <select
+              id="crianca-grau-suporte"
+              class="form-select form-input"
+              required
+            >
+              <option value="NIVEL_1">Nível 1</option>
+              <option value="NIVEL_2">Nível 2</option>
+              <option value="NIVEL_3">Nível 3</option>
+            </select>
+          </div>
+          <div
+            class="form-group"
+            id="crianca-escola-group"
+            style="display: none"
+          >
+            <label for="crianca-escola" class="form-label">Escola *</label>
+            <select id="crianca-escola" class="form-select form-input">
+              <option value="">Carregando...</option>
+            </select>
+          </div>
+          <div
+            class="form-group"
+            id="crianca-responsaveis-group"
+            style="display: none"
+          >
+            <label class="form-label">Responsáveis (pais/responsáveis)</label>
+            <p class="help-text" style="margin-bottom: 0.5rem">
+              Cadastre os pais ou responsáveis da criança. Eles receberão acesso
+              ao painel.
+            </p>
+            <div
+              style="
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                margin-bottom: 0.5rem;
+              "
+            >
+              <input
+                type="text"
+                id="resp-nome"
+                class="form-input"
+                placeholder="Nome"
+                style="flex: 1; min-width: 120px"
+              />
+              <input
+                type="email"
+                id="resp-email"
+                class="form-input"
+                placeholder="E-mail"
+                style="flex: 1; min-width: 140px"
+              />
+              <input
+                type="password"
+                id="resp-senha"
+                class="form-input"
+                placeholder="Senha inicial (mín. 6 caracteres, 1 letra e 1 número)"
+                style="flex: 1; min-width: 180px"
+              />
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                id="btn-add-responsavel"
+              >
+                + Adicionar
+              </button>
+            </div>
+            <div
+              id="responsaveis-lista"
+              style="display: flex; flex-direction: column; gap: 0.5rem"
+            ></div>
+          </div>
+          <div
+            class="form-actions"
+            style="display: flex; gap: 0.5rem; margin-top: 1rem"
+          >
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="fecharModalCrianca()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="btn-salvar-crianca"
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="/javascripts/sapea-ui.js"></script>
+    <script src="/javascripts/api.js"></script>
+    <script>
+      (function () {
+        if (typeof SAPEA_REQUIRE_AUTH === "function" && !SAPEA_REQUIRE_AUTH())
+          return;
+
+        var loading = document.getElementById("page-loading");
+        var content = document.getElementById("page-content");
+        var listEl = document.getElementById("crianca-list");
+        var emptyEl = document.getElementById("crianca-empty");
+        var form = document.getElementById("form-crianca");
+        var modal = document.getElementById("modal-crianca");
+        var escolaGroup = document.getElementById("crianca-escola-group");
+        var escolaSelect = document.getElementById("crianca-escola");
+
+        var usuario = {};
+        var criancas = [];
+        var responsaveisList = [];
+
+        function carregarEscolas() {
+          return fetch("/api/escolas")
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (data) {
+              var escolas = data.escolas || [];
+              escolaSelect.innerHTML =
+                '<option value="">Selecione a escola</option>' +
+                escolas
+                  .map(function (e) {
+                    return (
+                      '<option value="' +
+                      e.id +
+                      '">' +
+                      (e.nome || e.id) +
+                      "</option>"
+                    );
+                  })
+                  .join("");
+            });
+        }
+
+        function toggleEscolaField() {
+          var tipo = (usuario.tipoPerfil || "").toUpperCase();
+          if (tipo === "PROFESSOR" || tipo === "EQUIPE_ESCOLAR") {
+            escolaGroup.style.display = "block";
+            escolaSelect.required = true;
+          } else {
+            escolaGroup.style.display = "none";
+            escolaSelect.required = false;
+          }
+        }
+
+        function toggleResponsaveisField() {
+          var tipo = (usuario.tipoPerfil || "").toUpperCase();
+          var respGroup = document.getElementById("crianca-responsaveis-group");
+          if (respGroup) {
+            respGroup.style.display =
+              tipo === "PROFESSOR" || tipo === "EQUIPE_ESCOLAR"
+                ? "block"
+                : "none";
+          }
+        }
+
+        function renderResponsaveisLista() {
+          var el = document.getElementById("responsaveis-lista");
+          if (!el) return;
+          el.innerHTML = responsaveisList
+            .map(function (r, i) {
+              return (
+                '<div class="list-item" style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem;background:var(--color-bg);border-radius:var(--border-radius-sm)">' +
+                "<span>" +
+                (r.nome || "—") +
+                " &lt;" +
+                (r.email || "—") +
+                "&gt;</span>" +
+                '<button type="button" class="btn btn-danger btn-sm" onclick="removerResponsavel(' +
+                i +
+                ')">Remover</button>' +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        window.removerResponsavel = function (idx) {
+          responsaveisList.splice(idx, 1);
+          renderResponsaveisLista();
+        };
+
+        function carregarDados() {
+          return Promise.all([
+            SAPEA_API.fetchUsuario(),
+            SAPEA_API.fetchPerfisCriancas
+              ? SAPEA_API.fetchPerfisCriancas()
+              : Promise.resolve([]),
+          ]).then(function (results) {
+            usuario = results[0];
+            criancas = (results[1] || []).map(function (c) {
+              var nomeExib =
+                c.nome ||
+                "Criança (Grau " +
+                  (c.grauTEA || "—") +
+                  ", Suporte " +
+                  (c.grauSuporte || "—") +
+                  ")";
+              return {
+                id: c.id,
+                nome: nomeExib,
+                grauTEA: c.grauTEA,
+                grauSuporte: c.grauSuporte,
+                escolaId: c.escolaId,
+                dataNascimento: c.dataNascimento,
+              };
+            });
+            return carregarEscolas();
+          });
+        }
+
+        function renderizarLista() {
+          if (!criancas || criancas.length === 0) {
+            listEl.innerHTML = "";
+            listEl.style.display = "none";
+            emptyEl.style.display = "block";
+            return;
+          }
+          emptyEl.style.display = "none";
+          listEl.style.display = "block";
+          listEl.innerHTML = criancas
+            .map(function (c) {
+              var dataNasc = c.dataNascimento
+                ? new Date(c.dataNascimento).toLocaleDateString("pt-BR")
+                : "—";
+              return (
+                '<div class="student-item">' +
+                '<div class="student-avatar">👤</div>' +
+                '<div class="student-info">' +
+                '<p class="student-name">' +
+                (c.nome || "Criança") +
+                "</p>" +
+                '<p class="student-status">Grau ' +
+                (c.grauTEA || "—") +
+                " · Suporte " +
+                (c.grauSuporte || "—") +
+                " · Nasc. " +
+                dataNasc +
+                "</p></div>" +
+                '<div style="display:flex;gap:0.25rem;margin-left:auto">' +
+                '<a href="/pages/gerenciar_rotina.html" class="btn btn-primary btn-sm" onclick="localStorage.setItem(\'sapea_crianca_id\', \'' +
+                c.id +
+                "')\">Rotina</a>" +
+                '<button type="button" class="btn btn-secondary btn-sm" onclick="editarCrianca(\'' +
+                c.id +
+                "')\">Editar</button>" +
+                '<button type="button" class="btn btn-danger btn-sm" onclick="excluirCrianca(\'' +
+                c.id +
+                "','" +
+                (c.nome || "Criança").replace(/'/g, "\\'") +
+                "')\">Excluir</button>" +
+                "</div></div>"
+              );
+            })
+            .join("");
+        }
+
+        window.editarCrianca = function (id) {
+          if (!SAPEA_API.fetchPerfilCrianca) return;
+          SAPEA_API.fetchPerfilCrianca(id)
+            .then(function (c) {
+              c = c || {};
+              document.getElementById("modal-crianca-title").textContent =
+                "Editar Criança";
+              document.getElementById("crianca-id").value = c.id || id;
+              document.getElementById("crianca-nome").value = c.nome || "";
+              document.getElementById("crianca-data-nasc").value =
+                c.dataNascimento
+                  ? new Date(c.dataNascimento).toISOString().slice(0, 10)
+                  : "";
+              document.getElementById("crianca-grau-tea").value =
+                c.grauTEA || "LEVE";
+              document.getElementById("crianca-grau-suporte").value =
+                c.grauSuporte || "NIVEL_1";
+              document.getElementById("crianca-escola").value =
+                c.escolaId || "";
+              responsaveisList = [];
+              renderResponsaveisLista();
+              toggleEscolaField();
+              toggleResponsaveisField();
+              modal.classList.add("active");
+            })
+            .catch(function (err) {
+              SAPEA_TOAST(
+                err.message || "Erro ao carregar dados da criança.",
+                "danger"
+              );
+            });
+        };
+
+        window.excluirCrianca = function (id, nome) {
+          if (
+            !confirm(
+              'Excluir a criança "' +
+                nome +
+                '"? Esta ação não pode ser desfeita.'
+            )
+          )
+            return;
+          SAPEA_API.excluirCrianca(id)
+            .then(function () {
+              return carregarDados();
+            })
+            .then(function () {
+              renderizarLista();
+              SAPEA_TOAST("Criança excluída com sucesso.", "success");
+            })
+            .catch(function (err) {
+              SAPEA_TOAST(err.message || "Erro ao excluir.", "danger");
+            });
+        };
+
+        window.fecharModalCrianca = function () {
+          modal.classList.remove("active");
+          form.reset();
+          document.getElementById("crianca-id").value = "";
+          document.getElementById("modal-crianca-title").textContent =
+            "Nova Criança";
+          responsaveisList = [];
+          renderResponsaveisLista();
+        };
+
+        document
+          .getElementById("btn-add-responsavel")
+          .addEventListener("click", function () {
+            var nome = document.getElementById("resp-nome").value.trim();
+            var email = document.getElementById("resp-email").value.trim();
+            var senha = document.getElementById("resp-senha").value;
+            if (!nome || !email || !senha) {
+              SAPEA_TOAST(
+                "Preencha nome, e-mail e senha do responsável.",
+                "warning"
+              );
+              return;
+            }
+            if (
+              senha.length < 6 ||
+              !/[a-zA-Z]/.test(senha) ||
+              !/\d/.test(senha)
+            ) {
+              SAPEA_TOAST(
+                "A senha deve ter no mínimo 6 caracteres, pelo menos 1 letra e 1 número.",
+                "warning"
+              );
+              return;
+            }
+            responsaveisList.push({ nome: nome, email: email, senha: senha });
+            document.getElementById("resp-nome").value = "";
+            document.getElementById("resp-email").value = "";
+            document.getElementById("resp-senha").value = "";
+            renderResponsaveisLista();
+          });
+
+        document
+          .getElementById("btn-nova-crianca")
+          .addEventListener("click", function () {
+            document.getElementById("modal-crianca-title").textContent =
+              "Nova Criança";
+            document.getElementById("crianca-id").value = "";
+            form.reset();
+            responsaveisList = [];
+            renderResponsaveisLista();
+            toggleEscolaField();
+            toggleResponsaveisField();
+            modal.classList.add("active");
+          });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var id = document.getElementById("crianca-id").value;
+          var nome = document.getElementById("crianca-nome").value.trim();
+          var dataNasc = document.getElementById("crianca-data-nasc").value;
+          var grauTEA = document.getElementById("crianca-grau-tea").value;
+          var grauSuporte = document.getElementById(
+            "crianca-grau-suporte"
+          ).value;
+          var escolaId =
+            document.getElementById("crianca-escola").value || undefined;
+
+          if (!nome || !dataNasc || !grauTEA || !grauSuporte) {
+            SAPEA_TOAST(
+              "Preencha nome, data de nascimento, grau TEA e suporte.",
+              "warning"
+            );
+            return;
+          }
+
+          var tipo = (usuario.tipoPerfil || "").toUpperCase();
+          if (
+            (tipo === "PROFESSOR" || tipo === "EQUIPE_ESCOLAR") &&
+            !escolaId
+          ) {
+            SAPEA_TOAST("Selecione uma escola.", "warning");
+            return;
+          }
+
+          var btn = document.getElementById("btn-salvar-crianca");
+          btn.disabled = true;
+          btn.textContent = "Salvando...";
+
+          var criarCriancaComResponsaveis = function (responsavelIds) {
+            return SAPEA_API.criarCrianca({
+              nome: nome,
+              dataNascimento: dataNasc,
+              grauTEA: grauTEA,
+              grauSuporte: grauSuporte,
+              escolaId: escolaId,
+              responsavelIds: responsavelIds,
+            });
+          };
+
+          var promessa;
+          if (id) {
+            promessa = SAPEA_API.atualizarCrianca(id, {
+              nome: nome,
+              dataNascimento: dataNasc,
+              grauTEA: grauTEA,
+              grauSuporte: grauSuporte,
+              escolaId: escolaId,
+            });
+          } else if (
+            responsaveisList.length > 0 &&
+            SAPEA_API.criarResponsavel
+          ) {
+            promessa = Promise.all(
+              responsaveisList.map(function (r) {
+                return SAPEA_API.criarResponsavel({
+                  nome: r.nome,
+                  email: r.email,
+                  senha: r.senha,
+                });
+              })
+            ).then(function (results) {
+              var ids = results
+                .map(function (res) {
+                  return res.usuario?.usuarioId || res.usuarioId;
+                })
+                .filter(Boolean);
+              return criarCriancaComResponsaveis(ids);
+            });
+          } else {
+            promessa = criarCriancaComResponsaveis(undefined);
+          }
+
+          promessa
+            .then(function (res) {
+              if (res && res.criancaId && !id) {
+                localStorage.setItem("sapea_crianca_id", res.criancaId);
+              }
+              return carregarDados();
+            })
+            .then(function () {
+              renderizarLista();
+              fecharModalCrianca();
+              SAPEA_TOAST(
+                id
+                  ? "Criança atualizada!"
+                  : "Criança e " +
+                      (responsaveisList.length > 0
+                        ? responsaveisList.length + " responsável(is) "
+                        : "") +
+                      "cadastrados!",
+                "success"
+              );
+            })
+            .catch(function (err) {
+              SAPEA_TOAST(err.message || "Erro ao salvar.", "danger");
+            })
+            .finally(function () {
+              btn.disabled = false;
+              btn.textContent = "Salvar";
+            });
+        });
+
+        carregarDados()
+          .then(function () {
+            toggleEscolaField();
+            toggleResponsaveisField();
+            renderizarLista();
+            loading.classList.add("hidden");
+            content.classList.add("ready");
+          })
+          .catch(function () {
+            loading.querySelector("p").textContent =
+              "Erro ao carregar. Verifique se você tem permissão.";
+            setTimeout(function () {
+              loading.classList.add("hidden");
+              content.classList.add("ready");
+            }, 2000);
+          });
+      })();
+    </script>
+  </body>
+</html>

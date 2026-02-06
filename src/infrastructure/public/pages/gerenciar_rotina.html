@@ -32,6 +32,13 @@
         >
           ←
         </a>
+        <a
+          href="/pages/telaescolar.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
         <h1 class="rotina-title">Gerenciar Rotina</h1>
         <a
           href="/pages/login.html"
@@ -79,6 +86,14 @@
           <h3 class="rotina-card-title">
             <span class="rotina-card-icon">📅</span>
             Rotina de Hoje
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              id="btn-novo-evento"
+              style="margin-left: auto"
+            >
+              + Novo Evento
+            </button>
           </h3>
           <div
             id="timeline-rotina"
@@ -131,7 +146,94 @@
             Nenhum registro de humor ainda.
           </p>
         </section>
+
+        <!-- Personalização Sensorial -->
+        <section class="rotina-card" id="personalizacao-section">
+          <h3 class="rotina-card-title">
+            <span class="rotina-card-icon">🎨</span>
+            Personalização Sensorial
+          </h3>
+          <p class="rotina-description">
+            Configurações de acessibilidade para a criança (cores, fontes,
+            sons).
+          </p>
+          <div id="personalizacao-form" class="rotina-personalizacao"></div>
+        </section>
       </main>
+
+      <!-- Modal Novo/Editar Evento -->
+      <div id="modal-evento" class="modal-overlay" role="dialog">
+        <div class="modal-box">
+          <button
+            class="modal-close"
+            onclick="fecharModalEvento()"
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+          <h2 class="modal-title" id="modal-evento-title">Novo Evento</h2>
+          <form id="form-evento">
+            <input type="hidden" id="evento-id" />
+            <div class="form-group">
+              <label for="evento-titulo" class="form-label">Título *</label>
+              <input
+                type="text"
+                id="evento-titulo"
+                class="form-input"
+                placeholder="Ex: Aula de Matemática"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="evento-inicio" class="form-label">Início *</label>
+              <input
+                type="datetime-local"
+                id="evento-inicio"
+                class="form-input"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="evento-fim" class="form-label">Fim *</label>
+              <input
+                type="datetime-local"
+                id="evento-fim"
+                class="form-input"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="evento-risco" class="form-label"
+                >Nível de Risco *</label
+              >
+              <select id="evento-risco" class="form-select form-input" required>
+                <option value="VERDE">Verde</option>
+                <option value="AMARELO">Amarelo</option>
+                <option value="VERMELHO">Vermelho</option>
+              </select>
+            </div>
+            <div
+              class="form-actions"
+              style="display: flex; gap: 0.5rem; margin-top: 1rem"
+            >
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="fecharModalEvento()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="btn-salvar-evento"
+              >
+                Salvar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
 
       <nav class="bottom-nav">
         <a href="/pages/telaescolar.html" class="nav-item">
@@ -150,9 +252,14 @@
           <span class="nav-icon">⚙️</span>
           <span class="nav-label">Ambientes</span>
         </a>
+        <a href="/pages/gerenciar_criancas.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Crianças</span>
+        </a>
       </nav>
     </div>
 
+    <script src="/javascripts/sapea-ui.js"></script>
     <script src="/javascripts/api.js"></script>
     <script>
       (function () {
@@ -215,10 +322,10 @@
           rotinaEmpty.style.display = "none";
           timelineEl.style.display = "flex";
           var now = new Date();
+          var criancaId = localStorage.getItem("sapea_crianca_id");
           timelineEl.innerHTML = eventos
             .map(function (ev) {
               var inicio = new Date(ev.dataHoraInicio || ev.data_hora_inicio);
-              var isPast = inicio < now;
               var cls =
                 ev.status === "CONCLUIDO"
                   ? "completed"
@@ -239,6 +346,19 @@
                   : '<p class="timeline-time">' +
                     formatTime(ev.dataHoraInicio || ev.data_hora_inicio) +
                     "</p>";
+              var acoes =
+                ev.id && criancaId
+                  ? '<div class="timeline-actions" style="margin-top:0.5rem;display:flex;gap:0.25rem">' +
+                    '<button type="button" class="btn btn-secondary btn-sm" onclick="editarEvento(\'' +
+                    ev.id +
+                    "')\">Editar</button>" +
+                    '<button type="button" class="btn btn-danger btn-sm" onclick="excluirEvento(\'' +
+                    ev.id +
+                    "','" +
+                    (ev.titulo || "").replace(/'/g, "\\'") +
+                    "')\">Excluir</button>" +
+                    "</div>"
+                  : "";
               return (
                 '<div class="timeline-item ' +
                 cls +
@@ -256,6 +376,7 @@
                 (ev.titulo || "—") +
                 "</p>" +
                 progress +
+                acoes +
                 "</div></div>"
               );
             })
@@ -269,10 +390,27 @@
             return;
           }
           crisesEmpty.style.display = "none";
+          var criancaId = localStorage.getItem("sapea_crianca_id");
           crisesEl.innerHTML = crises
             .slice(0, 10)
             .map(function (c) {
               var cls = intensidadeClass(c.intensidade);
+              var eficacia =
+                c.foiEficaz === undefined || c.foiEficaz === null
+                  ? c.id && criancaId
+                    ? '<div class="rotina-crise-eficacia" style="margin-top:0.5rem">' +
+                      '<span class="help-text" style="font-size:0.75rem">Marcar eficácia: </span>' +
+                      '<button type="button" class="btn btn-primary btn-sm" onclick="marcarEficacia(\'' +
+                      c.id +
+                      "', true)\">✓ Eficaz</button> " +
+                      '<button type="button" class="btn btn-danger btn-sm" onclick="marcarEficacia(\'' +
+                      c.id +
+                      "', false)\">✗ Não eficaz</button>" +
+                      "</div>"
+                    : ""
+                  : '<p class="rotina-crise-eficacia" style="font-size:0.75rem;margin-top:0.25rem">Eficácia: ' +
+                    (c.foiEficaz ? "Sim ✓" : "Não ✗") +
+                    "</p>";
               return (
                 '<div class="rotina-crise-item ' +
                 cls +
@@ -292,6 +430,7 @@
                 (c.descricao
                   ? '<p class="rotina-crise-desc">' + c.descricao + "</p>"
                   : "") +
+                eficacia +
                 "</div>"
               );
             })
@@ -352,7 +491,9 @@
         }
 
         function updateHero(crianca) {
-          var nome = crianca.id ? "Criança" : "Selecione uma criança";
+          var nome = crianca.id
+            ? crianca.nome || "Criança"
+            : "Selecione uma criança";
           var meta =
             crianca.grauTEA || crianca.grauSuporte
               ? "Grau " +
@@ -370,12 +511,154 @@
         function loadRotina() {
           return SAPEA_API.fetchRotinaCompleta().then(function (data) {
             var crianca = data.crianca || {};
+            var criancaId =
+              crianca.id || localStorage.getItem("sapea_crianca_id");
+            eventosCache = data.eventos || [];
             updateHero(crianca);
-            renderTimeline(data.eventos || []);
+            renderTimeline(eventosCache);
             renderCrises(data.crises || []);
             renderAmbientes(data.ambientes || []);
             renderHumor(data.humorRegistros || []);
+            if (criancaId && SAPEA_API.obterPersonalizacao) {
+              SAPEA_API.obterPersonalizacao(criancaId)
+                .then(function (p) {
+                  renderPersonalizacao(p, criancaId);
+                })
+                .catch(function () {
+                  renderPersonalizacao({}, criancaId);
+                });
+            } else {
+              renderPersonalizacao({}, criancaId);
+            }
           });
+        }
+
+        var modalEvento = document.getElementById("modal-evento");
+        var formEvento = document.getElementById("form-evento");
+        var eventosCache = [];
+
+        window.fecharModalEvento = function () {
+          if (modalEvento) modalEvento.classList.remove("active");
+          if (formEvento) formEvento.reset();
+          document.getElementById("evento-id").value = "";
+          document.getElementById("modal-evento-title").textContent =
+            "Novo Evento";
+        };
+
+        window.editarEvento = function (id) {
+          var ev = eventosCache.find(function (e) {
+            return e.id === id;
+          });
+          if (!ev) return;
+          document.getElementById("modal-evento-title").textContent =
+            "Editar Evento";
+          document.getElementById("evento-id").value = ev.id;
+          document.getElementById("evento-titulo").value = ev.titulo || "";
+          var inicio = ev.dataHoraInicio ? new Date(ev.dataHoraInicio) : null;
+          var fim = ev.dataHoraFim ? new Date(ev.dataHoraFim) : null;
+          document.getElementById("evento-inicio").value = inicio
+            ? inicio.toISOString().slice(0, 16)
+            : "";
+          document.getElementById("evento-fim").value = fim
+            ? fim.toISOString().slice(0, 16)
+            : "";
+          document.getElementById("evento-risco").value =
+            ev.nivelRisco || "VERDE";
+          if (modalEvento) modalEvento.classList.add("active");
+        };
+
+        window.excluirEvento = function (id, titulo) {
+          if (!confirm('Excluir o evento "' + titulo + '"?')) return;
+          var criancaId = localStorage.getItem("sapea_crianca_id");
+          if (!criancaId || !SAPEA_API.excluirEvento) return;
+          SAPEA_API.excluirEvento(id)
+            .then(loadRotina)
+            .catch(function (err) {
+              SAPEA_TOAST(err.message || "Erro ao excluir evento.", "danger");
+            });
+        };
+
+        window.marcarEficacia = function (criseId, eficaz) {
+          var criancaId = localStorage.getItem("sapea_crianca_id");
+          if (!criancaId || !SAPEA_API.marcarEficaciaCrise) return;
+          SAPEA_API.marcarEficaciaCrise(criseId, criancaId, eficaz)
+            .then(loadRotina)
+            .catch(function (err) {
+              SAPEA_TOAST(err.message || "Erro ao marcar eficácia.", "danger");
+            });
+        };
+
+        function abrirModalNovoEvento() {
+          document.getElementById("modal-evento-title").textContent =
+            "Novo Evento";
+          document.getElementById("evento-id").value = "";
+          formEvento.reset();
+          var hoje = new Date();
+          var fim = new Date(hoje.getTime() + 60 * 60 * 1000);
+          document.getElementById("evento-inicio").value = hoje
+            .toISOString()
+            .slice(0, 16);
+          document.getElementById("evento-fim").value = fim
+            .toISOString()
+            .slice(0, 16);
+          document.getElementById("evento-risco").value = "VERDE";
+          if (modalEvento) modalEvento.classList.add("active");
+        }
+
+        function renderPersonalizacao(personalizacao, criancaId) {
+          var formEl = document.getElementById("personalizacao-form");
+          if (!formEl || !criancaId) return;
+          var p = personalizacao || {};
+          formEl.innerHTML =
+            '<div class="form-group">' +
+            '<label class="form-label">Tamanho da fonte</label>' +
+            '<select id="pers-tamanho" class="form-select form-input">' +
+            '<option value="PEQUENO"' +
+            (p.tamanhoFonte === "PEQUENO" ? " selected" : "") +
+            ">Pequeno</option>" +
+            '<option value="MEDIO"' +
+            (p.tamanhoFonte === "MEDIO" || !p.tamanhoFonte ? " selected" : "") +
+            ">Médio</option>" +
+            '<option value="GRANDE"' +
+            (p.tamanhoFonte === "GRANDE" ? " selected" : "") +
+            ">Grande</option>" +
+            "</select></div>" +
+            '<div class="form-group">' +
+            '<label class="form-label">' +
+            '<input type="checkbox" id="pers-sons" ' +
+            (p.sons ? "checked" : "") +
+            "> Sons</label></div>" +
+            '<div class="form-group">' +
+            '<label class="form-label">' +
+            '<input type="checkbox" id="pers-animacoes" ' +
+            (p.animacoes ? "checked" : "") +
+            "> Animações</label></div>" +
+            '<div class="form-group">' +
+            '<label class="form-label">' +
+            '<input type="checkbox" id="pers-contraste" ' +
+            (p.contrasteAlto ? "checked" : "") +
+            "> Alto contraste</label></div>" +
+            '<button type="button" class="btn btn-primary btn-sm" id="btn-salvar-pers">Salvar personalização</button>';
+          document.getElementById("btn-salvar-pers").onclick = function () {
+            if (!SAPEA_API.atualizarPersonalizacao) return;
+            var btn = this;
+            btn.disabled = true;
+            SAPEA_API.atualizarPersonalizacao(criancaId, {
+              tamanhoFonte: document.getElementById("pers-tamanho").value,
+              sons: document.getElementById("pers-sons").checked,
+              animacoes: document.getElementById("pers-animacoes").checked,
+              contrasteAlto: document.getElementById("pers-contraste").checked,
+            })
+              .then(function () {
+                SAPEA_TOAST("Personalização salva!", "success");
+              })
+              .catch(function (err) {
+                SAPEA_TOAST(err.message || "Erro ao salvar.", "danger");
+              })
+              .finally(function () {
+                btn.disabled = false;
+              });
+          };
         }
 
         function setupSelector() {
@@ -407,6 +690,58 @@
             };
           });
         }
+
+        document
+          .getElementById("btn-novo-evento")
+          .addEventListener("click", function () {
+            var criancaId = localStorage.getItem("sapea_crianca_id");
+            if (!criancaId) {
+              SAPEA_TOAST("Selecione uma criança primeiro.", "warning");
+              return;
+            }
+            abrirModalNovoEvento();
+          });
+
+        formEvento.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var id = document.getElementById("evento-id").value;
+          var titulo = document.getElementById("evento-titulo").value.trim();
+          var inicio = document.getElementById("evento-inicio").value;
+          var fim = document.getElementById("evento-fim").value;
+          var risco = document.getElementById("evento-risco").value;
+          var criancaId = localStorage.getItem("sapea_crianca_id");
+          if (!titulo || !inicio || !fim || !criancaId) {
+            SAPEA_TOAST("Preencha todos os campos.", "warning");
+            return;
+          }
+          var btn = document.getElementById("btn-salvar-evento");
+          btn.disabled = true;
+          var promessa = id
+            ? SAPEA_API.atualizarEvento(id, {
+                titulo: titulo,
+                dataHoraInicio: inicio,
+                dataHoraFim: fim,
+                nivelRisco: risco,
+              })
+            : SAPEA_API.criarEvento({
+                criancaId: criancaId,
+                titulo: titulo,
+                dataHoraInicio: inicio,
+                dataHoraFim: fim,
+                nivelRisco: risco,
+              });
+          promessa
+            .then(function () {
+              fecharModalEvento();
+              loadRotina();
+            })
+            .catch(function (err) {
+              SAPEA_TOAST(err.message || "Erro ao salvar evento.", "danger");
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        });
 
         setupSelector()
           .then(loadRotina)

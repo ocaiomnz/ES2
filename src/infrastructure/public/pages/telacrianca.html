@@ -19,6 +19,13 @@
 
     <div id="page-content" class="page-content">
       <header class="tela-crianca-header page-header">
+        <a
+          href="/pages/telacrianca.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
         <div class="header-content">
           <h2 class="header-title page-title" id="header-title">Olá! 👋</h2>
           <div style="display: flex; gap: 0.5rem; align-items: center">
@@ -34,8 +41,89 @@
         </div>
       </header>
       <main class="tela-crianca-main page-main" id="main-content">
+        <div id="rotina-banner" class="transicao-banner" style="display: none">
+          <span class="transicao-banner-icon">⏰</span>
+          <div class="transicao-banner-text">
+            <p class="transicao-banner-title" id="rotina-banner-titulo">
+              Próxima atividade
+            </p>
+            <p class="transicao-banner-time" id="rotina-banner-hora"></p>
+          </div>
+        </div>
         <h3 class="section-title">Sua Rotina de Hoje</h3>
         <div class="timeline-container" id="timeline-container"></div>
+        <section class="card" id="pais-section" style="display: none">
+          <h3 class="card-title">👨‍👩‍👧 Quem cuida de mim</h3>
+          <div id="pais-list" class="pais-list"></div>
+        </section>
+        <section class="card" id="contatos-section" style="display: none">
+          <h3 class="card-title">📞 Contatos de segurança</h3>
+          <p class="help-text" style="margin-bottom: 0.5rem">
+            Pessoas e lugares que podem te ajudar:
+          </p>
+          <div id="contatos-list" class="contatos-crianca-list"></div>
+        </section>
+        <section class="card">
+          <h3 class="card-title">😊 Como estou me sentindo?</h3>
+          <p class="help-text" style="margin-bottom: 0.75rem">
+            Toque em como você está se sentindo agora:
+          </p>
+          <div class="sentimento-grid" id="sentimento-grid">
+            <button
+              type="button"
+              class="sentimento-btn"
+              data-estado="CALMO"
+              title="Calmo"
+            >
+              😊
+            </button>
+            <button
+              type="button"
+              class="sentimento-btn"
+              data-estado="FELIZ"
+              title="Feliz"
+            >
+              😄
+            </button>
+            <button
+              type="button"
+              class="sentimento-btn"
+              data-estado="NEUTRO"
+              title="Neutro"
+            >
+              😐
+            </button>
+            <button
+              type="button"
+              class="sentimento-btn"
+              data-estado="TRISTE"
+              title="Triste"
+            >
+              😢
+            </button>
+            <button
+              type="button"
+              class="sentimento-btn"
+              data-estado="ANSIOSO"
+              title="Ansioso"
+            >
+              😟
+            </button>
+            <button
+              type="button"
+              class="sentimento-btn"
+              data-estado="IRRITADO"
+              title="Irritado"
+            >
+              😠
+            </button>
+          </div>
+          <p
+            class="help-text"
+            id="sentimento-ultimo"
+            style="margin-top: 0.5rem; font-size: 0.8rem; display: none"
+          ></p>
+        </section>
         <section class="actions-section">
           <a href="/pages/ambiente.html" class="action-btn">
             <span class="action-icon">🏫</span>
@@ -57,7 +145,100 @@
       </button>
     </div>
 
-    <!-- Modal Preciso de Ajuda -->
+    <!-- Modal Perguntar Gatilho (antes de enviar) -->
+    <div
+      id="modal-pedir-ajuda"
+      class="modal-overlay"
+      role="dialog"
+      aria-labelledby="modal-pedir-ajuda-title"
+    >
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="fecharModalPedirAjuda()"
+          aria-label="Fechar"
+        >
+          ✕
+        </button>
+        <div class="alerta-crise-content">
+          <h2 class="modal-title" id="modal-pedir-ajuda-title">
+            Preciso de ajuda
+          </h2>
+          <p class="alerta-crise-message" style="margin-bottom: 1rem">
+            O que aconteceu? O que te deixou assim?
+          </p>
+          <div
+            class="gatilho-opcoes"
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.5rem;
+              margin-bottom: 1rem;
+            "
+          >
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm gatilho-btn"
+              data-gatilho="Mudança de rotina"
+            >
+              Mudança de rotina
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm gatilho-btn"
+              data-gatilho="Barulho"
+            >
+              Barulho
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm gatilho-btn"
+              data-gatilho="Conflito com colega"
+            >
+              Conflito
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm gatilho-btn"
+              data-gatilho="Não sei"
+            >
+              Não sei
+            </button>
+          </div>
+          <div class="form-group">
+            <label for="gatilho-input" class="form-label">Ou descreva:</label>
+            <input
+              type="text"
+              id="gatilho-input"
+              class="form-input"
+              placeholder="Ex: luz forte, muita gente..."
+              maxlength="200"
+            />
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 0.5rem;
+              justify-content: flex-end;
+              margin-top: 1rem;
+            "
+          >
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="fecharModalPedirAjuda()"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-enviar-ajuda">
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Ajuda Enviada (sucesso) -->
     <div
       id="modal-ajuda"
       class="modal-overlay"
@@ -89,6 +270,7 @@
       </div>
     </div>
 
+    <script src="/javascripts/sapea-ui.js"></script>
     <script src="/javascripts/api.js"></script>
     <script>
       (function () {
@@ -175,15 +357,204 @@
           });
         }
 
+        var eventosCache = [];
+        var criancaId = localStorage.getItem("sapea_crianca_id");
+
+        function renderPais(responsaveis) {
+          var section = document.getElementById("pais-section");
+          var list = document.getElementById("pais-list");
+          if (!section || !list) return;
+          if (!responsaveis || !responsaveis.length) {
+            section.style.display = "none";
+            return;
+          }
+          section.style.display = "block";
+          list.innerHTML = responsaveis
+            .map(function (r) {
+              var mailto = r.email ? ' href="mailto:' + r.email + '"' : "";
+              var tag = mailto ? "a" : "div";
+              return (
+                "<" +
+                tag +
+                (mailto
+                  ? ' class="pais-item" style="text-decoration:none;color:inherit"'
+                  : ' class="pais-item"') +
+                (mailto || "") +
+                ">" +
+                '<div class="pais-item-icon">👤</div>' +
+                '<div><p class="pais-item-nome">' +
+                (r.nome || "Responsável") +
+                "</p>" +
+                (r.email
+                  ? '<p class="pais-item-email">' + r.email + "</p>"
+                  : "") +
+                "</div></" +
+                tag +
+                ">"
+              );
+            })
+            .join("");
+        }
+
+        function renderContatos(resumo) {
+          var section = document.getElementById("contatos-section");
+          var list = document.getElementById("contatos-list");
+          if (!section || !list) return;
+          var professores = resumo.professores || [];
+          var escola = resumo.escola || {};
+          var html = "";
+          professores.forEach(function (p) {
+            var mailto = p.email ? ' href="mailto:' + p.email + '"' : "";
+            html +=
+              (mailto
+                ? '<a href="mailto:' +
+                  p.email +
+                  '" class="contato-crianca-item">'
+                : '<div class="contato-crianca-item">') +
+              '<div class="contato-crianca-icon">👩‍🏫</div>' +
+              '<div><p class="contato-crianca-nome">' +
+              (p.nome || "Professor") +
+              "</p><p class='contato-crianca-detail'>" +
+              (p.email || "Escola") +
+              "</p></div></" +
+              (mailto ? "a" : "div") +
+              ">";
+          });
+          if (escola.nome) {
+            var mapsUrl = escola.endereco
+              ? "https://www.google.com/maps/search/?api=1&query=" +
+                encodeURIComponent(escola.endereco)
+              : "";
+            html += mapsUrl
+              ? '<a href="' +
+                mapsUrl +
+                '" target="_blank" rel="noopener" class="contato-crianca-item"><div class="contato-crianca-icon">🏫</div><div><p class="contato-crianca-nome">' +
+                escola.nome +
+                "</p><p class='contato-crianca-detail'>" +
+                (escola.endereco || "") +
+                "</p></div></a>"
+              : '<div class="contato-crianca-item"><div class="contato-crianca-icon">🏫</div><div><p class="contato-crianca-nome">' +
+                escola.nome +
+                "</p></div></div>";
+          }
+          html +=
+            '<a href="tel:192" class="contato-crianca-item" style="background:rgba(232,165,165,0.15);border-color:rgba(232,165,165,0.3)"><div class="contato-crianca-icon" style="background:rgba(232,165,165,0.3)">🚑</div><div><p class="contato-crianca-nome">Emergência SAMU</p><p class="contato-crianca-detail">192</p></div></a>';
+          list.innerHTML = html;
+          section.style.display = "block";
+        }
+
+        function renderRotinaBanner(eventos) {
+          var banner = document.getElementById("rotina-banner");
+          var titulo = document.getElementById("rotina-banner-titulo");
+          var hora = document.getElementById("rotina-banner-hora");
+          if (!banner || !eventos || !eventos.length) return;
+          var now = new Date();
+          var proximo = null;
+          for (var i = 0; i < eventos.length; i++) {
+            var inicio = eventos[i].data_hora_inicio
+              ? new Date(eventos[i].data_hora_inicio)
+              : eventos[i].dataHoraInicio
+              ? new Date(eventos[i].dataHoraInicio)
+              : null;
+            if (inicio && inicio > now) {
+              proximo = eventos[i];
+              break;
+            }
+          }
+          if (!proximo) {
+            banner.style.display = "none";
+            return;
+          }
+          var inicio = proximo.data_hora_inicio
+            ? new Date(proximo.data_hora_inicio)
+            : new Date(proximo.dataHoraInicio);
+          var min = Math.round((inicio - now) / 60000);
+          titulo.textContent = "Próxima: " + (proximo.titulo || "Atividade");
+          hora.textContent =
+            "Em " +
+            min +
+            " min · " +
+            inicio.toLocaleTimeString("pt-BR", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+          banner.style.display = "flex";
+        }
+
+        function setupSentimento() {
+          var grid = document.getElementById("sentimento-grid");
+          var ultimo = document.getElementById("sentimento-ultimo");
+          if (!grid || !criancaId) return;
+          grid.querySelectorAll(".sentimento-btn").forEach(function (btn) {
+            btn.onclick = function () {
+              var estado = btn.dataset.estado;
+              SAPEA_API.registrarSentimento(criancaId, estado)
+                .then(function () {
+                  grid
+                    .querySelectorAll(".sentimento-btn")
+                    .forEach(function (b) {
+                      b.classList.remove("registrado");
+                    });
+                  btn.classList.add("registrado");
+                  if (ultimo) {
+                    ultimo.style.display = "block";
+                    ultimo.textContent =
+                      "Registrado agora: " + btn.title + " ✓";
+                  }
+                  if (typeof SAPEA_TOAST === "function") {
+                    SAPEA_TOAST(
+                      "Sentimento registrado! " + btn.title,
+                      "success"
+                    );
+                  }
+                })
+                .catch(function (err) {
+                  if (typeof SAPEA_TOAST === "function") {
+                    SAPEA_TOAST(err.message || "Erro ao registrar.", "danger");
+                  }
+                });
+            };
+          });
+        }
+
+        function carregarResumo() {
+          if (!criancaId || !SAPEA_API.fetchPerfilCriancaResumo)
+            return Promise.resolve({});
+          return SAPEA_API.fetchPerfilCriancaResumo(criancaId).catch(
+            function () {
+              return {};
+            }
+          );
+        }
+
         SAPEA_API.fetchTelacrianca()
           .then(function (data) {
             var crianca = data.crianca || {};
             var eventos = data.eventos || [];
-            titleEl.textContent =
-              "Olá" + (crianca.id ? ", Criança" : "") + "! 👋";
+            eventosCache = eventos;
+            criancaId = crianca.id || localStorage.getItem("sapea_crianca_id");
+            if (crianca.id) {
+              localStorage.setItem("sapea_crianca_id", crianca.id);
+            }
+            titleEl.textContent = crianca.nome
+              ? "Olá, " + crianca.nome + "! 👋"
+              : "Olá! 👋";
             renderTimeline(eventos);
+            renderRotinaBanner(eventos);
             updateClock();
             setInterval(updateClock, 1000);
+            if (typeof SAPEA_ALERTA_TRANSICAO === "function") {
+              SAPEA_ALERTA_TRANSICAO(eventos, 5);
+              setInterval(function () {
+                SAPEA_ALERTA_TRANSICAO(eventosCache, 5);
+              }, 60000);
+            }
+            setupSentimento();
+            return carregarResumo();
+          })
+          .then(function (resumo) {
+            renderPais(resumo.responsaveis || []);
+            renderContatos(resumo);
             loading.classList.add("hidden");
             content.classList.add("ready");
           })
@@ -206,6 +577,18 @@
           var modal = document.getElementById("modal-ajuda");
           if (modal) modal.classList.remove("active");
         };
+        function abrirModalPedirAjuda() {
+          var modal = document.getElementById("modal-pedir-ajuda");
+          var input = document.getElementById("gatilho-input");
+          if (modal) {
+            if (input) input.value = "";
+            modal.classList.add("active");
+          }
+        }
+        window.fecharModalPedirAjuda = function () {
+          var modal = document.getElementById("modal-pedir-ajuda");
+          if (modal) modal.classList.remove("active");
+        };
         function acionarAjuda() {
           var criancaId = localStorage.getItem("sapea_crianca_id");
           if (!criancaId) {
@@ -213,15 +596,45 @@
               "Para solicitar ajuda em uma emergência, é preciso estar logado e ter uma criança selecionada. ";
             msg +=
               'Vá ao Painel da Escola ou do Responsável e selecione "Ver como criança" para configurar.';
-            alert(msg);
+            SAPEA_TOAST(msg, "info", 10000);
             return;
           }
-          SAPEA_API.solicitarSuporte(criancaId)
+          abrirModalPedirAjuda();
+        }
+        function enviarPedidoAjuda() {
+          var criancaId = localStorage.getItem("sapea_crianca_id");
+          if (!criancaId) return;
+          var input = document.getElementById("gatilho-input");
+          var gatilho = input ? input.value.trim() : "";
+          if (!gatilho) {
+            var gatilhoSelecionado = document.querySelector(
+              ".gatilho-btn.active"
+            );
+            if (gatilhoSelecionado) {
+              gatilho = gatilhoSelecionado.getAttribute("data-gatilho") || "";
+            }
+          }
+          var btn = document.getElementById("btn-enviar-ajuda");
+          if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Enviando...";
+          }
+          SAPEA_API.solicitarSuporte(criancaId, gatilho || undefined)
             .then(function () {
+              fecharModalPedirAjuda();
               abrirModalAjuda();
             })
             .catch(function (err) {
-              alert(err.message || "Erro ao solicitar ajuda. Tente novamente.");
+              SAPEA_TOAST(
+                err.message || "Erro ao solicitar ajuda. Tente novamente.",
+                "danger"
+              );
+            })
+            .finally(function () {
+              if (btn) {
+                btn.disabled = false;
+                btn.textContent = "Enviar";
+              }
             });
         }
         document
@@ -230,6 +643,26 @@
         document
           .getElementById("btn-ajuda")
           .addEventListener("click", acionarAjuda);
+        document
+          .getElementById("btn-enviar-ajuda")
+          .addEventListener("click", enviarPedidoAjuda);
+        document.querySelectorAll(".gatilho-btn").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            document.querySelectorAll(".gatilho-btn").forEach(function (b) {
+              b.classList.remove("active");
+            });
+            this.classList.add("active");
+            var input = document.getElementById("gatilho-input");
+            if (input) input.value = "";
+          });
+        });
+        document
+          .getElementById("gatilho-input")
+          .addEventListener("input", function () {
+            document.querySelectorAll(".gatilho-btn").forEach(function (b) {
+              b.classList.remove("active");
+            });
+          });
       })();
     </script>
   </body>

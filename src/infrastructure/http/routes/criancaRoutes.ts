@@ -1,4 +1,5 @@
 import express from "express";
+import { v4 as uuidv4 } from "uuid";
 import { PrismaClient } from "@prisma/client";
 import { PrismaCriancaRepository } from "../../database/PrismaCriancaRepository.js";
 import { PrismaEventoRepository } from "../../database/PrismaEventoRepository.js";
@@ -16,24 +17,27 @@ const eventoRepo = new PrismaEventoRepository(prisma);
 const ambienteRepo = new PrismaAmbienteEscolarRepository(prisma);
 const notificacaoService = new NotificacaoService();
 
-const solicitarSuporteUseCase = new SolicitarSuporteUseCase(criancaRepo, notificacaoService);
+const solicitarSuporteUseCase = new SolicitarSuporteUseCase(
+  criancaRepo,
+  notificacaoService
+);
 const visualizarCalendarioUseCase = new VisualizarCalendarioUseCase(
   criancaRepo,
-  eventoRepo,
+  eventoRepo
 );
 const visualizarAmbienteEscolarUseCase = new VisualizarAmbienteEscolarUseCase(
   criancaRepo,
-  ambienteRepo,
+  ambienteRepo
 );
 
 /**
  * @swagger
  * /criancas/{id}/suporte:
  *   post:
- *     summary: Solicitar suporte para criança  
+ *     summary: Solicitar suporte para criança
  *     description: |
  *       Registra um pedido de suporte para uma criança específica.
- *      
+ *
  *     tags: [Suporte]
  *     parameters:
  *       - in: path
@@ -64,9 +68,13 @@ const visualizarAmbienteEscolarUseCase = new VisualizarAmbienteEscolarUseCase(
  */
 router.post("/criancas/:id/suporte", async (req, res) => {
   const { id } = req.params;
+  const { gatilhoIdentificado } = req.body ?? {};
 
   try {
-    await solicitarSuporteUseCase.execute(id);
+    await solicitarSuporteUseCase.execute(
+      id,
+      typeof gatilhoIdentificado === "string" ? gatilhoIdentificado : undefined
+    );
     return res.status(201).json({
       message: "Pedido de suporte registrado com sucesso.",
       criancaId: id,
@@ -191,6 +199,85 @@ router.get("/criancas/:id/ambientes", async (req, res) => {
     console.error("Erro ao visualizar ambientes:", err);
     return res.status(500).json({
       error: "Erro ao buscar ambientes escolares para a criança.",
+    });
+  }
+});
+
+const ESTADOS_SENTIMENTO = [
+  "CALMO",
+  "FELIZ",
+  "NEUTRO",
+  "TRISTE",
+  "ANSIOSO",
+  "IRRITADO",
+];
+
+/**
+ * @swagger
+ * /criancas/{id}/sentimento:
+ *   post:
+ *     summary: Registrar como a criança está se sentindo
+ *     description: Permite à criança registrar seu estado emocional (interface da criança)
+ *     tags: [Perfis de Crianças]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               estado:
+ *                 type: string
+ *                 enum: [CALMO, FELIZ, NEUTRO, TRISTE, ANSIOSO, IRRITADO]
+ *     responses:
+ *       201:
+ *         description: Sentimento registrado
+ *       400:
+ *         description: Estado inválido
+ *       404:
+ *         description: Criança não encontrada
+ */
+router.post("/criancas/:id/sentimento", async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body ?? {};
+
+  if (!estado || !ESTADOS_SENTIMENTO.includes(String(estado).toUpperCase())) {
+    return res.status(400).json({
+      error: "Estado inválido",
+      message: "estado deve ser um de: " + ESTADOS_SENTIMENTO.join(", "),
+    });
+  }
+
+  try {
+    const crianca = await prisma.crianca.findUnique({ where: { id } });
+    if (!crianca) {
+      return res.status(404).json({ error: "Criança não encontrada" });
+    }
+
+    await prisma.registroSentimento.create({
+      data: {
+        id: uuidv4(),
+        criancaId: id,
+        dataHora: new Date(),
+        estado: String(estado).toUpperCase(),
+      },
+    });
+
+    return res.status(201).json({
+      message: "Sentimento registrado com sucesso",
+      criancaId: id,
+    });
+  } catch (err: any) {
+    console.error("Erro ao registrar sentimento:", err);
+    return res.status(500).json({
+      error: "Erro ao registrar sentimento",
+      message: "Erro interno do servidor",
     });
   }
 });

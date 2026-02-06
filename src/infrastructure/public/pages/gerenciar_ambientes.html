@@ -22,6 +22,13 @@
         <a href="/pages/telaescolar.html" class="btn-icon" aria-label="Voltar"
           >←</a
         >
+        <a
+          href="/pages/telaescolar.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
         <h1 class="page-title">Gerenciar Ambientes</h1>
         <button type="button" class="btn btn-primary" id="btn-novo-ambiente">
           + Novo Ambiente
@@ -106,6 +113,7 @@
       </div>
     </div>
 
+    <script src="/javascripts/sapea-ui.js"></script>
     <script src="/javascripts/api.js"></script>
     <script>
       (function () {
@@ -203,10 +211,10 @@
             })
             .then(function () {
               renderizarLista();
-              alert("Ambiente excluído com sucesso.");
+              SAPEA_TOAST("Ambiente excluído com sucesso.", "success");
             })
             .catch(function (err) {
-              alert(err.message || "Erro ao excluir.");
+              SAPEA_TOAST(err.message || "Erro ao excluir.", "danger");
             });
         };
 
@@ -236,7 +244,7 @@
             .getElementById("ambiente-descricao")
             .value.trim();
           if (!nome) {
-            alert("Informe o nome do ambiente.");
+            SAPEA_TOAST("Informe o nome do ambiente.", "warning");
             return;
           }
           var btn = document.getElementById("btn-salvar-ambiente");
@@ -248,8 +256,9 @@
             escolaId = criancas[0].escolaId;
           }
           if (!escolaId) {
-            alert(
-              "Escola não identificada. Faça login com perfil de equipe escolar."
+            SAPEA_TOAST(
+              "Escola não identificada. Faça login com perfil de equipe escolar.",
+              "warning"
             );
             btn.disabled = false;
             btn.textContent = "Salvar";
@@ -274,10 +283,13 @@
             .then(function () {
               renderizarLista();
               fecharModalAmbiente();
-              alert(id ? "Ambiente atualizado!" : "Ambiente cadastrado!");
+              SAPEA_TOAST(
+                id ? "Ambiente atualizado!" : "Ambiente cadastrado!",
+                "success"
+              );
             })
             .catch(function (err) {
-              alert(err.message || "Erro ao salvar.");
+              SAPEA_TOAST(err.message || "Erro ao salvar.", "danger");
             })
             .finally(function () {
               btn.disabled = false;

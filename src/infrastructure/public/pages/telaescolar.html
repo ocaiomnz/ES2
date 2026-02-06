@@ -19,6 +19,13 @@
 
     <div id="page-content" class="page-content">
       <header class="page-header">
+        <a
+          href="/pages/telaescolar.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
         <h1 class="page-title">Painel da Escola</h1>
         <a
           href="/pages/login.html"
@@ -47,6 +54,10 @@
             <a href="/pages/registrar_crise.html" class="action-card-btn">
               <span class="action-card-icon">📝</span>
               <span class="action-card-label">Registrar Crise</span>
+            </a>
+            <a href="/pages/gerenciar_criancas.html" class="action-card-btn">
+              <span class="action-card-icon">👥</span>
+              <span class="action-card-label">Gerenciar Crianças</span>
             </a>
             <a href="/pages/gerenciar_ambientes.html" class="action-card-btn">
               <span class="action-card-icon">⚙️</span>
@@ -96,7 +107,7 @@
                       "</div>" +
                       '<div class="student-info">' +
                       '<p class="student-name">' +
-                      (c.nome || "") +
+                      (c.nome || "Criança") +
                       "</p>" +
                       '<p class="student-status ' +
                       statusClass(c.status) +

@@ -22,6 +22,13 @@
         <a href="/pages/telaescolar.html" class="btn-icon" aria-label="Voltar"
           >←</a
         >
+        <a
+          href="/pages/telaescolar.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
         <h1 class="page-title">Registrar Crise</h1>
         <a
           href="/pages/login.html"
@@ -123,6 +130,7 @@
       </main>
     </div>
 
+    <script src="/javascripts/sapea-ui.js"></script>
     <script src="/javascripts/api.js"></script>
     <script>
       (function () {
@@ -191,7 +199,10 @@
             .value.trim();
 
           if (!criancaId || !dataHora || !intensidade) {
-            alert("Preencha criança, data/hora e intensidade.");
+            SAPEA_TOAST(
+              "Preencha criança, data/hora e intensidade.",
+              "warning"
+            );
             return;
           }
 
@@ -229,7 +240,7 @@
               formSuccess.style.display = "block";
             })
             .catch(function (err) {
-              alert(err.message || "Erro ao registrar crise.");
+              SAPEA_TOAST(err.message || "Erro ao registrar crise.", "danger");
             })
             .finally(function () {
               btn.disabled = false;

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SAPEA - Cadastro de Usuário" />
+    <meta name="theme-color" content="#7B9ACC" />
+    <title>SAPEA - Cadastrar Usuário</title>
+    <link rel="stylesheet" href="/stylesheets/design-system.css" />
+    <link rel="stylesheet" href="/stylesheets/main.css" />
+    <script src="/javascripts/sapea-ui.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Pular para conteúdo principal</a>
+
+    <div id="register-screen" class="screen active">
+      <div class="login-container">
+        <div class="logo-container">
+          <img src="/logo-sapea.png" alt="SAPEA" class="logo-img" />
+          <p class="logo-subtitle">Cadastrar novo usuário</p>
+        </div>
+        <form
+          class="login-form"
+          id="register-form"
+          action="#"
+          method="post"
+          novalidate
+        >
+          <div class="form-group">
+            <label for="user-nome" class="form-label">Nome completo *</label>
+            <input
+              type="text"
+              id="user-nome"
+              class="form-input"
+              placeholder="João Silva"
+              autocomplete="name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="user-email" class="form-label">E-mail *</label>
+            <input
+              type="email"
+              id="user-email"
+              class="form-input"
+              placeholder="seu@email.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="user-password" class="form-label">Senha *</label>
+            <input
+              type="password"
+              id="user-password"
+              class="form-input"
+              placeholder="Mín. 6 caracteres, 1 letra e 1 número"
+              autocomplete="new-password"
+              required
+            />
+            <p
+              class="help-text"
+              style="margin-top: 0.25rem; font-size: 0.75rem"
+            >
+              Mínimo 6 caracteres, com pelo menos uma letra e um número.
+            </p>
+          </div>
+          <div class="form-group">
+            <label for="user-tipo-perfil" class="form-label"
+              >Tipo de perfil *</label
+            >
+            <select
+              id="user-tipo-perfil"
+              class="form-select form-input"
+              required
+            >
+              <option value="">Selecione...</option>
+              <option value="ADMIN">Administrador</option>
+              <option value="PROFESSOR">Professor</option>
+              <option value="EQUIPE_ESCOLAR">Equipe Escolar</option>
+              <option value="RESPONSAVEL">Responsável</option>
+              <option value="CRIANCA">Criança</option>
+            </select>
+          </div>
+          <div class="form-group" id="escola-group" style="display: none">
+            <label for="user-escola" class="form-label">Escola *</label>
+            <select id="user-escola" class="form-select form-input">
+              <option value="">Carregando...</option>
+            </select>
+          </div>
+          <div
+            id="register-error"
+            class="form-error"
+            role="alert"
+            aria-live="polite"
+            hidden
+          ></div>
+          <button
+            type="submit"
+            class="btn btn-primary btn-large"
+            id="btn-registrar"
+          >
+            Cadastrar
+          </button>
+        </form>
+        <div class="login-help">
+          <p class="help-text">Já tem uma conta?</p>
+          <a
+            href="/pages/login.html"
+            class="btn btn-secondary"
+            style="
+              margin-top: 0.5rem;
+              display: inline-block;
+              text-decoration: none;
+            "
+          >
+            Fazer login
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var form = document.getElementById("register-form");
+        var btnRegistrar = document.getElementById("btn-registrar");
+        var errorEl = document.getElementById("register-error");
+        var tipoPerfilSelect = document.getElementById("user-tipo-perfil");
+        var escolaGroup = document.getElementById("escola-group");
+        var escolaSelect = document.getElementById("user-escola");
+
+        function showError(msg) {
+          errorEl.textContent = msg;
+          errorEl.hidden = false;
+        }
+
+        function hideError() {
+          errorEl.textContent = "";
+          errorEl.hidden = true;
+        }
+
+        function toggleEscolaField() {
+          var tipo = tipoPerfilSelect.value;
+          if (tipo === "PROFESSOR" || tipo === "EQUIPE_ESCOLAR") {
+            escolaGroup.style.display = "block";
+            escolaSelect.required = true;
+          } else {
+            escolaGroup.style.display = "none";
+            escolaSelect.required = false;
+          }
+        }
+
+        function carregarEscolas() {
+          return fetch("/api/escolas")
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (data) {
+              var escolas = data.escolas || [];
+              escolaSelect.innerHTML =
+                '<option value="">Selecione a escola</option>' +
+                escolas
+                  .map(function (e) {
+                    return (
+                      '<option value="' +
+                      e.id +
+                      '">' +
+                      (e.nome || e.id) +
+                      "</option>"
+                    );
+                  })
+                  .join("");
+            })
+            .catch(function () {
+              escolaSelect.innerHTML =
+                '<option value="">Erro ao carregar escolas</option>';
+            });
+        }
+
+        tipoPerfilSelect.addEventListener("change", toggleEscolaField);
+
+        carregarEscolas();
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          hideError();
+
+          var nome = document.getElementById("user-nome").value.trim();
+          var email = document.getElementById("user-email").value.trim();
+          var password = document.getElementById("user-password").value;
+          var tipoPerfil = tipoPerfilSelect.value;
+          var escolaId = escolaSelect.value || undefined;
+
+          if (!nome || !email || !password || !tipoPerfil) {
+            showError("Preencha todos os campos obrigatórios.");
+            return;
+          }
+
+          if (tipoPerfil === "PROFESSOR" || tipoPerfil === "EQUIPE_ESCOLAR") {
+            if (!escolaId) {
+              showError("Selecione uma escola.");
+              return;
+            }
+          }
+
+          btnRegistrar.disabled = true;
+          btnRegistrar.textContent = "Cadastrando...";
+
+          fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              nome: nome,
+              email: email,
+              senha: password,
+              tipoPerfil: tipoPerfil,
+              escolaId: escolaId,
+            }),
+          })
+            .then(function (r) {
+              return r.json().then(function (data) {
+                if (!r.ok) {
+                  throw new Error(
+                    data.message || data.error || "Erro ao cadastrar"
+                  );
+                }
+                return data;
+              });
+            })
+            .then(function () {
+              if (typeof SAPEA_TOAST === "function") {
+                SAPEA_TOAST(
+                  "Usuário cadastrado com sucesso! Faça login para continuar.",
+                  "success",
+                  3000
+                );
+              } else {
+                alert(
+                  "Usuário cadastrado com sucesso! Faça login para continuar."
+                );
+              }
+              setTimeout(function () {
+                window.location.href = "/pages/login.html";
+              }, 800);
+            })
+            .catch(function (err) {
+              showError(err.message || "Erro ao cadastrar. Tente novamente.");
+            })
+            .finally(function () {
+              btnRegistrar.disabled = false;
+              btnRegistrar.textContent = "Cadastrar";
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

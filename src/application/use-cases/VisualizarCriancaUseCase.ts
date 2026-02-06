@@ -4,6 +4,7 @@ import { TipoPerfilEnum } from "../../domain/value-objects/TipoPerfil.js";
 
 export type CriancaDTO = {
   id: string;
+  nome?: string;
   dataNascimento: string;
   grauTEA: string;
   grauSuporte: string;
@@ -66,6 +67,10 @@ export class VisualizarCriancaUseCase {
       responsavelIds: [...crianca.responsavelIds],
     };
 
+    if (crianca.nome) {
+      dto.nome = crianca.nome;
+    }
+
     if (crianca.escolaId) {
       dto.escolaId = crianca.escolaId;
     }
@@ -114,6 +119,10 @@ export class VisualizarCriancaUseCase {
         grauSuporte: a.crianca.grauSuporte.grau,
         responsavelIds: [...a.crianca.responsavelIds],
       };
+
+      if (a.crianca.nome) {
+        dto.nome = a.crianca.nome;
+      }
 
       if (a.crianca.escolaId) {
         dto.escolaId = a.crianca.escolaId;

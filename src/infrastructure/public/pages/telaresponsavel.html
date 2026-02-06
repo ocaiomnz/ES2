@@ -19,13 +19,20 @@
 
     <div id="page-content" class="page-content">
       <header class="page-header">
+        <a
+          href="/pages/telaresponsavel.html"
+          class="header-logo"
+          aria-label="SAPEA"
+        >
+          <img src="/logo-sapea.png" alt="SAPEA" />
+        </a>
         <h1 class="page-title">Painel do Responsável</h1>
         <div style="display: flex; gap: 0.5rem; align-items: center">
           <button
             type="button"
             class="btn-icon"
+            id="btn-contatos-rapidos"
             aria-label="Contatos rápidos"
-            onclick="alert('Contatos rápidos - em desenvolvimento')"
           >
             📞
           </button>
@@ -48,11 +55,49 @@
           <p class="help-text" style="margin-bottom: 0.5rem">
             Você acompanha mais de um filho. Selecione qual deseja visualizar:
           </p>
-          <select
-            id="seletor-crianca"
-            class="form-select"
-            style="max-width: 300px"
-          ></select>
+          <div
+            style="
+              display: flex;
+              gap: 0.5rem;
+              align-items: center;
+              flex-wrap: wrap;
+            "
+          >
+            <select
+              id="seletor-crianca"
+              class="form-select"
+              style="max-width: 300px"
+            ></select>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              id="btn-adicionar-crianca"
+            >
+              + Adicionar criança
+            </button>
+          </div>
+        </section>
+        <section
+          class="card"
+          id="nenhuma-crianca-section"
+          style="display: none"
+        >
+          <h2 class="card-title">Nenhum filho cadastrado</h2>
+          <p class="help-text" style="margin-bottom: 1rem">
+            Cadastre o perfil do seu filho para acompanhar a rotina, crises e
+            ambientes escolares.
+          </p>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="btn-nova-crianca-inicial"
+          >
+            + Adicionar criança
+          </button>
+        </section>
+        <section class="card" id="sobre-crianca-section" style="display: none">
+          <h2 class="card-title" id="sobre-crianca-titulo">Sobre o Filho(a)</h2>
+          <div id="sobre-crianca-conteudo"></div>
         </section>
         <section class="card">
           <h2 class="card-title">Status de Hoje</h2>
@@ -76,6 +121,188 @@
           <div class="history-list" id="history-list"></div>
         </section>
       </main>
+      <!-- Modal Nova Criança -->
+      <div id="modal-nova-crianca" class="modal-overlay" role="dialog">
+        <div class="modal-box">
+          <button
+            class="modal-close"
+            onclick="fecharModalNovaCrianca()"
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+          <h2 class="modal-title">Adicionar Criança</h2>
+          <form id="form-nova-crianca">
+            <div class="form-group">
+              <label for="crianca-nome-modal" class="form-label"
+                >Nome da criança *</label
+              >
+              <input
+                type="text"
+                id="crianca-nome-modal"
+                class="form-input"
+                placeholder="Ex: Lucas, Maria..."
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="crianca-data-nasc" class="form-label"
+                >Data de Nascimento *</label
+              >
+              <input
+                type="date"
+                id="crianca-data-nasc"
+                class="form-input"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="crianca-grau-tea" class="form-label"
+                >Grau TEA *</label
+              >
+              <select
+                id="crianca-grau-tea"
+                class="form-select form-input"
+                required
+              >
+                <option value="LEVE">Leve</option>
+                <option value="MODERADO">Moderado</option>
+                <option value="SEVERO">Severo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="crianca-grau-suporte" class="form-label"
+                >Nível de Suporte *</label
+              >
+              <select
+                id="crianca-grau-suporte"
+                class="form-select form-input"
+                required
+              >
+                <option value="NIVEL_1">Nível 1</option>
+                <option value="NIVEL_2">Nível 2</option>
+                <option value="NIVEL_3">Nível 3</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="crianca-escola" class="form-label"
+                >Instituição de Ensino</label
+              >
+              <div style="display: flex; gap: 0.5rem; align-items: center">
+                <select
+                  id="crianca-escola"
+                  class="form-select form-input"
+                  style="flex: 1"
+                >
+                  <option value="">Selecione ou adicione nova</option>
+                </select>
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  id="btn-nova-escola"
+                >
+                  + Nova escola
+                </button>
+              </div>
+            </div>
+            <div
+              id="form-nova-escola"
+              class="form-group"
+              style="
+                display: none;
+                padding: 1rem;
+                background: var(--color-bg);
+                border-radius: var(--border-radius-md);
+              "
+            >
+              <p class="help-text" style="margin-bottom: 0.5rem">
+                Cadastrar nova instituição:
+              </p>
+              <input
+                type="text"
+                id="nova-escola-nome"
+                class="form-input"
+                placeholder="Nome da escola"
+                style="margin-bottom: 0.5rem"
+              />
+              <input
+                type="text"
+                id="nova-escola-endereco"
+                class="form-input"
+                placeholder="Endereço (opcional)"
+              />
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                id="btn-salvar-escola"
+                style="margin-top: 0.5rem"
+              >
+                Salvar e selecionar
+              </button>
+            </div>
+            <div
+              class="form-actions"
+              style="display: flex; gap: 0.5rem; margin-top: 1rem"
+            >
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="fecharModalNovaCrianca()"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="btn-salvar-crianca"
+              >
+                Salvar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal Contatos Rápidos -->
+      <div
+        id="modal-contatos"
+        class="modal-overlay"
+        role="dialog"
+        aria-labelledby="modal-contatos-title"
+      >
+        <div class="modal-box modal-large">
+          <button
+            class="modal-close"
+            onclick="fecharModalContatos()"
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+          <h2 class="modal-title" id="modal-contatos-title">
+            Contatos Rápidos
+          </h2>
+          <p
+            class="help-text"
+            id="contatos-aviso"
+            style="margin-bottom: 1rem; display: none"
+          >
+            Selecione um filho para ver os contatos da instituição.
+          </p>
+          <div
+            id="contatos-list"
+            class="contatos-list"
+            style="display: flex; flex-direction: column; gap: 0.75rem"
+          ></div>
+          <button
+            type="button"
+            class="btn btn-secondary btn-large mt-md"
+            onclick="fecharModalContatos()"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+
       <nav class="bottom-nav">
         <a href="/pages/telaresponsavel.html" class="nav-item active">
           <span class="nav-icon">🏠</span>
@@ -92,6 +319,7 @@
       </nav>
     </div>
 
+    <script src="/javascripts/sapea-ui.js"></script>
     <script src="/javascripts/api.js"></script>
     <script>
       (function () {
@@ -103,6 +331,141 @@
         var alertList = document.getElementById("alert-list");
         var calendarView = document.getElementById("calendar-view");
         var historyList = document.getElementById("history-list");
+        var seletorSection = document.getElementById("seletor-crianca-section");
+        var nenhumaSection = document.getElementById("nenhuma-crianca-section");
+        var sobreSection = document.getElementById("sobre-crianca-section");
+        var sobreTitulo = document.getElementById("sobre-crianca-titulo");
+        var sobreConteudo = document.getElementById("sobre-crianca-conteudo");
+
+        function carregarEscolas() {
+          return fetch("/api/escolas")
+            .then(function (r) {
+              return r.json();
+            })
+            .then(function (data) {
+              var sel = document.getElementById("crianca-escola");
+              if (!sel) return;
+              var escolas = data.escolas || [];
+              sel.innerHTML =
+                '<option value="">Selecione ou adicione nova</option>' +
+                escolas
+                  .map(function (e) {
+                    return (
+                      '<option value="' +
+                      e.id +
+                      '">' +
+                      (e.nome || e.id) +
+                      "</option>"
+                    );
+                  })
+                  .join("");
+            });
+        }
+
+        window.fecharModalContatos = function () {
+          var modal = document.getElementById("modal-contatos");
+          if (modal) modal.classList.remove("active");
+        };
+
+        function abrirModalContatos() {
+          var modal = document.getElementById("modal-contatos");
+          var listEl = document.getElementById("contatos-list");
+          var avisoEl = document.getElementById("contatos-aviso");
+          var criancaId = localStorage.getItem("sapea_crianca_id");
+          if (!criancaId || !SAPEA_API.fetchPerfilCriancaResumo) {
+            avisoEl.style.display = "block";
+            listEl.innerHTML = "";
+            if (modal) modal.classList.add("active");
+            return;
+          }
+          avisoEl.style.display = "none";
+          listEl.innerHTML = '<p class="help-text">Carregando...</p>';
+          if (modal) modal.classList.add("active");
+          SAPEA_API.fetchPerfilCriancaResumo(criancaId)
+            .then(function (resumo) {
+              var professores = resumo.professores || [];
+              var escola = resumo.escola || {};
+              var html = "";
+              professores.forEach(function (p) {
+                var mailto = p.email ? ' href="mailto:' + p.email + '"' : "";
+                var tag = mailto ? "a" : "div";
+                var cls = "contato-item-btn";
+                html +=
+                  "<" +
+                  tag +
+                  (mailto
+                    ? ' class="' +
+                      cls +
+                      '" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md);border:none;cursor:pointer;width:100%;text-decoration:none;color:inherit;font:inherit"' +
+                      mailto
+                    : ' class="' +
+                      cls +
+                      '" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md)"') +
+                  ">" +
+                  '<div style="width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem">👩‍🏫</div>' +
+                  '<div style="text-align:left;flex:1">' +
+                  "<p style='font-weight:600;margin:0'>" +
+                  (p.nome || "Professor") +
+                  "</p>" +
+                  "<p class='help-text' style='margin:0.25rem 0 0 0;font-size:0.875rem'>Equipe Escolar" +
+                  (p.email ? " · " + p.email : "") +
+                  "</p></div>" +
+                  (mailto ? '<span style="font-size:1.25rem">✉️</span>' : "") +
+                  "</" +
+                  tag +
+                  ">";
+              });
+              if (escola.nome) {
+                var mapsUrl = escola.endereco
+                  ? "https://www.google.com/maps/search/?api=1&query=" +
+                    encodeURIComponent(escola.endereco)
+                  : "";
+                html +=
+                  (mapsUrl
+                    ? '<a href="' +
+                      mapsUrl +
+                      '" target="_blank" rel="noopener" class="contato-item-btn" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md);text-decoration:none;color:inherit;font:inherit">'
+                    : '<div class="contato-item-btn" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md)">') +
+                  '<div style="width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem">🏫</div>' +
+                  '<div style="text-align:left;flex:1">' +
+                  "<p style='font-weight:600;margin:0'>" +
+                  escola.nome +
+                  "</p>" +
+                  (escola.endereco
+                    ? "<p class='help-text' style='margin:0.25rem 0 0 0;font-size:0.875rem'>" +
+                      escola.endereco +
+                      "</p>"
+                    : "") +
+                  "</div>" +
+                  (mapsUrl ? '<span style="font-size:1.25rem">📍</span>' : "") +
+                  (mapsUrl ? "</a>" : "</div>");
+              }
+              html +=
+                '<a href="tel:192" class="contato-item-btn" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-danger);color:white;border-radius:var(--border-radius-md);text-decoration:none;font:inherit">' +
+                '<div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem">🚑</div>' +
+                '<div style="text-align:left;flex:1">' +
+                "<p style='font-weight:600;margin:0'>Emergência SAMU</p>" +
+                "<p style='margin:0.25rem 0 0 0;font-size:0.875rem;opacity:0.9'>192</p></div>" +
+                '<span style="font-size:1.25rem">📞</span></a>';
+              listEl.innerHTML =
+                html || '<p class="help-text">Nenhum contato disponível.</p>';
+            })
+            .catch(function () {
+              listEl.innerHTML =
+                '<p class="help-text">Erro ao carregar contatos.</p>';
+            });
+        }
+
+        document.getElementById("btn-contatos-rapidos").onclick =
+          abrirModalContatos;
+
+        window.fecharModalNovaCrianca = function () {
+          var modal = document.getElementById("modal-nova-crianca");
+          var formEscola = document.getElementById("form-nova-escola");
+          if (modal) modal.classList.remove("active");
+          if (formEscola) formEscola.style.display = "none";
+          document.getElementById("form-nova-crianca").reset();
+        };
 
         function riscoClass(risco) {
           var r = (risco || "").toUpperCase();
@@ -143,19 +506,131 @@
         function carregarTelaresponsavel() {
           return SAPEA_API.fetchTelaresponsavel();
         }
-        function atualizarSeletorCriancas() {
-          return SAPEA_API.fetchTelaescolar
-            ? SAPEA_API.fetchTelaescolar()
-            : Promise.resolve({ criancas: [] });
+        function renderSobreCrianca(resumo) {
+          if (!sobreSection || !sobreTitulo || !sobreConteudo) return;
+          var c = resumo.crianca || {};
+          var escola = resumo.escola || {};
+          var professores = resumo.professores || [];
+          var crises = resumo.crises || [];
+          var nomeExibicao = c.nome || "Filho(a)";
+          sobreTitulo.textContent = "Sobre o " + nomeExibicao;
+          var dataNasc = c.dataNascimento
+            ? new Date(c.dataNascimento).toLocaleDateString("pt-BR")
+            : "—";
+          var html =
+            '<div class="sobre-crianca-grid" style="display:grid;gap:1rem;margin-bottom:1.5rem">' +
+            '<div class="sobre-item"><p class="help-text" style="margin:0 0 0.25rem 0">Data de Nascimento</p><p style="font-weight:600">' +
+            dataNasc +
+            "</p></div>" +
+            '<div class="sobre-item"><p class="help-text" style="margin:0 0 0.25rem 0">Grau TEA</p><p style="font-weight:600">' +
+            (c.grauTEA || "—") +
+            "</p></div>" +
+            '<div class="sobre-item"><p class="help-text" style="margin:0 0 0.25rem 0">Nível de Suporte</p><p style="font-weight:600">' +
+            (c.grauSuporte || "—") +
+            "</p></div>" +
+            '<div class="sobre-item"><p class="help-text" style="margin:0 0 0.25rem 0">Instituição</p><p style="font-weight:600">' +
+            (escola.nome || "Não vinculada") +
+            "</p>" +
+            (escola.endereco
+              ? '<p class="help-text" style="margin:0.25rem 0 0 0;font-size:0.8rem">' +
+                escola.endereco +
+                "</p>"
+              : "") +
+            "</div>" +
+            "</div>";
+          if (professores.length > 0) {
+            html +=
+              '<div style="margin-bottom:1.5rem"><p class="help-text" style="margin:0 0 0.5rem 0">Professor(es) / Equipe Escolar</p><ul style="margin:0;padding-left:1.25rem">';
+            professores.forEach(function (p) {
+              html +=
+                "<li>" +
+                (p.nome || "—") +
+                (p.email
+                  ? " <span class='help-text'>(" + p.email + ")</span>"
+                  : "") +
+                "</li>";
+            });
+            html += "</ul></div>";
+          }
+          html +=
+            '<div><p class="help-text" style="margin:0 0 0.5rem 0">Histórico de Crises</p>';
+          if (crises.length === 0) {
+            html += '<p class="help-text">Nenhum registro.</p>';
+          } else {
+            html += '<div class="history-list">';
+            crises.slice(0, 10).forEach(function (cr) {
+              var dh = cr.dataHora
+                ? new Date(cr.dataHora).toLocaleString("pt-BR")
+                : "—";
+              html +=
+                '<div class="list-item">' +
+                '<div class="list-item-date">' +
+                dh +
+                " · " +
+                (cr.intensidade || "") +
+                "</div>" +
+                (cr.gatilhoIdentificado
+                  ? '<p class="list-item-detail">Gatilho: ' +
+                    cr.gatilhoIdentificado +
+                    "</p>"
+                  : "") +
+                (cr.descricao
+                  ? '<p class="list-item-detail">' + cr.descricao + "</p>"
+                  : "") +
+                "</div>";
+            });
+            html += "</div>";
+          }
+          html += "</div>";
+          sobreConteudo.innerHTML = html;
+          sobreSection.style.display = "block";
         }
-        atualizarSeletorCriancas().then(function (r) {
-          var criancas = r.criancas || [];
-          var sec = document.getElementById("seletor-crianca-section");
+
+        function atualizarSeletorCriancas() {
+          if (SAPEA_API.fetchPerfisCriancas) {
+            return SAPEA_API.fetchPerfisCriancas().then(function (criancas) {
+              return { criancas: criancas || [] };
+            });
+          }
+          if (SAPEA_API.fetchTelaescolar) {
+            return SAPEA_API.fetchTelaescolar().then(function (r) {
+              return { criancas: r.criancas || [] };
+            });
+          }
+          return Promise.resolve({ criancas: [] });
+        }
+        function atualizarUI(criancas) {
+          criancas = criancas || [];
+          var sec = seletorSection;
           var sel = document.getElementById("seletor-crianca");
-          if (criancas.length > 1 && sec && sel) {
-            sec.style.display = "block";
-            var atual = localStorage.getItem("sapea_crianca_id");
-            sel.innerHTML = criancas
+          var nenhuma = nenhumaSection;
+          if (criancas.length === 0) {
+            if (sec) sec.style.display = "none";
+            if (nenhuma) nenhuma.style.display = "block";
+            sobreSection.style.display = "none";
+            return;
+          }
+          if (nenhuma) nenhuma.style.display = "none";
+          if (sec) sec.style.display = "block";
+          var atual = localStorage.getItem("sapea_crianca_id");
+          if (!atual && criancas[0]) {
+            atual = criancas[0].id;
+            localStorage.setItem("sapea_crianca_id", atual);
+          }
+          var criancasFormatadas = criancas.map(function (c) {
+            return {
+              id: c.id,
+              nome:
+                c.nome ||
+                "Criança (Grau " +
+                  (c.grauTEA || "—") +
+                  ", Suporte " +
+                  (c.grauSuporte || "—") +
+                  ")",
+            };
+          });
+          if (sel) {
+            sel.innerHTML = criancasFormatadas
               .map(function (c) {
                 var s = c.id === atual ? " selected" : "";
                 return (
@@ -171,10 +646,141 @@
               .join("");
             sel.onchange = function () {
               localStorage.setItem("sapea_crianca_id", sel.value);
-              carregarTelaresponsavel().then(renderData).catch(handleError);
+              carregarTelaresponsavel()
+                .then(function (data) {
+                  eventosCache = data.eventos || [];
+                  renderData(data);
+                  if (sel.value && SAPEA_API.fetchPerfilCriancaResumo) {
+                    SAPEA_API.fetchPerfilCriancaResumo(sel.value)
+                      .then(renderSobreCrianca)
+                      .catch(function () {});
+                  }
+                })
+                .catch(handleError);
             };
           }
+          var btnAdd = document.getElementById("btn-adicionar-crianca");
+          if (btnAdd) btnAdd.onclick = abrirModalNovaCrianca;
+        }
+        function abrirModalNovaCrianca() {
+          carregarEscolas();
+          document.getElementById("form-nova-escola").style.display = "none";
+          document.getElementById("modal-nova-crianca").classList.add("active");
+        }
+        atualizarSeletorCriancas().then(function (r) {
+          var criancas = r.criancas || [];
+          atualizarUI(criancas);
+          if (criancas.length > 0) {
+            var criancaId =
+              localStorage.getItem("sapea_crianca_id") ||
+              (criancas[0] && criancas[0].id);
+            if (criancaId && SAPEA_API.fetchPerfilCriancaResumo) {
+              SAPEA_API.fetchPerfilCriancaResumo(criancaId)
+                .then(renderSobreCrianca)
+                .catch(function () {});
+            }
+          }
         });
+        document.getElementById("btn-nova-crianca-inicial").onclick =
+          abrirModalNovaCrianca;
+        document.getElementById("btn-nova-escola").onclick = function () {
+          document.getElementById("form-nova-escola").style.display = "block";
+        };
+        document.getElementById("btn-salvar-escola").onclick = function () {
+          var nome = document.getElementById("nova-escola-nome").value.trim();
+          if (!nome) {
+            SAPEA_TOAST("Informe o nome da escola.", "warning");
+            return;
+          }
+          var btn = this;
+          btn.disabled = true;
+          SAPEA_API.criarEscola({
+            nome: nome,
+            endereco:
+              document.getElementById("nova-escola-endereco").value.trim() ||
+              undefined,
+          })
+            .then(function (res) {
+              if (res && res.escola) {
+                var sel = document.getElementById("crianca-escola");
+                var opt = document.createElement("option");
+                opt.value = res.escola.id;
+                opt.textContent = res.escola.nome;
+                opt.selected = true;
+                sel.appendChild(opt);
+                document.getElementById("form-nova-escola").style.display =
+                  "none";
+                document.getElementById("nova-escola-nome").value = "";
+                document.getElementById("nova-escola-endereco").value = "";
+              }
+            })
+            .catch(function (err) {
+              SAPEA_TOAST(err.message || "Erro ao cadastrar escola.", "danger");
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+        document
+          .getElementById("form-nova-crianca")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            var nome = document
+              .getElementById("crianca-nome-modal")
+              .value.trim();
+            var dataNasc = document.getElementById("crianca-data-nasc").value;
+            var grauTEA = document.getElementById("crianca-grau-tea").value;
+            var grauSuporte = document.getElementById(
+              "crianca-grau-suporte"
+            ).value;
+            var escolaId =
+              document.getElementById("crianca-escola").value || undefined;
+            if (!nome || !dataNasc || !grauTEA || !grauSuporte) {
+              SAPEA_TOAST(
+                "Preencha nome, data de nascimento, grau TEA e suporte.",
+                "warning"
+              );
+              return;
+            }
+            var btn = document.getElementById("btn-salvar-crianca");
+            btn.disabled = true;
+            SAPEA_API.criarCrianca({
+              nome: nome,
+              dataNascimento: dataNasc,
+              grauTEA: grauTEA,
+              grauSuporte: grauSuporte,
+              escolaId: escolaId,
+            })
+              .then(function (res) {
+                fecharModalNovaCrianca();
+                if (res && res.criancaId) {
+                  localStorage.setItem("sapea_crianca_id", res.criancaId);
+                }
+                return atualizarSeletorCriancas();
+              })
+              .then(function (r) {
+                atualizarUI(r.criancas || []);
+                carregarTelaresponsavel()
+                  .then(function (data) {
+                    eventosCache = data.eventos || [];
+                    renderData(data);
+                  })
+                  .catch(handleError);
+                var cid = localStorage.getItem("sapea_crianca_id");
+                if (cid && SAPEA_API.fetchPerfilCriancaResumo) {
+                  SAPEA_API.fetchPerfilCriancaResumo(cid)
+                    .then(renderSobreCrianca)
+                    .catch(function () {});
+                }
+                SAPEA_TOAST("Criança cadastrada com sucesso!", "success");
+              })
+              .catch(function (err) {
+                SAPEA_TOAST(err.message || "Erro ao cadastrar.", "danger");
+              })
+              .finally(function () {
+                btn.disabled = false;
+              });
+          });
         function renderData(data) {
           var status = data.status || {};
           statusGrid.innerHTML =
@@ -256,7 +862,25 @@
               '<p class="text-center" style="color: var(--color-text-light);">Nenhum registro.</p>';
           }, 2000);
         }
-        carregarTelaresponsavel().then(renderData).catch(handleError);
+        var eventosCache = [];
+        carregarTelaresponsavel()
+          .then(function (data) {
+            eventosCache = data.eventos || [];
+            if (typeof SAPEA_ALERTA_TRANSICAO === "function") {
+              SAPEA_ALERTA_TRANSICAO(eventosCache, 5);
+              setInterval(function () {
+                SAPEA_ALERTA_TRANSICAO(eventosCache, 5);
+              }, 60000);
+            }
+            renderData(data);
+            var cid = localStorage.getItem("sapea_crianca_id");
+            if (cid && SAPEA_API.fetchPerfilCriancaResumo) {
+              SAPEA_API.fetchPerfilCriancaResumo(cid)
+                .then(renderSobreCrianca)
+                .catch(function () {});
+            }
+          })
+          .catch(handleError);
       })();
     </script>
   </body>

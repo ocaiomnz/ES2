@@ -165,6 +165,7 @@ router.post("/auth/login", async (req, res) => {
       TipoPerfilEnum.PROFESSOR,
       TipoPerfilEnum.EQUIPE_ESCOLAR,
     ];
+    const perfilCrianca = TipoPerfilEnum.CRIANCA;
     if (
       perfisComCriancas.includes(resultado.usuario.tipoPerfil as TipoPerfilEnum)
     ) {
@@ -173,6 +174,17 @@ router.post("/auth/login", async (req, res) => {
           resultado.usuario.id
         );
         criancaId = criancas[0]?.id;
+      } catch {
+        criancaId = undefined;
+      }
+    } else if (
+      (resultado.usuario.tipoPerfil as TipoPerfilEnum) === perfilCrianca
+    ) {
+      try {
+        const agregado = await criancaRepository.buscarPorUsuarioId?.(
+          resultado.usuario.id
+        );
+        criancaId = agregado?.crianca.id;
       } catch {
         criancaId = undefined;
       }

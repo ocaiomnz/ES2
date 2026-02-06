@@ -11,6 +11,7 @@
     <title>SAPEA - Sistema de Apoio Pedagógico Digital</title>
     <link rel="stylesheet" href="stylesheets/design-system.css" />
     <link rel="stylesheet" href="stylesheets/main.css" />
+    <script src="javascripts/sapea-ui.js"></script>
     <script src="javascripts/api.js"></script>
   </head>
   <body>
@@ -20,19 +21,7 @@
       <div id="login-screen" class="screen active">
         <div class="login-container">
           <div class="logo-container">
-            <div class="logo-circle">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="35" fill="#7B9ACC" opacity="0.2" />
-                <path
-                  d="M40 20 L40 60 M20 40 L60 40"
-                  stroke="#7B9ACC"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                />
-                <circle cx="40" cy="40" r="8" fill="#7B9ACC" />
-              </svg>
-            </div>
-            <h1 class="logo-text">SAPEA</h1>
+            <img src="logo-sapea.png" alt="SAPEA" class="logo-img" />
             <p class="logo-subtitle">Sistema de Apoio Pedagógico Digital</p>
           </div>
           <div class="login-form">
@@ -100,6 +89,14 @@
       <!-- ========== TELA CRIANÇA (telacrianca) ========== -->
       <div id="telacrianca" class="screen">
         <header class="tela-crianca-header page-header">
+          <a
+            href="#"
+            class="header-logo"
+            aria-label="SAPEA"
+            onclick="event.preventDefault(); showScreen('telacrianca')"
+          >
+            <img src="logo-sapea.png" alt="SAPEA" />
+          </a>
           <div class="header-content">
             <h2 class="header-title page-title">Olá, João! 👋</h2>
             <div class="time-display" id="current-time">09:30</div>
@@ -162,10 +159,7 @@
               <span class="action-icon">🏫</span>
               <span class="action-label">Ver Lugares</span>
             </button>
-            <button
-              class="action-btn"
-              onclick="openModal('modal-alerta-crise')"
-            >
+            <button class="action-btn" onclick="abrirModalPedirAjudaSPA()">
               <span class="action-icon">💙</span>
               <span class="action-label">Preciso de Ajuda</span>
             </button>
@@ -185,6 +179,14 @@
       <!-- ========== TELA RESPONSÁVEL (telaresponsavel) ========== -->
       <div id="telaresponsavel" class="screen">
         <header class="page-header">
+          <a
+            href="#"
+            class="header-logo"
+            aria-label="SAPEA"
+            onclick="event.preventDefault(); showScreen('telaresponsavel')"
+          >
+            <img src="logo-sapea.png" alt="SAPEA" />
+          </a>
           <h1 class="page-title">Painel do Responsável</h1>
           <div>
             <button
@@ -300,6 +302,14 @@
       <!-- ========== TELA ESCOLAR (telaescolar) ========== -->
       <div id="telaescolar" class="screen">
         <header class="page-header">
+          <a
+            href="#"
+            class="header-logo"
+            aria-label="SAPEA"
+            onclick="event.preventDefault(); showScreen('telaescolar')"
+          >
+            <img src="logo-sapea.png" alt="SAPEA" />
+          </a>
           <h1 class="page-title">Painel da Escola</h1>
           <button
             class="btn-icon"
@@ -367,6 +377,14 @@
           >
             ←
           </button>
+          <a
+            href="#"
+            class="header-logo"
+            aria-label="SAPEA"
+            onclick="event.preventDefault(); showScreen('acompanhamento-humor')"
+          >
+            <img src="logo-sapea.png" alt="SAPEA" />
+          </a>
           <h1 class="page-title">Acompanhamento de Humor</h1>
           <span></span>
         </header>
@@ -414,6 +432,14 @@
           >
             ←
           </button>
+          <a
+            href="#"
+            class="header-logo"
+            aria-label="SAPEA"
+            onclick="event.preventDefault(); showScreen('ambiente')"
+          >
+            <img src="logo-sapea.png" alt="SAPEA" />
+          </a>
           <h1 class="page-title">Lugares da Escola</h1>
           <span></span>
         </header>
@@ -482,7 +508,106 @@
         </div>
       </div>
 
-      <!-- ========== MODAL ALERTA DE CRISE ========== -->
+      <!-- ========== MODAL PEDIR AJUDA (perguntar gatilho) ========== -->
+      <div
+        id="modal-pedir-ajuda"
+        class="modal-overlay"
+        role="dialog"
+        aria-labelledby="modal-pedir-ajuda-title"
+      >
+        <div class="modal-box">
+          <button
+            class="modal-close"
+            onclick="closeModal('modal-pedir-ajuda')"
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+          <div class="alerta-crise-content">
+            <h2 class="modal-title" id="modal-pedir-ajuda-title">
+              Preciso de ajuda
+            </h2>
+            <p class="alerta-crise-message" style="margin-bottom: 1rem">
+              O que aconteceu? O que te deixou assim?
+            </p>
+            <div
+              class="gatilho-opcoes"
+              style="
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm gatilho-btn"
+                data-gatilho="Mudança de rotina"
+              >
+                Mudança de rotina
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm gatilho-btn"
+                data-gatilho="Barulho"
+              >
+                Barulho
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm gatilho-btn"
+                data-gatilho="Conflito com colega"
+              >
+                Conflito
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm gatilho-btn"
+                data-gatilho="Não sei"
+              >
+                Não sei
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="gatilho-input-spa" class="form-label"
+                >Ou descreva:</label
+              >
+              <input
+                type="text"
+                id="gatilho-input-spa"
+                class="form-input"
+                placeholder="Ex: luz forte, muita gente..."
+                maxlength="200"
+              />
+            </div>
+            <div
+              style="
+                display: flex;
+                gap: 0.5rem;
+                justify-content: flex-end;
+                margin-top: 1rem;
+              "
+            >
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="closeModal('modal-pedir-ajuda')"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="btn-enviar-ajuda-spa"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== MODAL ALERTA DE CRISE (sucesso) ========== -->
       <div
         id="modal-alerta-crise"
         class="modal-overlay modal-alerta-crise"
@@ -550,34 +675,19 @@
             ✕
           </button>
           <h2 class="modal-title" id="modal-contatos-title">
-            Contatos Rápidos (usuarios / responsavel)
+            Contatos Rápidos
           </h2>
-          <div class="contatos-list">
-            <button type="button" class="contato-item-btn">
-              <div class="contact-avatar">👩</div>
-              <div style="text-align: left">
-                <p class="contact-name">Professora Ana</p>
-                <p class="contact-role">Equipe Escolar</p>
-              </div>
-              <span>📞</span>
-            </button>
-            <button type="button" class="contato-item-btn">
-              <div class="contact-avatar">👨</div>
-              <div style="text-align: left">
-                <p class="contact-name">Coordenação</p>
-                <p class="contact-role">Escola</p>
-              </div>
-              <span>📞</span>
-            </button>
-            <button type="button" class="contato-item-btn">
-              <div class="contact-avatar">🏥</div>
-              <div style="text-align: left">
-                <p class="contact-name">Emergência</p>
-                <p class="contact-role">192</p>
-              </div>
-              <span>📞</span>
-            </button>
-          </div>
+          <p
+            class="help-text"
+            data-contatos-aviso
+            style="margin-bottom: 1rem; display: none"
+          >
+            Selecione um filho para ver os contatos da instituição.
+          </p>
+          <div
+            class="contatos-list"
+            style="display: flex; flex-direction: column; gap: 0.75rem"
+          ></div>
           <button
             class="btn btn-secondary btn-large mt-md"
             onclick="closeModal('modal-contatos')"

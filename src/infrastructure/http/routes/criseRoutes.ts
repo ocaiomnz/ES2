@@ -13,12 +13,15 @@ const criancaRepository = new PrismaCriancaRepository(prisma);
 const notificacaoService = new NotificacaoService();
 
 const manterHistoricoCriseUseCase = new ManterHistoricoCriseUseCase(
-  criancaRepository,
+  criancaRepository
 );
 const visualizarHistoricoCriseUseCase = new VisualizarHistoricoCriseUseCase(
-  criancaRepository,
+  criancaRepository
 );
-const solicitarSuporteUseCase = new SolicitarSuporteUseCase(criancaRepository, notificacaoService);
+const solicitarSuporteUseCase = new SolicitarSuporteUseCase(
+  criancaRepository,
+  notificacaoService
+);
 
 /**
  * @swagger
@@ -161,7 +164,8 @@ router.post("/intervencoes", authMiddleware, async (req, res) => {
     if (req.user.tipoPerfil !== "EQUIPE_ESCOLAR") {
       return res.status(403).json({
         error: "Acesso negado",
-        message: "Apenas membros da equipe escolar podem registrar intervenções",
+        message:
+          "Apenas membros da equipe escolar podem registrar intervenções",
       });
     }
 
@@ -171,7 +175,8 @@ router.post("/intervencoes", authMiddleware, async (req, res) => {
     if (!criancaId || !dataHora || !estrategia || !aplicadaPor) {
       return res.status(400).json({
         error: "Dados incompletos",
-        message: "criancaId, dataHora, estrategia e aplicadaPor são obrigatórios",
+        message:
+          "criancaId, dataHora, estrategia e aplicadaPor são obrigatórios",
       });
     }
 
@@ -200,10 +205,7 @@ router.post("/intervencoes", authMiddleware, async (req, res) => {
       });
     }
 
-    if (
-      error instanceof Error &&
-      error.message.includes("obrigatório")
-    ) {
+    if (error instanceof Error && error.message.includes("obrigatório")) {
       return res.status(400).json({
         error: "Dados inválidos",
         message: error.message,
@@ -266,7 +268,8 @@ router.patch("/crises/:id/eficacia", authMiddleware, async (req, res) => {
     if (req.user.tipoPerfil !== "EQUIPE_ESCOLAR") {
       return res.status(403).json({
         error: "Acesso negado",
-        message: "Apenas membros da equipe escolar podem marcar eficácia de crises",
+        message:
+          "Apenas membros da equipe escolar podem marcar eficácia de crises",
       });
     }
 
@@ -382,10 +385,7 @@ router.get("/crises/crianca/:criancaId", authMiddleware, async (req, res) => {
   } catch (error: any) {
     console.error("Erro ao listar crises:", error);
 
-    if (
-      error instanceof Error &&
-      error.message.includes("não encontrada")
-    ) {
+    if (error instanceof Error && error.message.includes("não encontrada")) {
       return res.status(404).json({
         error: "Criança não encontrada",
         message: error.message,
@@ -446,7 +446,7 @@ router.post("/suporte", authMiddleware, async (req, res) => {
       });
     }
 
-    const { criancaId } = req.body ?? {};
+    const { criancaId, gatilhoIdentificado } = req.body ?? {};
 
     if (!criancaId) {
       return res.status(400).json({
@@ -455,7 +455,10 @@ router.post("/suporte", authMiddleware, async (req, res) => {
       });
     }
 
-    await solicitarSuporteUseCase.execute(criancaId);
+    await solicitarSuporteUseCase.execute(
+      criancaId,
+      typeof gatilhoIdentificado === "string" ? gatilhoIdentificado : undefined
+    );
 
     return res.status(201).json({
       message: "Suporte solicitado com sucesso",
@@ -463,10 +466,7 @@ router.post("/suporte", authMiddleware, async (req, res) => {
   } catch (error: any) {
     console.error("Erro ao solicitar suporte:", error);
 
-    if (
-      error instanceof Error &&
-      error.message.includes("não encontrada")
-    ) {
+    if (error instanceof Error && error.message.includes("não encontrada")) {
       return res.status(404).json({
         error: "Criança não encontrada",
         message: error.message,

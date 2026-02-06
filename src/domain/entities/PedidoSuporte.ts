@@ -14,7 +14,7 @@ export class PedidoSuporte extends Entity {
     dataHora: Date,
     //localizacao: Localizacao,
     status: StatusAtendimento,
-    registroCrise: RegistroCrise,
+    registroCrise: RegistroCrise
   ) {
     super(id);
     this._dataHora = dataHora;
@@ -28,6 +28,7 @@ export class PedidoSuporte extends Entity {
     //localizacao: Localizacao,
     intensidade: IntensidadeDaCrise,
     descricaoCrise?: string,
+    gatilhoIdentificado?: string
   ): PedidoSuporte {
     if (dataHora > new Date()) {
       throw new Error("Data/hora não pode ser futura");
@@ -36,6 +37,7 @@ export class PedidoSuporte extends Entity {
       dataHora,
       intensidade,
       descricaoCrise,
+      gatilhoIdentificado
     );
     const status = StatusAtendimento.pendente();
     return new PedidoSuporte(
@@ -43,7 +45,7 @@ export class PedidoSuporte extends Entity {
       dataHora,
       //localizacao,
       status,
-      registroCrise,
+      registroCrise
     );
   }
 
@@ -74,7 +76,7 @@ export class PedidoSuporte extends Entity {
   public atualizarStatus(novoStatus: StatusAtendimento): void {
     if (!this._status.podeTransitarPara(novoStatus)) {
       throw new Error(
-        `Transição inválida de ${this._status.status} para ${novoStatus.status}`,
+        `Transição inválida de ${this._status.status} para ${novoStatus.status}`
       );
     }
     this._status = novoStatus;

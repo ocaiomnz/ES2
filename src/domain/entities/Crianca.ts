@@ -6,6 +6,7 @@ import {
 } from "../value-objects/index.js";
 
 export class Crianca extends Entity {
+  private _nome: string | undefined;
   private _dataNascimento: DataNascimento;
   private _grauTEA: GrauTEA;
   private _grauSuporte: GrauSuporte;
@@ -19,8 +20,10 @@ export class Crianca extends Entity {
     grauSuporte: GrauSuporte,
     escolaId?: string,
     responsavelIds?: string[],
+    nome?: string
   ) {
     super(id);
+    this._nome = nome;
     this._dataNascimento = dataNascimento;
     this._grauTEA = grauTEA;
     this._grauSuporte = grauSuporte;
@@ -34,6 +37,7 @@ export class Crianca extends Entity {
     grauSuporte: GrauSuporte,
     escolaId?: string,
     responsavelIds?: string[],
+    nome?: string
   ): Crianca {
     return new Crianca(
       undefined,
@@ -42,11 +46,13 @@ export class Crianca extends Entity {
       grauSuporte,
       escolaId,
       responsavelIds,
+      nome
     );
   }
 
   public static fromPersistence(input: {
     id?: string | undefined;
+    nome?: string;
     dataNascimento: string;
     grauTEA: string;
     grauSuporte: string;
@@ -60,6 +66,7 @@ export class Crianca extends Entity {
       GrauSuporte.fromString(input.grauSuporte),
       input.escolaId,
       input.responsavelIds,
+      input.nome
     );
   }
 
@@ -76,8 +83,16 @@ export class Crianca extends Entity {
     return `Calendário da criança ${this._id}`;
   }
 
+  public get nome(): string | undefined {
+    return this._nome;
+  }
+
   public get dataNascimento(): DataNascimento {
     return this._dataNascimento;
+  }
+
+  public alterarNome(nome: string | undefined): void {
+    this._nome = nome;
   }
 
   public get grauTEA(): GrauTEA {

@@ -7,17 +7,20 @@ import type { INotificacaoService } from "../services/INotificacaoService.js";
 export class SolicitarSuporteUseCase {
   constructor(
     private readonly criancaRepo: ICriancaRepository,
-    private readonly notificacaoService?: INotificacaoService,
+    private readonly notificacaoService?: INotificacaoService
   ) {}
 
-  public async execute(criancaId: string): Promise<void> {
+  public async execute(
+    criancaId: string,
+    gatilhoIdentificado?: string
+  ): Promise<void> {
     const agregadoOriginal = await this.criancaRepo.buscarPorId(criancaId);
     if (!agregadoOriginal) throw new Error("Criança não encontrada");
 
     let agregado = agregadoOriginal;
 
     const crisesNaoResolvidas = agregado.crises.filter(
-      (c): c is RegistroCrise => c.foiEficaz === undefined,
+      (c): c is RegistroCrise => c.foiEficaz === undefined
     );
 
     let criseAtual: RegistroCrise;
@@ -32,17 +35,18 @@ export class SolicitarSuporteUseCase {
         agora,
         intensidadePadrao,
         descricaoPadrao,
+        gatilhoIdentificado
       );
       agregado = agregado.adicionarCrise(novaCrise);
       criseAtual = novaCrise;
     }
 
-    const descricaoPedido =
-      criseAtual.descricao ?? "Botão de ajuda acionado";
+    const descricaoPedido = criseAtual.descricao ?? "Botão de ajuda acionado";
     const pedido = PedidoSuporte.create(
       new Date(),
       criseAtual.intensidade,
       descricaoPedido,
+      gatilhoIdentificado ?? criseAtual.gatilhoIdentificado
     );
     (pedido as any)._registroCrise = criseAtual;
 

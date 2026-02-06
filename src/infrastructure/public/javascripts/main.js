@@ -11,6 +11,7 @@ const appState = {
   currentProfile: null,
   colorTheme: "blue",
   minimalMode: false,
+  eventos: [],
 };
 
 // Inicialização
@@ -20,6 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(updateTime, 1000);
   updateActivityProgress();
   setInterval(updateActivityProgress, 1000);
+  // Verificar alertas de transição a cada minuto
+  setInterval(() => {
+    if (
+      appState.eventos &&
+      appState.eventos.length > 0 &&
+      typeof window.SAPEA_ALERTA_TRANSICAO === "function"
+    ) {
+      window.SAPEA_ALERTA_TRANSICAO(appState.eventos, 5);
+    }
+  }, 60000);
 });
 
 // Função de inicialização
@@ -65,8 +76,98 @@ function showScreen(screenId) {
 function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) {
+    if (modalId === "modal-contatos") {
+      loadContatosRapidos();
+    }
     modal.classList.add("active");
   }
+}
+
+function closeModalContatos() {
+  const modal = document.getElementById("modal-contatos");
+  if (modal) modal.classList.remove("active");
+}
+
+function loadContatosRapidos() {
+  const modal = document.getElementById("modal-contatos");
+  const listEl = modal?.querySelector(".contatos-list");
+  const avisoEl = modal?.querySelector("[data-contatos-aviso]");
+  if (!listEl) return;
+  const criancaId = localStorage.getItem("sapea_crianca_id");
+  if (
+    !criancaId ||
+    typeof window.SAPEA_API?.fetchPerfilCriancaResumo !== "function"
+  ) {
+    if (avisoEl) avisoEl.style.display = "block";
+    listEl.innerHTML =
+      '<p class="help-text">Selecione um filho para ver os contatos.</p>';
+    return;
+  }
+  if (avisoEl) avisoEl.style.display = "none";
+  listEl.innerHTML = '<p class="help-text">Carregando...</p>';
+  window.SAPEA_API.fetchPerfilCriancaResumo(criancaId)
+    .then((resumo) => {
+      const professores = resumo.professores || [];
+      const escola = resumo.escola || {};
+      let html = "";
+      professores.forEach((p) => {
+        const mailto = p.email ? ` href="mailto:${p.email}"` : "";
+        const tag = mailto ? "a" : "div";
+        html += `<${tag} class="contato-item-btn"${mailto} style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md);border:none;cursor:pointer;width:100%;text-decoration:none;color:inherit;font:inherit">
+          <div style="width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem">👩‍🏫</div>
+          <div style="text-align:left;flex:1">
+            <p style="font-weight:600;margin:0">${p.nome || "Professor"}</p>
+            <p class="help-text" style="margin:0.25rem 0 0 0;font-size:0.875rem">Equipe Escolar${
+              p.email ? " · " + p.email : ""
+            }</p>
+          </div>
+          ${mailto ? '<span style="font-size:1.25rem">✉️</span>' : ""}
+        </${tag}>`;
+      });
+      if (escola.nome) {
+        const mapsUrl = escola.endereco
+          ? "https://www.google.com/maps/search/?api=1&query=" +
+            encodeURIComponent(escola.endereco)
+          : "";
+        html += mapsUrl
+          ? `<a href="${mapsUrl}" target="_blank" rel="noopener" class="contato-item-btn" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md);text-decoration:none;color:inherit;font:inherit">
+            <div style="width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem">🏫</div>
+            <div style="text-align:left;flex:1">
+              <p style="font-weight:600;margin:0">${escola.nome}</p>
+              ${
+                escola.endereco
+                  ? `<p class="help-text" style="margin:0.25rem 0 0 0;font-size:0.875rem">${escola.endereco}</p>`
+                  : ""
+              }
+            </div>
+            <span style="font-size:1.25rem">📍</span>
+          </a>`
+          : `<div class="contato-item-btn" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-bg);border-radius:var(--border-radius-md)">
+            <div style="width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;font-size:1.5rem">🏫</div>
+            <div style="text-align:left;flex:1">
+              <p style="font-weight:600;margin:0">${escola.nome}</p>
+              ${
+                escola.endereco
+                  ? `<p class="help-text" style="margin:0.25rem 0 0 0;font-size:0.875rem">${escola.endereco}</p>`
+                  : ""
+              }
+            </div>
+          </div>`;
+      }
+      html += `<a href="tel:192" class="contato-item-btn" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--color-danger);color:white;border-radius:var(--border-radius-md);text-decoration:none;font:inherit">
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem">🚑</div>
+        <div style="text-align:left;flex:1">
+          <p style="font-weight:600;margin:0">Emergência SAMU</p>
+          <p style="margin:0.25rem 0 0 0;font-size:0.875rem;opacity:0.9">192</p>
+        </div>
+        <span style="font-size:1.25rem">📞</span>
+      </a>`;
+      listEl.innerHTML =
+        html || '<p class="help-text">Nenhum contato disponível.</p>';
+    })
+    .catch(() => {
+      listEl.innerHTML = '<p class="help-text">Erro ao carregar contatos.</p>';
+    });
 }
 
 function voltarDaTelaAmbiente() {
@@ -205,6 +306,75 @@ function showHelp() {
   }
 }
 
+function abrirModalPedirAjudaSPA() {
+  const criancaId = localStorage.getItem("sapea_crianca_id");
+  if (!criancaId) {
+    showHelp();
+    showNotification(
+      "Modo demonstração: sem criança vinculada. Use as páginas separadas para acionar SOS real.",
+      "info"
+    );
+    return;
+  }
+  const modal = document.getElementById("modal-pedir-ajuda");
+  const input = document.getElementById("gatilho-input-spa");
+  if (modal) {
+    if (input) input.value = "";
+    document
+      .querySelectorAll("#modal-pedir-ajuda .gatilho-btn")
+      .forEach((b) => b.classList.remove("active"));
+    modal.classList.add("active");
+  }
+}
+
+function enviarPedidoAjudaSPA() {
+  const criancaId = localStorage.getItem("sapea_crianca_id");
+  if (!criancaId) return;
+  const input = document.getElementById("gatilho-input-spa");
+  let gatilho = input ? input.value.trim() : "";
+  if (!gatilho) {
+    const sel = document.querySelector(
+      "#modal-pedir-ajuda .gatilho-btn.active"
+    );
+    if (sel) gatilho = sel.getAttribute("data-gatilho") || "";
+  }
+  const btn = document.getElementById("btn-enviar-ajuda-spa");
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Enviando...";
+  }
+  if (
+    typeof window.SAPEA_API !== "undefined" &&
+    window.SAPEA_API.solicitarSuporte
+  ) {
+    window.SAPEA_API.solicitarSuporte(criancaId, gatilho || undefined)
+      .then(() => {
+        closeModal("modal-pedir-ajuda");
+        showHelp();
+        showNotification("Ajuda solicitada! Alguém virá em breve.", "success");
+      })
+      .catch((err) => {
+        showNotification(
+          err.message || "Erro ao enviar pedido de ajuda.",
+          "danger"
+        );
+      })
+      .finally(() => {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = "Enviar";
+        }
+      });
+  } else {
+    closeModal("modal-pedir-ajuda");
+    showHelp();
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Enviar";
+    }
+  }
+}
+
 function triggerSOS() {
   const sosBtn = document.getElementById("sos-btn");
   if (sosBtn) {
@@ -224,26 +394,36 @@ function triggerSOS() {
     return;
   }
 
-  if (
-    typeof window.SAPEA_API !== "undefined" &&
-    window.SAPEA_API.solicitarSuporte
-  ) {
-    window.SAPEA_API.solicitarSuporte(criancaId)
-      .then(() => {
-        showHelp();
-        showNotification("Ajuda solicitada! Alguém virá em breve.", "success");
-      })
-      .catch((err) => {
-        showNotification(
-          err.message || "Erro ao enviar pedido de ajuda.",
-          "danger"
-        );
-      });
-  } else {
-    showHelp();
-    showNotification("Ajuda solicitada! Alguém virá em breve.", "success");
-  }
+  abrirModalPedirAjudaSPA();
 }
+
+// Event listeners para modal pedir ajuda (SPA)
+document.addEventListener("DOMContentLoaded", () => {
+  const btnEnviar = document.getElementById("btn-enviar-ajuda-spa");
+  if (btnEnviar) {
+    btnEnviar.addEventListener("click", enviarPedidoAjudaSPA);
+  }
+  document
+    .querySelectorAll("#modal-pedir-ajuda .gatilho-btn")
+    .forEach((btn) => {
+      btn.addEventListener("click", function () {
+        document
+          .querySelectorAll("#modal-pedir-ajuda .gatilho-btn")
+          .forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
+        const input = document.getElementById("gatilho-input-spa");
+        if (input) input.value = "";
+      });
+    });
+  const inputGatilho = document.getElementById("gatilho-input-spa");
+  if (inputGatilho) {
+    inputGatilho.addEventListener("input", () => {
+      document
+        .querySelectorAll("#modal-pedir-ajuda .gatilho-btn")
+        .forEach((b) => b.classList.remove("active"));
+    });
+  }
+});
 
 // ===== MODAIS =====
 function closeModal(modalId) {
@@ -337,6 +517,9 @@ function loadTelacriancaData() {
   window.SAPEA_API.fetchTelacrianca().then(
     (res) => {
       const { crianca, eventos } = res;
+      if (crianca?.id) {
+        localStorage.setItem("sapea_crianca_id", crianca.id);
+      }
       const title = document.querySelector("#telacrianca .header-title");
       if (title)
         title.textContent = "Olá, " + (crianca.nome || "João") + "! 👋";
@@ -355,6 +538,11 @@ function loadTelacriancaData() {
         DEFAULT: "📌",
       };
       const now = new Date();
+      appState.eventos = eventos || [];
+      // Alerta de transição: verificar se próximo evento está em 5 min
+      if (typeof window.SAPEA_ALERTA_TRANSICAO === "function") {
+        window.SAPEA_ALERTA_TRANSICAO(eventos, 5);
+      }
       eventos.slice(0, 6).forEach((ev, i) => {
         const inicio = ev.data_hora_inicio
           ? new Date(ev.data_hora_inicio)
@@ -414,6 +602,10 @@ function loadTelaresponsavelData() {
   window.SAPEA_API.fetchTelaresponsavel().then(
     (res) => {
       const { status, alertas, registro_crises, eventos } = res;
+      appState.eventos = eventos || [];
+      if (typeof window.SAPEA_ALERTA_TRANSICAO === "function") {
+        window.SAPEA_ALERTA_TRANSICAO(eventos, 5);
+      }
 
       const statusGrid = document.querySelector(
         "#telaresponsavel .status-grid"
@@ -631,44 +823,11 @@ function showEnvironmentManager() {
 
 // ===== NOTIFICAÇÕES =====
 function showNotification(message, type = "info") {
-  // Criar elemento de notificação
-  const notification = document.createElement("div");
-  notification.className = `notification notification-${type}`;
-  notification.textContent = message;
-
-  // Estilos inline para notificação
-  Object.assign(notification.style, {
-    position: "fixed",
-    top: "20px",
-    right: "20px",
-    padding: "16px 24px",
-    backgroundColor:
-      type === "success"
-        ? "#9ACD9A"
-        : type === "warning"
-        ? "#F4D03F"
-        : type === "danger"
-        ? "#E8A5A5"
-        : "#7B9ACC",
-    color: "#2C3E50",
-    borderRadius: "12px",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-    zIndex: "10000",
-    fontSize: "14px",
-    fontWeight: "500",
-    maxWidth: "300px",
-    animation: "slideInRight 0.3s ease",
-  });
-
-  document.body.appendChild(notification);
-
-  // Remover após 3 segundos
-  setTimeout(() => {
-    notification.style.animation = "slideOutRight 0.3s ease";
-    setTimeout(() => {
-      document.body.removeChild(notification);
-    }, 300);
-  }, 3000);
+  if (typeof window.SAPEA_TOAST === "function") {
+    window.SAPEA_TOAST(message, type);
+  } else {
+    alert(message);
+  }
 }
 
 // ===== PERSISTÊNCIA =====
@@ -735,29 +894,4 @@ if (window.matchMedia) {
   });
 }
 
-// Adicionar animações CSS para notificações
-const style = document.createElement("style");
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
+// Animações de notificação estão em main.css (sapea-toast)

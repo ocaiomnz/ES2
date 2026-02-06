@@ -14,6 +14,7 @@ import {
 export type PersistedAgregadoCrianca = {
   crianca: {
     id?: string | undefined;
+    nome?: string;
     dataNascimento: string; // ISO
     grauTEA: string;
     grauSuporte: string;
@@ -58,6 +59,7 @@ export function desserializarAgregadoCrianca(
     dataNascimento: persisted.crianca.dataNascimento,
     grauTEA: persisted.crianca.grauTEA,
     grauSuporte: persisted.crianca.grauSuporte,
+    nome: persisted.crianca.nome,
   };
 
   if (persisted.crianca.escolaId) {
@@ -98,6 +100,7 @@ export function serializarAgregadoCrianca(
 
   const criancaData: any = {
     id: crianca.id,
+    nome: crianca.nome,
     dataNascimento: crianca.dataNascimento.data.toISOString(),
     grauTEA: crianca.grauTEA.grau,
     grauSuporte: crianca.grauSuporte.grau,

@@ -138,14 +138,16 @@
       return fetchApi("/perfis/criancas").then(function (data) {
         return {
           criancas: (data.criancas || []).map(function (c) {
-            return {
-              id: c.id,
-              nome:
-                "Criança (Grau " +
+            var nomeExib =
+              c.nome ||
+              "Criança (Grau " +
                 (c.grauTEA || "—") +
                 ", Suporte " +
                 (c.grauSuporte || "—") +
-                ")",
+                ")";
+            return {
+              id: c.id,
+              nome: nomeExib,
               grauTEA: c.grauTEA,
               grauSuporte: c.grauSuporte,
               escolaId: c.escolaId,
@@ -198,12 +200,18 @@
       }));
     },
 
-    solicitarSuporte: function (criancaId) {
+    solicitarSuporte: function (criancaId, gatilhoIdentificado) {
       criancaId = criancaId || getCriancaId();
       if (!criancaId)
         return Promise.reject(new Error("Criança não identificada"));
       return fetchApi("/criancas/" + criancaId + "/suporte", {
         method: "POST",
+        body: JSON.stringify({
+          gatilhoIdentificado:
+            typeof gatilhoIdentificado === "string"
+              ? gatilhoIdentificado.trim() || undefined
+              : undefined,
+        }),
       });
     },
 
@@ -263,6 +271,96 @@
       });
     },
 
+    criarEvento: function (payload) {
+      return fetchApi("/eventos", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    atualizarEvento: function (id, payload) {
+      return fetchApi("/eventos/" + id, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    },
+    excluirEvento: function (id) {
+      return fetchApi("/eventos/" + id, {
+        method: "DELETE",
+      });
+    },
+
+    marcarEficaciaCrise: function (criseId, criancaId, eficaz) {
+      return fetchApi("/crises/" + criseId + "/eficacia", {
+        method: "PATCH",
+        body: JSON.stringify({ criancaId: criancaId, eficaz: eficaz }),
+      });
+    },
+
+    obterPersonalizacao: function (criancaId) {
+      return fetchApi("/personalizacao/crianca/" + criancaId).then(function (
+        data
+      ) {
+        return data.personalizacao || {};
+      });
+    },
+    atualizarPersonalizacao: function (criancaId, payload) {
+      return fetchApi("/personalizacao/crianca/" + criancaId, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    },
+
+    fetchPerfisCriancas: function () {
+      return fetchApi("/perfis/criancas").then(function (data) {
+        return data.criancas || [];
+      });
+    },
+    fetchPerfilCrianca: function (id) {
+      return fetchApi("/perfis/criancas/" + id).then(function (data) {
+        return data.crianca || data;
+      });
+    },
+    fetchPerfilCriancaResumo: function (id) {
+      return fetchApi("/perfis/criancas/" + id + "/resumo");
+    },
+    criarEscola: function (payload) {
+      return fetchApi("/escolas", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    criarResponsavel: function (payload) {
+      return fetchApi("/usuarios", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+
+    registrarSentimento: function (criancaId, estado) {
+      return fetchApi("/criancas/" + criancaId + "/sentimento", {
+        method: "POST",
+        body: JSON.stringify({ estado }),
+      });
+    },
+
+    criarCrianca: function (payload) {
+      return fetchApi("/perfis/criancas", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    },
+    atualizarCrianca: function (id, payload) {
+      return fetchApi("/perfis/criancas/" + id, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+    },
+    excluirCrianca: function (id) {
+      return fetchApi("/perfis/criancas/" + id, {
+        method: "DELETE",
+      });
+    },
+
     /** Carrega todos os dados para a tela Gerenciar Rotina (eventos, crises, ambientes, humor) */
     fetchRotinaCompleta: function (criancaId) {
       criancaId = criancaId || getCriancaId();
@@ -290,8 +388,10 @@
         var crianca = perfil.crianca || perfil || {};
         var eventos = (calendario.eventos || []).map(function (e) {
           return {
+            id: e.id,
             titulo: e.titulo,
             dataHoraInicio: e.dataHoraInicio,
+            dataHoraFim: e.dataHoraFim,
             status: e.status,
             nivelRisco: e.nivelRisco,
             icone: "📌",

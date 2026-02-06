@@ -37,11 +37,33 @@ export class PrismaCriancaRepository implements ICriancaRepository {
     return desserializarAgregadoCrianca(this.mapRowToPersisted(row));
   }
 
- 
+  public async buscarPorUsuarioId(
+    usuarioId: string
+  ): Promise<AgregadoCrianca | undefined> {
+    const row: any = await this.prisma.crianca
+      .findFirst({
+        where: { usuarioId },
+        include: {
+          RegistroCrise: true,
+          PedidoSuporte: {
+            include: {
+              RegistroCrise: true,
+            },
+          },
+          Intervencao: true,
+          CriancaResponsavel: true,
+        },
+      })
+      .catch(() => undefined);
+
+    if (!row) return undefined;
+
+    return desserializarAgregadoCrianca(this.mapRowToPersisted(row));
+  }
+
   public async salvar(agregado: AgregadoCrianca): Promise<void> {
     const p = serializarAgregadoCrianca(agregado);
     const txOperations: any[] = [];
-
 
     const criancaData: any = {
       dataNascimento: p.crianca.dataNascimento,
@@ -49,6 +71,10 @@ export class PrismaCriancaRepository implements ICriancaRepository {
       grauSuporte: p.crianca.grauSuporte,
       updatedAt: new Date(),
     };
+
+    if (p.crianca.nome !== undefined) {
+      criancaData.nome = p.crianca.nome || null;
+    }
 
     if (p.crianca.escolaId) {
       criancaData.escolaId = p.crianca.escolaId;
@@ -66,13 +92,13 @@ export class PrismaCriancaRepository implements ICriancaRepository {
           ...criancaData,
         },
         update: criancaData,
-      }),
+      })
     );
 
-   txOperations.push(
+    txOperations.push(
       this.prisma.criancaResponsavel.deleteMany({
         where: { criancaId: p.crianca.id! },
-      }),
+      })
     );
 
     if (p.crianca.responsavelIds && p.crianca.responsavelIds.length > 0) {
@@ -84,7 +110,7 @@ export class PrismaCriancaRepository implements ICriancaRepository {
               criancaId: p.crianca.id!,
               responsavelId,
             },
-          }),
+          })
         );
       }
     }
@@ -92,7 +118,7 @@ export class PrismaCriancaRepository implements ICriancaRepository {
     txOperations.push(
       this.prisma.registroCrise.deleteMany({
         where: { criancaId: p.crianca.id! },
-      }),
+      })
     );
 
     for (const c of p.crises || []) {
@@ -108,14 +134,14 @@ export class PrismaCriancaRepository implements ICriancaRepository {
             foiEficaz: c.foiEficaz ?? null,
             updatedAt: new Date(),
           },
-        }),
+        })
       );
     }
 
     txOperations.push(
       this.prisma.pedidoSuporte.deleteMany({
         where: { criancaId: p.crianca.id! },
-      }),
+      })
     );
 
     for (const ps of p.pedidosSuporte || []) {
@@ -129,14 +155,14 @@ export class PrismaCriancaRepository implements ICriancaRepository {
             registroCriseId: ps.registroCrise.id ?? null,
             updatedAt: new Date(),
           },
-        }),
+        })
       );
     }
 
     txOperations.push(
       this.prisma.intervencao.deleteMany({
         where: { criancaId: p.crianca.id! },
-      }),
+      })
     );
 
     for (const i of p.intervencoes || []) {
@@ -151,7 +177,7 @@ export class PrismaCriancaRepository implements ICriancaRepository {
             resultado: i.resultado ?? null,
             updatedAt: new Date(),
           },
-        }),
+        })
       );
     }
 
@@ -159,7 +185,7 @@ export class PrismaCriancaRepository implements ICriancaRepository {
   }
 
   public async buscarPorFiltro(
-    filtro: { nome?: string } = {},
+    filtro: { nome?: string } = {}
   ): Promise<AgregadoCrianca[]> {
     const rows: any[] = await this.prisma.crianca
       .findMany({
@@ -178,7 +204,7 @@ export class PrismaCriancaRepository implements ICriancaRepository {
       .catch(() => []);
 
     return rows.map((row) =>
-      desserializarAgregadoCrianca(this.mapRowToPersisted(row)),
+      desserializarAgregadoCrianca(this.mapRowToPersisted(row))
     );
   }
 
@@ -200,18 +226,19 @@ export class PrismaCriancaRepository implements ICriancaRepository {
       .catch(() => []);
 
     return rows.map((row) =>
-      desserializarAgregadoCrianca(this.mapRowToPersisted(row)),
+      desserializarAgregadoCrianca(this.mapRowToPersisted(row))
     );
   }
 
   private mapRowToPersisted(row: any): PersistedAgregadoCrianca {
     const responsavelIds = (row.CriancaResponsavel || []).map(
-      (cr: any) => cr.responsavelId,
+      (cr: any) => cr.responsavelId
     );
 
     return {
       crianca: {
         id: row.id,
+        nome: row.nome || undefined,
         dataNascimento:
           row.dataNascimento instanceof Date
             ? row.dataNascimento.toISOString()

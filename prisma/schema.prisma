@@ -20,19 +20,32 @@ model AmbienteEscolar {
 
 model Crianca {
   id                      String                   @id
+  nome                    String?
   dataNascimento          DateTime
   grauTEA                 String
   grauSuporte             String
   escolaId                String?
+  usuarioId               String?                  @unique
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime
   Escola                  Escola?                  @relation(fields: [escolaId], references: [id])
+  Usuario                 Usuario?                 @relation("CriancaUsuario", fields: [usuarioId], references: [id])
   CriancaResponsavel      CriancaResponsavel[]
   Evento                  Evento[]
   Intervencao             Intervencao[]
   PedidoSuporte           PedidoSuporte[]
   PersonalizacaoSensorial PersonalizacaoSensorial?
   RegistroCrise           RegistroCrise[]
+  RegistroSentimento      RegistroSentimento[]
+}
+
+model RegistroSentimento {
+  id        String   @id
+  criancaId String
+  dataHora  DateTime
+  estado    String
+  createdAt DateTime @default(now())
+  Crianca   Crianca  @relation(fields: [criancaId], references: [id], onDelete: Cascade)
 }
 
 model CriancaResponsavel {
@@ -134,5 +147,6 @@ model Usuario {
   createdAt          DateTime             @default(now())
   updatedAt          DateTime
   CriancaResponsavel CriancaResponsavel[]
+  CriancaPerfil      Crianca?             @relation("CriancaUsuario")
   Escola             Escola?              @relation(fields: [escolaId], references: [id])
 }

@@ -1,6 +1,7 @@
 import express from "express";
 import authRoutes from "./authRoutes.js";
 import usuarioRoutes from "./usuarioRoutes.js";
+import escolaRoutes from "./escolaRoutes.js";
 import criancaRoutes from "./criancaRoutes.js";
 import equipeEscolarRoutes from "./equipeEscolarRoutes.js";
 import eventoRoutes from "./eventoRoutes.js";
@@ -11,11 +12,10 @@ import personalizacaoRoutes from "./personalizacaoRoutes.js";
 
 const apiRouter = express.Router();
 
-
 apiRouter.use(authRoutes);
 
-
 apiRouter.use(usuarioRoutes);
+apiRouter.use(escolaRoutes);
 apiRouter.use(criancaRoutes);
 apiRouter.use(equipeEscolarRoutes);
 apiRouter.use(eventoRoutes);
