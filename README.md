@@ -70,7 +70,17 @@ prisma/
 
 - `npm run dev` — Inicia o servidor em modo desenvolvimento com recarregamento automático.
 - `npx prisma migrate dev` — Executa as migrações do banco de dados.
+- `npm run db:seed` — Aplica a seed de teste (esquema + dados mínimos).
+- `npm run db:seed-dados-atual` — Aplica a seed com todos os dados atuais do banco (use em outra máquina após `migrate deploy`).
 - `npx prisma studio` — Interface visual para o banco de dados.
+
+### Usar banco com dados atuais em outra máquina
+
+1. Configure o `DATABASE_URL` no `.env` (PostgreSQL da nova máquina).
+2. Aplique as migrações: `npm run db:migrate` (ou `npx prisma migrate deploy`).
+3. Carregue os dados: `npm run db:seed-dados-atual`.
+
+O arquivo `prisma/seed-dados-atual.sql` contém apenas INSERTs (sem DROP/CREATE). Use em banco vazio para evitar conflito de chaves primárias.
 
 ## Observações
 
